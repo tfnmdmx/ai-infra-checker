@@ -1,0 +1,112 @@
+(pose-modality-operator)=
+<div class="quality-page-kicker">MODALITY OPERATOR · unimodal</div>
+
+# Pose 模态算子
+
+<p class="quality-lead">将标准手或 Manus 输入转换为原生采样率的 20 维关节角并质检。</p>
+
+<div class="quality-meta">
+  <code class="meta-kind">fm-pose-label-operator</code>
+  <code class="meta-version">v0.16.0</code>
+  <code class="meta-stage">unimodal</code>
+  <code class="meta-domain">13 quality operators</code>
+</div>
+
+
+| 属性 | 值 |
+| --- | --- |
+| 包名 | `fm-pose-label-operator` |
+| 包版本 | `0.16.0` |
+| 输入边界 | 一个原始 Pose NPZ |
+| 默认产物 | `<work-dir>/pose/processed.npz` |
+| 质检算子数 | 13 |
+
+## 包版本历史
+
+| 包版本 | 更新时间（北京时间） | 变更 | 提交 |
+| --- | --- | --- | --- |
+| — | — | 尚无基线后的版本变更 | — |
+
+仅展示文档 1.0.0 基线之后的变更。
+
+## 使用入口
+
+```bash
+fm-pose-label-operator --help
+```
+
+::::{div} quality-source-links
+[查看完整使用手册](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/docs/operator-user-guide.md#4-pose-label-operator) · [查看 GitHub 包源码](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/tree/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-pose-label-operator)
+::::
+
+## 质检算子
+
+### IDC · 输入/设备兼容性
+
+::::{div} modality-rule-table
+| Rule ID | 名称 | error 时产物 | 实例 | 阶段 | 版本 |
+| --- | --- | --- | --- | --- | --- |
+| <span id="catalog-pose-idc-001"></span>`pose-idc-001` | [Pose 输入是否有效](../quality-operators/pose/pose-idc-001.md) | 无法生成 | `single` | `raw` | `2.0.0` |
+::::
+
+### DSF · 数据结构/格式
+
+::::{div} modality-rule-table
+| Rule ID | 名称 | error 时产物 | 实例 | 阶段 | 版本 |
+| --- | --- | --- | --- | --- | --- |
+| <span id="catalog-pose-dsf-003"></span>`pose-dsf-003` | [Pose 字段结构是否正确](../quality-operators/pose/pose-dsf-003.md) | 无法生成 | `multi` · `field` | `processed` | `2.0.0` |
+::::
+
+### TSA · 时间/样本对齐
+
+::::{div} modality-rule-table
+| Rule ID | 名称 | error 时产物 | 实例 | 阶段 | 版本 |
+| --- | --- | --- | --- | --- | --- |
+| <span id="catalog-pose-tsa-003"></span>`pose-tsa-003` | [Pose 时间戳是否有效](../quality-operators/pose/pose-tsa-003.md) | 无法生成 | `single` | `processed` | `2.0.0` |
+| <span id="catalog-pose-tsa-004"></span>`pose-tsa-004` | [最大连续缺口](../quality-operators/pose/pose-tsa-004.md) | 可生成 | `single` | `raw` | `3.0.0` |
+| <span id="catalog-pose-tsa-006"></span>`pose-tsa-006` | [采样率偏差比例](../quality-operators/pose/pose-tsa-006.md) | 可生成 | `single` | `raw` | `4.0.0` |
+::::
+
+### DCR · 时长/覆盖
+
+::::{div} modality-rule-table
+| Rule ID | 名称 | error 时产物 | 实例 | 阶段 | 版本 |
+| --- | --- | --- | --- | --- | --- |
+| <span id="catalog-pose-dcr-002"></span>`pose-dcr-002` | [有效数据时长](../quality-operators/pose/pose-dcr-002.md) | 可生成 | `single` | `raw` | `3.0.0` |
+::::
+
+### NVA · 数值有效性
+
+::::{div} modality-rule-table
+| Rule ID | 名称 | error 时产物 | 实例 | 阶段 | 版本 |
+| --- | --- | --- | --- | --- | --- |
+| <span id="catalog-pose-nva-002"></span>`pose-nva-002` | [关节角是否包含非有限值](../quality-operators/pose/pose-nva-002.md) | 无法生成 | `multi` · `field` | `processed` | `2.0.0` |
+::::
+
+### LAQ · 标签/动作质量
+
+::::{div} modality-rule-table
+| Rule ID | 名称 | error 时产物 | 实例 | 阶段 | 版本 |
+| --- | --- | --- | --- | --- | --- |
+| <span id="catalog-pose-laq-001"></span>`pose-laq-001` | [关节角最大绝对值](../quality-operators/pose/pose-laq-001.md) | 可生成 | `single` | `processed` | `2.0.0` |
+| <span id="catalog-pose-laq-002"></span>`pose-laq-002` | [原始无效帧比例](../quality-operators/pose/pose-laq-002.md) | 可生成 | `single` | `raw` | `1.2.0` |
+| <span id="catalog-pose-laq-005"></span>`pose-laq-005` | [静止间隔比例](../quality-operators/pose/pose-laq-005.md) | 可生成 | `single` | `processed` | `2.0.0` |
+| <span id="catalog-pose-laq-006"></span>`pose-laq-006` | [高角速度间隔比例](../quality-operators/pose/pose-laq-006.md) | 可生成 | `single` | `processed` | `2.0.0` |
+::::
+
+### PPA · 处理/产物异常
+
+::::{div} modality-rule-table
+| Rule ID | 名称 | error 时产物 | 实例 | 阶段 | 版本 |
+| --- | --- | --- | --- | --- | --- |
+| <span id="catalog-pose-ppa-001"></span>`pose-ppa-001` | [Pose 处理异常](../quality-operators/pose/pose-ppa-001.md) | 无法生成 | `single` | `raw_to_processed` | `2.0.0` |
+| <span id="catalog-pose-ppa-002"></span>`pose-ppa-002` | [Pose 产物读写异常](../quality-operators/pose/pose-ppa-002.md) | 无法生成 | `single` | `artifact` | `2.0.0` |
+::::
+
+
+```{admonition} 文档覆盖说明
+:class: note
+
+“待补充”表示 Rule ID 已在代码中注册，但尚未完成独立质检算子页面；它不表示规则未实现或
+执行时会被跳过。
+```

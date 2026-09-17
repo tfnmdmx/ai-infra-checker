@@ -1,0 +1,163 @@
+(vision-dsf-001)=
+<div class="quality-page-kicker">QUALITY OPERATOR · data_structure_format</div>
+
+# `vision-dsf-001` — 视频编码与画面结构是否正确
+
+[所属模态算子：Vision](../../modality-operators/vision.md)
+
+<div class="quality-meta">
+  <code class="meta-lifecycle is-active">active</code>
+  <code class="meta-artifact is-unavailable">error 时产物无法生成</code>
+  <code class="meta-cardinality">single</code>
+  <code class="meta-domain">data_structure_format</code>
+  <code class="meta-stage">raw</code>
+  <code class="meta-version">rule v1.2.0</code>
+  <code class="meta-version">fm-vision-operator v0.9.0</code>
+</div>
+
+<p class="quality-lead">核对压缩消息索引、H.264/H.265 编码和左右并排双目画面的尺寸。</p>
+
+## 先看懂这条规则
+
+- **检查什么：** 检查视频编码、消息清单、解码尺寸和左右眼并排画面的形状能否互相对上。
+- **为什么不是 pass：** 编码不受支持、文件声明和实际视频不一致、消息清单对不上，或双目画面尺寸不合理时会失败，因为视频无法被可靠解释。
+
+### 判定标准
+
+| 状态 | 完整条件 |
+| --- | --- |
+| **通过 `pass`** | 消息清单和计数一致，视频为 H.264/H.265，声明与解码尺寸一致，且双目画面几何合理。 |
+| **告警 `warn`** | 不会出现；本规则不使用 warn 状态。 |
+| **失败 `error`** | 非 H.264/H.265、声明与实际编码不一致、索引数组或消息计数不一致、奇数宽或单眼宽高比不合理为 error |
+
+**边界怎么算：**
+
+- 结构校验按离散条件判定，不进行隐式修复或默认跳过。
+
+### 具体检查项
+
+1. 要求扫描到的压缩消息数与 MCAP summary 一致，且 `frame_size_bytes`、`frame_sequence` 与消息逐条等长。
+2. ffprobe 识别的 codec 必须是 H.264/H.265，并与每条消息声明的编码一致；声明宽高也必须与解码几何一致。
+3. 解码宽高必须为正、总宽为偶数，单眼宽高比 `(width/2)/height` 必须位于 `[1.2,2.2]`。
+4. 任一条件失败即发布 error，因为此时不能证明消息索引和双目画面可被正确解释。
+
+## 版本历史
+
+| Rule 版本 | 首次对应包版本 | 更新时间（北京时间） | 变更 | 提交 |
+| --- | --- | --- | --- | --- |
+| — | — | — | 尚无基线后的版本变更 | — |
+
+仅展示文档 1.0.0 基线之后的变更。
+
+## 计算契约
+
+::::{admonition} 计算契约（不可直接调用）
+:class: quality-contract
+
+```python
+quality.vision.vision_dsf_001(
+    video_stream: MCAP/protobuf messages=[T], decoded_frames=[T,H,W,C],
+) -> RuleResult
+```
+::::
+
+::::{div} quality-source-links
+[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/vision.py#L473) ·
+[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/rules.py#L55) ·
+[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-vision-operator/tests/test_vision_operator.py#L874) ·
+[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/docs/quality-rule-calculation-spec.md)
+::::
+
+```{admonition} 注意
+:class: note
+
+- 规则阶段为 raw；总状态只取已执行规则的最高严重度。
+- 质量或数据异常由 RuleResult 明确记录且进程返回 0；只有运行配置错误返回 1。
+```
+
+## 数据输入
+
+| 名称 | 来源 | dtype | shape | 单位 | 必需 | 说明 |
+| --- | --- | --- | --- | --- | --- | --- |
+| `video_stream` | raw | `MCAP/protobuf` | `messages=[T], decoded_frames=[T,H,W,C]` | N/A | 是 | 选定视频 topic、消息索引、标定和解码帧。 |
+
+## 配置参数
+
+本质检算子没有独立配置参数。
+
+## 校验逻辑
+
+## 执行关系
+
+**前置质检算子：** 无。
+
+
+**产物影响：** 本规则为 `error` 时，输出契约已经无法满足，因此本次不会登记产物；
+原因由结构化 RuleResult 记录。只要这不是运行配置错误，进程仍返回 0。
+
+**相关质检算子：**
+
+- [`vision-dsf-002`](../vision/vision-dsf-002.md)
+
+## 输出
+
+| 字段 | 约定 |
+| --- | --- |
+| 实例模型 | `single` |
+| `value` | `boolean` 或 `null` |
+| `unit` | N/A |
+| `threshold` | `any` |
+| `details` | `message`, `category`, `message_encoding`, `schema_name`, `codec`, `probe_codec`, `metadata_codec`, `message_formats`, `declared_codecs`, `unsupported_formats`, `summary_message_count`, `indexed_message_count`, `frame_size_count`, `frame_sequence_count`, `width`, `height`, `eye_width`, `eye_aspect_ratio`, `layout` |
+
+```json
+{
+  "rule_id": "vision-dsf-001",
+  "rule_version": "1.2.0",
+  "problem_domain": "data_structure_format",
+  "stage": "raw",
+  "status": "error",
+  "value": false,
+  "unit": null,
+  "threshold": true,
+  "details": {
+    "message_encoding": "protobuf",
+    "schema_name": "foxglove.CompressedVideo",
+    "codec": "h265",
+    "probe_codec": "hevc",
+    "metadata_codec": "h264",
+    "message_formats": [
+      "h264"
+    ],
+    "declared_codecs": [
+      "h264"
+    ],
+    "unsupported_formats": [],
+    "summary_message_count": 4,
+    "indexed_message_count": 4,
+    "frame_size_count": 4,
+    "frame_sequence_count": 4,
+    "width": 3840,
+    "height": 1080,
+    "eye_width": 1920,
+    "eye_aspect_ratio": 1.7777777777777777,
+    "layout": "side_by_side",
+    "message": "视频编码、消息索引或双目并排几何不符合契约",
+    "category": "schema"
+  }
+}
+```
+
+## 失败后建议
+
+1. 根据 details 中的 codec、unsupported_formats 和声明编码检查生产端编码配置。
+2. 核对消息计数、索引长度、宽高和左右并排布局；修复上游后重跑。
+
+## 来源与维护
+
+- 页面 owner：`data-quality/vision`
+- 所属模态算子：[Vision](../../modality-operators/vision.md)
+- 实现：[operators/fm-vision-operator/src/fm_vision_operator/vision.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/vision.py#L473)
+- 注册：[operators/fm-vision-operator/src/fm_vision_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/rules.py#L55)
+- 测试：[operators/fm-vision-operator/tests/test_vision_operator.py::test_declared_codec_must_match_detected_bitstream](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-vision-operator/tests/test_vision_operator.py#L874)
+- 计算规范：[docs/quality-rule-calculation-spec.md](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/docs/quality-rule-calculation-spec.md)
+- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator-docs/site/operator-pages/vision/vision-dsf-001.yaml#L1)

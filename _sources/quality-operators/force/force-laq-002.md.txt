@@ -1,0 +1,215 @@
+(force-laq-002)=
+<div class="quality-page-kicker">QUALITY OPERATOR · label_action_quality</div>
+
+# `force-laq-002` — 前 3 秒静息受力异常
+
+[所属模态算子：Force](../../modality-operators/force.md)
+
+<div class="quality-meta">
+  <code class="meta-lifecycle is-active">active</code>
+  <code class="meta-artifact is-available">error 时产物可生成</code>
+  <code class="meta-cardinality">multi · sensor_finger</code>
+  <code class="meta-domain">label_action_quality</code>
+  <code class="meta-stage">raw</code>
+  <code class="meta-version">rule v6.0.0</code>
+  <code class="meta-version">fm-force-label-operator v3.2.0</code>
+</div>
+
+<p class="quality-lead">按传感器和通道联合检查完整前 3 秒的平均受力、高位受力（p95）和波动（标准差），保留三项独立证据。</p>
+
+## 先看懂这条规则
+
+- **检查什么：** 检查开始 3 秒是否充分放松：平均载荷是否偏高、大多数较高的力值是否偏高、力值波动是否偏大。
+- **`value` 是什么：** 每个通道的 value 是前 3 秒平均力的绝对值。details.p95_n 表示 95% 的绝对力值不超过多少，details.std_n 表示这 3 秒内力值波动多大；三项中最严重的状态作为该通道状态。
+- **为什么不是 pass：** 均值、p95 或标准差任一超过设备对应告警门槛时 warn；只有绝对均值超过失败门槛才 error。
+
+### 判定标准
+
+| 状态 | 完整条件 |
+| --- | --- |
+| **通过 `pass`** | CMCU05/CMCU05B 同时满足 value <=0.05、p95 <=0.15、std <=0.03 N；Gen3 同时满足 value <=0.10、p95 <=0.30、std <=0.05 N。 |
+| **告警 `warn`** | CMCU05/CMCU05B 满足 value <=0.20 N，且 value >0.05、p95 >0.15 或 std >0.03 N 至少一项成立；Gen3 满足 value <=0.50 N，且 value >0.10、p95 >0.30 或 std >0.05 N 至少一项成立。 |
+| **失败 `error`** | 只有绝对均值超过 error 阈值：CMCU05/CMCU05B value >0.20 N；Gen3 value >0.50 N。p95/std 不单独升级到 error。 |
+
+**边界怎么算：**
+
+- 所有升级比较均为严格大于。
+- 三项均等于各自 warn 阈值时 pass；均值等于 error 阈值时 warn。
+- 均值 error 不抑制 p95/std 的分项状态和超限诊断。
+
+
+## 版本历史
+
+| Rule 版本 | 首次对应包版本 | 更新时间（北京时间） | 变更 | 提交 |
+| --- | --- | --- | --- | --- |
+| `6.0.0` | `3.1.0` | 2026-09-16 16:29:24 | 将静息受力统计窗口从前 5 秒改为前 3 秒，均值、p95 和 std 阈值不变。 | [`95f5140`](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/95f51400b3a2c8a4e2fbd800f65d2283e9a7ef35) |
+| `5.0.0` | `3.0.0` | 2026-09-16 11:36:12 | 移除 adapter 后，对按字段名选择的 CMCU 和 Gen3 通道执行静息检查。 | [`b3e1f07`](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/b3e1f07698c7307af6f19f88eb9997cdc73fbc4e) |
+
+仅展示文档 1.0.0 基线之后的变更。
+
+## 计算契约
+
+::::{admonition} 计算契约（不可直接调用）
+:class: quality-contract
+
+```python
+quality.force.force_laq_002(
+    force: numeric[T, C],
+    timestamps: float64[T],
+    *,
+    rest_window_s: float = 3.0,
+    sensor_thresholds: mapping,
+) -> RuleResult
+```
+::::
+
+::::{div} quality-source-links
+[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-force-label-operator/src/fm_force_label_operator/force_rest_quality.py#L426) ·
+[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-force-label-operator/src/fm_force_label_operator/rules.py#L70) ·
+[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-force-label-operator/tests/test_force_label_operator.py#L713) · [test 2](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-force-label-operator/tests/test_force_label_operator.py#L848) · [test 3](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-force-label-operator/tests/test_force_label_operator.py#L1756) ·
+[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/docs/quality-rule-calculation-spec.md#44-%E9%9D%99%E6%81%AF%E7%AA%97%E5%8F%A3%E4%B8%8E%E9%80%9A%E9%81%93%E4%BA%8B%E5%AE%9E)
+::::
+
+```{admonition} 注意
+:class: note
+
+- 稳定高载荷不能在缺少独立空载标定时自动归因为零漂。
+- force-scq-001 告警不会阻断本规则，恒定高载荷仍按均值阈值判定。
+- 保留 force-laq-002，移除独立 force-laq-003/004；历史结果不改写，按 rule_version 区分旧版纯均值判定与新版联合判定。
+- 阈值为 warn_any（mean_abs_gt_n、p95_gt_n、std_gt_n）和 error_gt（绝对均值）；值与阈值均以 N 为单位。
+- 消费者从 details.instances[].details 获取 p95_n、std_n 及 mean_status/p95_status/std_status（pass/warn/error）。主值为均值时，p95/std 超限也可能使实例 warn。
+```
+
+## 数据输入
+
+| 名称 | 来源 | dtype | shape | 单位 | 必需 | 说明 |
+| --- | --- | --- | --- | --- | --- | --- |
+| `force` | raw | `numeric` | `[T, C]` | N | 是 | 已按传感器布局提取并统一到 N 的 Force 通道。 |
+| `timestamps` | raw | `float64` | `[T]` | s | 是 | 与目标 Force 通道等长的时间轴。 |
+
+## 配置参数
+
+| 名称 | 类型 | 默认值/必需 | 来源 | 说明 |
+| --- | --- | --- | --- | --- |
+| `rest_window_s` | `float` | `3.0` | implementation_constant | 从首样本开始使用的静息区间。 |
+| `sensor_thresholds` | `mapping` | 必填 | sensor_profile | CMCU05/CMCU05B：均值 warn/error 为 0.05/0.20 N，p95 warn 为 0.15 N，std warn 为 0.03 N；Gen3 分别为 0.10/0.50、0.30、0.05 N。 |
+
+## 计算定义
+计算使用 `force`、`timestamps`，
+结果类型为 `number`（允许 `null`），
+单位为 N。
+
+### 计算方法
+
+```text
+rest = timestamps < timestamps[0] + 3.0
+mean_n = mean(force[rest])
+value = abs(mean_n)
+p95_n = percentile(abs(force[rest]), 95)
+std_n = std(force[rest], ddof=0)
+error = value > mean_error
+warn = not error and (value > mean_warn or p95_n > p95_warn or std_n > std_warn)
+```
+
+- **聚合口径：** 每个 sensor_finger 独立计算实例，规则状态取全部实例中的最高严重度。
+- **无法计算时：** 缺少有效时间轴、存在非有限值或记录不足以完整覆盖前 3 秒时不执行静息统计。
+
+
+## 执行关系
+
+**前置质检算子：**
+
+- [`force-dsf-003`](../force/force-dsf-003.md)
+- [`force-nva-002`](../force/force-nva-002.md)
+- [`force-tsa-003`](../force/force-tsa-003.md)
+
+**不执行条件：**
+
+- Force 时间轴从首样本起覆盖不足 3 秒，并在 summary.skipped_rules 记录原因。
+
+**产物影响：** 本规则为 `error` 时，只记录质量异常，不阻止生成结构上有效的产物。
+如果后续处理或写入本身失败，仍可能没有产物；最终事实以 `processed_ok` 与 `artifacts`
+为准。
+
+**相关质检算子：**
+
+- [`force-scq-001`](../force/force-scq-001.md)
+
+## 输出
+
+| 字段 | 约定 |
+| --- | --- |
+| 实例模型 | `multi`；实例身份为 `sensor_finger` 类型的 `(target_type, target_id)` |
+| `value` | `number` 或 `null` |
+| `unit` | N |
+| `threshold` | `mapping` |
+| `details` | `message`, `category`, `instances`, `sensor`, `channel`, `mean_n`, `signed_mean_n`, `mean_abs_n`, `p95_n`, `std_n`, `mean_status`, `p95_status`, `std_status`, `n_samples`, `rest_window_s`, `stable_rest_load`, `stable_rest_std_lt_n`, `zero_drift_inferred`, `automatic_zero_drift_correction` |
+
+```json
+{
+  "rule_id": "force-laq-002",
+  "rule_version": "6.0.0",
+  "problem_domain": "label_action_quality",
+  "stage": "raw",
+  "status": "warn",
+  "value": null,
+  "unit": null,
+  "threshold": null,
+  "details": {
+    "instances": [
+      {
+        "target_type": "sensor_finger",
+        "target_id": "cmcu05b.left_ch0",
+        "status": "warn",
+        "value": 0.08,
+        "unit": "N",
+        "threshold": {
+          "warn_any": {
+            "mean_abs_gt_n": 0.05,
+            "p95_gt_n": 0.15,
+            "std_gt_n": 0.03
+          },
+          "error_gt": 0.2
+        },
+        "details": {
+          "sensor": "cmcu05b",
+          "channel": "left_ch0",
+          "mean_n": 0.08,
+          "signed_mean_n": 0.08,
+          "mean_abs_n": 0.08,
+          "p95_n": 0.2,
+          "std_n": 0.04,
+          "mean_status": "warn",
+          "p95_status": "warn",
+          "std_status": "warn",
+          "stable_rest_load": false,
+          "zero_drift_inferred": false,
+          "automatic_zero_drift_correction": false,
+          "stable_rest_std_lt_n": 0.01,
+          "n_samples": 60,
+          "rest_window_s": 3.0
+        }
+      }
+    ],
+    "message": "WARN：静息力绝对均值 0.08 N > 0.05 N；静息力 P95 0.2 N > 0.15 N；静息力标准差 0.04 N > 0.03 N",
+    "category": "quality"
+  }
+}
+```
+
+## 失败后建议
+
+1. 确认前 3 秒是否按采集规范保持静息且没有持续按压。
+2. 检查佩戴预载、传感器基线和 Force 单位转换。
+
+## 来源与维护
+
+- 页面 owner：`data-quality/force`
+- 所属模态算子：[Force](../../modality-operators/force.md)
+- 实现：[operators/fm-force-label-operator/src/fm_force_label_operator/force_rest_quality.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-force-label-operator/src/fm_force_label_operator/force_rest_quality.py#L426)
+- 注册：[operators/fm-force-label-operator/src/fm_force_label_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-force-label-operator/src/fm_force_label_operator/rules.py#L70)
+- 测试：[operators/fm-force-label-operator/tests/test_force_label_operator.py::test_force_required_rest_uses_only_full_first_three_seconds](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-force-label-operator/tests/test_force_label_operator.py#L713)
+- 测试：[operators/fm-force-label-operator/tests/test_force_label_operator.py::test_force_rule_instances_are_merged_by_rule_id](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-force-label-operator/tests/test_force_label_operator.py#L848)
+- 测试：[operators/fm-force-label-operator/tests/test_force_label_operator.py::test_force_merged_rest_preserves_sensor_thresholds](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-force-label-operator/tests/test_force_label_operator.py#L1756)
+- 计算规范：[docs/quality-rule-calculation-spec.md#44-静息窗口与通道事实](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/docs/quality-rule-calculation-spec.md#44-%E9%9D%99%E6%81%AF%E7%AA%97%E5%8F%A3%E4%B8%8E%E9%80%9A%E9%81%93%E4%BA%8B%E5%AE%9E)
+- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator-docs/site/operator-pages/force/force-laq-002.yaml#L1)

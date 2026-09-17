@@ -1,0 +1,172 @@
+(pose-laq-005)=
+<div class="quality-page-kicker">QUALITY OPERATOR · label_action_quality</div>
+
+# `pose-laq-005` — 静止间隔比例
+
+[所属模态算子：Pose](../../modality-operators/pose.md)
+
+<div class="quality-meta">
+  <code class="meta-lifecycle is-active">active</code>
+  <code class="meta-artifact is-available">error 时产物可生成</code>
+  <code class="meta-cardinality">single</code>
+  <code class="meta-domain">label_action_quality</code>
+  <code class="meta-stage">processed</code>
+  <code class="meta-version">rule v2.0.0</code>
+  <code class="meta-version">fm-pose-label-operator v0.16.0</code>
+</div>
+
+<p class="quality-lead">统计有效相邻评估点中最大关节角变化小于 0.001 rad 的间隔比例；达到 100% 时 error。</p>
+
+## 先看懂这条规则
+
+- **检查什么：** 最多按每秒 100 个点抽查相邻姿态；如果两点之间所有关节的变化都小于 0.001 rad，就把这段间隔算作静止。
+- **`value` 是什么：** value = 静止间隔数 / 有效评估间隔数。一个间隔中全部关节的变化都 < 0.001 rad 才算静止；高采样率输入最多按 100 Hz 抽查，最长静止时长仍按真实时间戳计算。
+- **为什么不是 pass：** 所有可评估间隔都静止时失败，说明整段没有检测到一次超过门槛的动作；只要有一个间隔不是静止就通过。
+
+### 判定标准
+
+| 状态 | 完整条件 |
+| --- | --- |
+| **通过 `pass`** | 0 <= value < 1.0；至少一个有效评估间隔的最大关节变化 >= 0.001 rad。 |
+| **告警 `warn`** | 不会出现；本规则不使用 warn 状态。 |
+| **失败 `error`** | value == 1.0；全部有效评估间隔都满足最大关节变化 < 0.001 rad。 |
+
+**边界怎么算：**
+
+- 比例恰好 100% 时 error；99.9% 时 pass，不做百分数四舍五入后判定。
+- 单个间隔最大关节角变化恰好 0.001 rad 时不计为静止。
+
+
+## 版本历史
+
+| Rule 版本 | 首次对应包版本 | 更新时间（北京时间） | 变更 | 提交 |
+| --- | --- | --- | --- | --- |
+| — | — | — | 尚无基线后的版本变更 | — |
+
+仅展示文档 1.0.0 基线之后的变更。
+
+## 计算契约
+
+::::{admonition} 计算契约（不可直接调用）
+:class: quality-contract
+
+```python
+quality.pose.pose_laq_005(
+    pose_record: NPZ arrays timestamps=[T], joint_angles=[T,20],
+) -> RuleResult
+```
+::::
+
+::::{div} quality-source-links
+[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-pose-label-operator/src/fm_pose_label_operator/pose_processed_quality.py#L291) ·
+[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-pose-label-operator/src/fm_pose_label_operator/rules.py#L62) ·
+[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-pose-label-operator/tests/test_pose_label_operator.py#L591) · [test 2](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-pose-label-operator/tests/test_pose_label_operator.py#L964) · [test 3](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-pose-label-operator/tests/test_pose_label_operator.py#L976) · [test 4](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-pose-label-operator/tests/test_pose_label_operator.py#L986) ·
+[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/docs/quality-rule-calculation-spec.md)
+::::
+
+```{admonition} 注意
+:class: note
+
+- 规则阶段为 processed；总状态只取已执行规则的最高严重度。
+- 质量或数据异常由 RuleResult 明确记录且进程返回 0；只有运行配置错误返回 1。
+- 该比例按相邻点的小变化判定；缓慢累积运动也可能达到 100%，不等同于所有帧逐值完全相同。
+```
+
+## 数据输入
+
+| 名称 | 来源 | dtype | shape | 单位 | 必需 | 说明 |
+| --- | --- | --- | --- | --- | --- | --- |
+| `pose_record` | processed | `NPZ arrays` | `timestamps=[T], joint_angles=[T,20]` | N/A | 是 | Pose 原始数据及处理后关节角。 |
+
+## 配置参数
+
+本质检算子没有独立配置参数。
+
+## 计算定义
+计算使用 `pose_record`，
+结果类型为 `number`，
+单位为 ratio。
+
+### 计算方法
+
+```text
+value = count(max_joint(abs(q[i+1]-q[i])) < 0.001 rad) / valid_evaluated_intervals
+```
+
+- **聚合口径：** 单条记录发布一个静止比例；最长连续静止时长和有效间隔数量保留在 details。
+- **无法计算时：** 结构、数值、时间戳或角度范围前置未通过，或没有有效评估间隔时，不执行；原因记录于 summary.skipped_rules。
+
+
+## 执行关系
+
+**前置质检算子：**
+
+- [`pose-dsf-003`](../pose/pose-dsf-003.md)
+- [`pose-nva-002`](../pose/pose-nva-002.md)
+- [`pose-tsa-003`](../pose/pose-tsa-003.md)
+- [`pose-laq-001`](../pose/pose-laq-001.md)
+
+**不执行条件：**
+
+- 前置规则失败或没有有效评估间隔。
+
+**产物影响：** 本规则为 `error` 时，只记录质量异常，不阻止生成结构上有效的产物。
+如果后续处理或写入本身失败，仍可能没有产物；最终事实以 `processed_ok` 与 `artifacts`
+为准。
+
+**相关质检算子：**
+
+- [`pose-laq-001`](../pose/pose-laq-001.md)
+- [`pose-laq-002`](../pose/pose-laq-002.md)
+
+## 输出
+
+| 字段 | 约定 |
+| --- | --- |
+| 实例模型 | `single` |
+| `value` | `number` |
+| `unit` | ratio |
+| `threshold` | `mapping` |
+| `details` | `message`, `category`, `static_diff_threshold_rad`, `max_static_duration_s`, `eval_fs_hz`, `valid_interval_count`, `static_interval_count` |
+
+```json
+{
+  "rule_id": "pose-laq-005",
+  "rule_version": "2.0.0",
+  "problem_domain": "label_action_quality",
+  "stage": "processed",
+  "status": "error",
+  "value": 1.0,
+  "unit": "ratio",
+  "threshold": {
+    "error_gte": 1.0
+  },
+  "details": {
+    "message": "ERROR：Pose 静止间隔比例达到 100%",
+    "category": "quality",
+    "static_diff_threshold_rad": 0.001,
+    "max_static_duration_s": 30.0,
+    "eval_fs_hz": 100.0,
+    "valid_interval_count": 3000,
+    "static_interval_count": 3000
+  }
+}
+```
+
+## 失败后建议
+
+1. 回看采集过程，确认受试者确实完成了动作，而不是全程保持不动。
+2. 若画面中有动作但关节角仍不变，检查跟踪器是否冻结、手侧和 adapter 是否匹配。
+
+## 来源与维护
+
+- 页面 owner：`data-quality/pose`
+- 所属模态算子：[Pose](../../modality-operators/pose.md)
+- 实现：[operators/fm-pose-label-operator/src/fm_pose_label_operator/pose_processed_quality.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-pose-label-operator/src/fm_pose_label_operator/pose_processed_quality.py#L291)
+- 注册：[operators/fm-pose-label-operator/src/fm_pose_label_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-pose-label-operator/src/fm_pose_label_operator/rules.py#L62)
+- 测试：[operators/fm-pose-label-operator/tests/test_pose_label_operator.py::test_fully_static_pose_is_error_but_keeps_artifact](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-pose-label-operator/tests/test_pose_label_operator.py#L591)
+- 测试：[operators/fm-pose-label-operator/tests/test_pose_label_operator.py::test_static_ratio_requires_exactly_all_intervals](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-pose-label-operator/tests/test_pose_label_operator.py#L964)
+- 测试：[operators/fm-pose-label-operator/tests/test_pose_label_operator.py::test_static_ratio_keeps_small_delta_definition](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-pose-label-operator/tests/test_pose_label_operator.py#L976)
+- 测试：[operators/fm-pose-label-operator/tests/test_pose_label_operator.py::test_static_rule_does_not_pass_without_valid_intervals](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-pose-label-operator/tests/test_pose_label_operator.py#L986)
+- 计算规范：[docs/quality-rule-calculation-spec.md](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/docs/quality-rule-calculation-spec.md)
+- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator-docs/site/operator-pages/pose/pose-laq-005.yaml#L1)

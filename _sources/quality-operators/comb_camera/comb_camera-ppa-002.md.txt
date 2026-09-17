@@ -1,0 +1,151 @@
+(comb_camera-ppa-002)=
+<div class="quality-page-kicker">QUALITY OPERATOR · processing_artifact_anomaly</div>
+
+# `comb_camera-ppa-002` — 配对索引文件能否正确保存
+
+[所属模态算子：Comb Camera](../../modality-operators/comb_camera.md)
+
+<div class="quality-meta">
+  <code class="meta-lifecycle is-active">active</code>
+  <code class="meta-artifact is-unavailable">error 时产物无法生成</code>
+  <code class="meta-cardinality">single</code>
+  <code class="meta-domain">processing_artifact_anomaly</code>
+  <code class="meta-stage">artifact</code>
+  <code class="meta-version">rule v1.0.0</code>
+  <code class="meta-version">fm-comb-camera-operator v0.3.0</code>
+</div>
+
+<p class="quality-lead">把已接受的八目配对结果写入临时 NPZ，重新读取并校验字段、形状和时间轴后，再原子发布为正式索引文件。</p>
+
+## 先看懂这条规则
+
+- **检查什么：** 先把配对结果保存到临时文件，再重新打开核对内容，全部正确后一次性替换正式文件，避免下游读到只写了一半的索引。
+- **为什么不是 pass：** 工作目录无法创建、磁盘写满、数组字段或形状不对、时间不合法，或最终替换失败时，都不会登记这个不可靠的产物。
+
+### 判定标准
+
+| 状态 | 完整条件 |
+| --- | --- |
+| **通过 `pass`** | 未发生该执行事件时通常不发布；成功写入后通过 artifacts 登记产物 |
+| **告警 `warn`** | 不会出现；本规则不使用 warn 状态。 |
+| **失败 `error`** | 创建目录/暂存文件、NPZ 序列化、字段与 shape 复验、时间轴复验或原子替换任一步失败 |
+
+**边界怎么算：**
+
+- 事件型规则没有数值等号边界。
+
+### 具体捕获点
+
+1. 在 `<work-dir>/comb_camera/` 创建同目录暂存文件，写入 `timestamps`、`frame_indices`、`sync_timestamps_ns`、`group_span_ms` 和 `strict_sync` 五个字段。
+2. 重新以 `allow_pickle=false` 打开暂存 NPZ；字段集合必须完全一致，五个数组首维都等于 M，两个八路矩阵必须为 M×8。
+3. `timestamps` 取每组 cam0 的 `sync_ts_ns / 1e9`，必须全部有限；M 大于 1 时必须严格递增。
+4. 复验通过后使用 `os.replace` 原子发布为 `<work-dir>/comb_camera/processed.npz`；任一阶段异常都清理暂存文件且不登记 artifact。
+
+## 版本历史
+
+| Rule 版本 | 首次对应包版本 | 更新时间（北京时间） | 变更 | 提交 |
+| --- | --- | --- | --- | --- |
+| — | — | — | 尚无基线后的版本变更 | — |
+
+仅展示文档 1.0.0 基线之后的变更。
+
+## 计算契约
+
+::::{admonition} 计算契约（不可直接调用）
+:class: quality-contract
+
+```python
+quality.comb_camera.comb_camera_ppa_002(
+    accepted_sync_groups: NumPy arrays groups=[M], indices=[M,8], timestamps=[M,8],
+) -> RuleResult
+```
+::::
+
+::::{div} quality-source-links
+[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-comb-camera-operator/src/fm_comb_camera_operator/comb_camera.py#L365) ·
+[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-comb-camera-operator/src/fm_comb_camera_operator/rules.py#L56) ·
+[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-comb-camera-operator/tests/test_comb_camera_operator.py#L588) ·
+[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/docs/quality-rule-calculation-spec.md#74-%E5%85%AB%E7%9B%AE%E6%9C%80%E8%BF%91%E6%97%B6%E9%97%B4%E9%85%8D%E5%AF%B9)
+::::
+
+```{admonition} 注意
+:class: note
+
+- 只有 `comb_camera-tsa-002` 至少接受一个分组时才尝试写文件；零分组不会发布本执行异常规则。
+- `timestamps` 是 cam0 的秒时间轴；`frame_indices` 是各相机内的零基源消息索引；`sync_timestamps_ns` 保留八路原始同步纳秒值。
+- `group_span_ms` 是每组最晚与最早帧的时间差；`strict_sync` 只标记跨度不超过 5 ms 的组。
+- 写入失败时 `processed_ok=false`，且不会在 `artifacts` 中登记 `comb_camera_processed`。
+```
+
+## 数据输入
+
+| 名称 | 来源 | dtype | shape | 单位 | 必需 | 说明 |
+| --- | --- | --- | --- | --- | --- | --- |
+| `accepted_sync_groups` | artifact | `NumPy arrays` | `groups=[M], indices=[M,8], timestamps=[M,8]` | N/A | 是 | `comb_camera-tsa-002` 已接受的 M 个八目组，包含 8 路源索引、8 路同步时间、组跨度及 5 ms 严格同步标志。 |
+
+## 配置参数
+
+本质检算子没有独立配置参数。
+
+## 执行异常处理
+
+## 执行关系
+
+**前置质检算子：** 无。
+
+**不执行条件：**
+
+- 没有任何已接受八目组时不尝试写出产物，也不发布本规则。
+
+**产物影响：** 本规则为 `error` 时，输出契约已经无法满足，因此本次不会登记产物；
+原因由结构化 RuleResult 记录。只要这不是运行配置错误，进程仍返回 0。
+
+**相关质检算子：**
+
+- [`comb_camera-tsa-002`](../comb_camera/comb_camera-tsa-002.md)
+- [`comb_camera-ppa-001`](../comb_camera/comb_camera-ppa-001.md)
+
+## 输出
+
+| 字段 | 约定 |
+| --- | --- |
+| 实例模型 | `single` |
+| `value` | `any` 或 `null` |
+| `unit` | N/A |
+| `threshold` | `any` |
+| `details` | `message`, `category`, `exception_type`, `reason` |
+
+```json
+{
+  "rule_id": "comb_camera-ppa-002",
+  "rule_version": "1.0.0",
+  "problem_domain": "processing_artifact_anomaly",
+  "stage": "artifact",
+  "status": "error",
+  "value": null,
+  "unit": null,
+  "threshold": null,
+  "details": {
+    "message": "Comb Camera 配对索引产物写入失败",
+    "category": "artifact",
+    "exception_type": "OSError",
+    "reason": "disk full"
+  }
+}
+```
+
+## 失败后建议
+
+1. 根据 `exception_type` 和 `reason` 判断是目录权限、磁盘空间、NPZ 序列化、数组 shape、非法时间戳还是原子替换问题。
+2. 确认 `<work-dir>/comb_camera/` 与目标文件位于支持原子替换的同一文件系统，并且目标没有被其他进程异常占用。
+3. 修复后重新运行，确认 `artifacts.comb_camera_processed` 已登记，且五个字段首维一致、两个索引矩阵为 M×8。
+
+## 来源与维护
+
+- 页面 owner：`data-quality/comb-camera`
+- 所属模态算子：[Comb Camera](../../modality-operators/comb_camera.md)
+- 实现：[operators/fm-comb-camera-operator/src/fm_comb_camera_operator/comb_camera.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-comb-camera-operator/src/fm_comb_camera_operator/comb_camera.py#L365)
+- 注册：[operators/fm-comb-camera-operator/src/fm_comb_camera_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-comb-camera-operator/src/fm_comb_camera_operator/rules.py#L56)
+- 测试：[operators/fm-comb-camera-operator/tests/test_comb_camera_operator.py::test_artifact_write_failure_is_structured_error](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-comb-camera-operator/tests/test_comb_camera_operator.py#L588)
+- 计算规范：[docs/quality-rule-calculation-spec.md#74-八目最近时间配对](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/docs/quality-rule-calculation-spec.md#74-%E5%85%AB%E7%9B%AE%E6%9C%80%E8%BF%91%E6%97%B6%E9%97%B4%E9%85%8D%E5%AF%B9)
+- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator-docs/site/operator-pages/comb_camera/comb_camera-ppa-002.yaml#L1)

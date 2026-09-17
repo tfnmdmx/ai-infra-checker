@@ -1,0 +1,167 @@
+(pose-dsf-003)=
+<div class="quality-page-kicker">QUALITY OPERATOR · data_structure_format</div>
+
+# `pose-dsf-003` — Pose 字段结构是否正确
+
+[所属模态算子：Pose](../../modality-operators/pose.md)
+
+<div class="quality-meta">
+  <code class="meta-lifecycle is-active">active</code>
+  <code class="meta-artifact is-unavailable">error 时产物无法生成</code>
+  <code class="meta-cardinality">multi · field</code>
+  <code class="meta-domain">data_structure_format</code>
+  <code class="meta-stage">processed</code>
+  <code class="meta-version">rule v2.0.0</code>
+  <code class="meta-version">fm-pose-label-operator v0.16.0</code>
+</div>
+
+<p class="quality-lead">检查处理后 Pose 文件中 timestamps 和 joint_angles 两个字段的类型与形状。</p>
+
+## 先看懂这条规则
+
+- **检查什么：** 确认输出里既有一列时间戳，也有每帧 20 个关节角，并且两者都用浮点数保存。
+- **为什么不是 pass：** 字段缺失、列数不对或类型不对时，后续程序无法知道每个数字代表哪个时刻或关节，所以不能发布产物。
+
+### 判定标准
+
+| 状态 | 完整条件 |
+| --- | --- |
+| **通过 `pass`** | timestamps 是浮点 `[T]`，joint_angles 是浮点 `[T,20]`，且两个字段都存在。 |
+| **告警 `warn`** | 不会出现；本规则不使用 warn 状态。 |
+| **失败 `error`** | 缺少 timestamps/joint_angles、时间戳非一维、关节角非 (T,20) 或任一数组非浮点时 error。 |
+
+**边界怎么算：**
+
+- 本规则检查离散的字段、dtype 和 shape，没有数值阈值或等号边界。
+
+### 具体检查项
+
+1. `timestamps` 必须存在、使用浮点 dtype，且 shape 为 `[T]`。
+2. `joint_angles` 必须存在、使用浮点 dtype，且 shape 为 `[T,20]`。
+3. 同一字段同时有多个问题时合并为一个实例，并在 `details.issues` 中列出全部原因。
+
+## 版本历史
+
+| Rule 版本 | 首次对应包版本 | 更新时间（北京时间） | 变更 | 提交 |
+| --- | --- | --- | --- | --- |
+| — | — | — | 尚无基线后的版本变更 | — |
+
+仅展示文档 1.0.0 基线之后的变更。
+
+## 计算契约
+
+::::{admonition} 计算契约（不可直接调用）
+:class: quality-contract
+
+```python
+quality.pose.pose_dsf_003(
+    pose_record: NPZ arrays timestamps=[T], joint_angles=[T,20],
+) -> RuleResult
+```
+::::
+
+::::{div} quality-source-links
+[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-pose-label-operator/src/fm_pose_label_operator/pose_processed_quality.py#L351) ·
+[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-pose-label-operator/src/fm_pose_label_operator/rules.py#L55) ·
+[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-pose-label-operator/tests/test_pose_label_operator.py#L880) ·
+[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/docs/quality-rule-calculation-spec.md)
+::::
+
+```{admonition} 注意
+:class: note
+
+- 规则阶段为 processed；总状态只取已执行规则的最高严重度。
+- 质量或数据异常由 RuleResult 明确记录且进程返回 0；只有运行配置错误返回 1。
+```
+
+## 数据输入
+
+| 名称 | 来源 | dtype | shape | 单位 | 必需 | 说明 |
+| --- | --- | --- | --- | --- | --- | --- |
+| `pose_record` | processed | `NPZ arrays` | `timestamps=[T], joint_angles=[T,20]` | N/A | 是 | Pose 原始数据及处理后关节角。 |
+
+## 配置参数
+
+本质检算子没有独立配置参数。
+
+## 校验逻辑
+
+## 执行关系
+
+**前置质检算子：** 无。
+
+
+**产物影响：** 本规则为 `error` 时，输出契约已经无法满足，因此本次不会登记产物；
+原因由结构化 RuleResult 记录。只要这不是运行配置错误，进程仍返回 0。
+
+
+## 输出
+
+| 字段 | 约定 |
+| --- | --- |
+| 实例模型 | `multi`；实例身份为 `field` 类型的 `(target_type, target_id)` |
+| `value` | `any` 或 `null` |
+| `unit` | N/A |
+| `threshold` | `any` |
+| `details` | `message`, `category`, `instances` |
+
+```json
+{
+  "rule_id": "pose-dsf-003",
+  "rule_version": "2.0.0",
+  "problem_domain": "data_structure_format",
+  "stage": "processed",
+  "status": "error",
+  "value": null,
+  "unit": null,
+  "threshold": null,
+  "details": {
+    "instances": [
+      {
+        "target_type": "field",
+        "target_id": "joint_angles",
+        "status": "error",
+        "value": null,
+        "unit": null,
+        "threshold": null,
+        "details": {
+          "issues": [
+            "shape=(10, 19)，期望 (T,20)"
+          ]
+        }
+      },
+      {
+        "target_type": "field",
+        "target_id": "timestamps",
+        "status": "pass",
+        "value": null,
+        "unit": null,
+        "threshold": null,
+        "details": {
+          "shape": [
+            10
+          ],
+          "dtype": "float64"
+        }
+      }
+    ],
+    "message": "shape=(10, 19)，期望 (T,20)",
+    "category": "schema"
+  }
+}
+```
+
+## 失败后建议
+
+1. 检查生产端字段名、dtype、shape 和样本维契约。
+2. 修复上游序列化或转换逻辑后重跑，避免在质检端猜测结构。
+
+## 来源与维护
+
+- 页面 owner：`data-quality/pose`
+- 所属模态算子：[Pose](../../modality-operators/pose.md)
+- 实现：[operators/fm-pose-label-operator/src/fm_pose_label_operator/pose_processed_quality.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-pose-label-operator/src/fm_pose_label_operator/pose_processed_quality.py#L351)
+- 注册：[operators/fm-pose-label-operator/src/fm_pose_label_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-pose-label-operator/src/fm_pose_label_operator/rules.py#L55)
+- 测试：[operators/fm-pose-label-operator/tests/test_pose_label_operator.py::test_pose_structure_issues_merge_per_field](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-pose-label-operator/tests/test_pose_label_operator.py#L880)
+- 计算规范：[docs/quality-rule-calculation-spec.md](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/docs/quality-rule-calculation-spec.md)
+- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator-docs/site/operator-pages/pose/pose-dsf-003.yaml#L1)

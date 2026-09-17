@@ -1,0 +1,90 @@
+(timestamp-modality-operator)=
+<div class="quality-page-kicker">MODALITY OPERATOR · multimodal</div>
+
+# Timestamp 模态算子
+
+<p class="quality-lead">单流复验后原样发布；多流检查输入契约并裁剪公共时间窗口。</p>
+
+<div class="quality-meta">
+  <code class="meta-kind">fm-timestamp-operator</code>
+  <code class="meta-version">v0.15.0</code>
+  <code class="meta-stage">multimodal</code>
+  <code class="meta-domain">6 quality operators</code>
+</div>
+
+```{admonition} 跨模态特例
+:class: important
+
+Timestamp 位于模态算子层，接收一个或多个已处理模态流。单流只复验并原样发布；多流执行
+公共时间段判定和原生行裁剪。它不代表一个独立传感器模态。
+```
+
+| 属性 | 值 |
+| --- | --- |
+| 包名 | `fm-timestamp-operator` |
+| 包版本 | `0.15.0` |
+| 输入边界 | 一个或多个已处理模态 NPZ |
+| 默认产物 | `每个输入流一个 <work-dir>/<name>/processed.npz` |
+| 质检算子数 | 6 |
+
+## 包版本历史
+
+| 包版本 | 更新时间（北京时间） | 变更 | 提交 |
+| --- | --- | --- | --- |
+| — | — | 尚无基线后的版本变更 | — |
+
+仅展示文档 1.0.0 基线之后的变更。
+
+## 使用入口
+
+```bash
+fm-timestamp-operator --help
+```
+
+::::{div} quality-source-links
+[查看完整使用手册](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/docs/operator-user-guide.md#7-timestamp-operator) · [查看 GitHub 包源码](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/tree/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-timestamp-operator)
+::::
+
+## 质检算子
+
+### IDC · 输入/设备兼容性
+
+::::{div} modality-rule-table
+| Rule ID | 名称 | error 时产物 | 实例 | 阶段 | 版本 |
+| --- | --- | --- | --- | --- | --- |
+| <span id="catalog-timestamp-idc-001"></span>`timestamp-idc-001` | [各模态 NPZ 是否可读取](../quality-operators/timestamp/timestamp-idc-001.md) | 无法生成 | `multi` · `modality` | `processed_input` | `1.0.0` |
+::::
+
+### DSF · 数据结构/格式
+
+::::{div} modality-rule-table
+| Rule ID | 名称 | error 时产物 | 实例 | 阶段 | 版本 |
+| --- | --- | --- | --- | --- | --- |
+| <span id="catalog-timestamp-dsf-001"></span>`timestamp-dsf-001` | [各模态时间轴是否正常](../quality-operators/timestamp/timestamp-dsf-001.md) | 无法生成 | `multi` · `modality` | `processed_input` | `2.0.0` |
+| <span id="catalog-timestamp-dsf-002"></span>`timestamp-dsf-002` | [各模态时间戳 shape 和 dtype 是否正常](../quality-operators/timestamp/timestamp-dsf-002.md) | 无法生成 | `multi` · `modality` | `processed_input` | `2.0.0` |
+| <span id="catalog-timestamp-dsf-003"></span>`timestamp-dsf-003` | [各模态数据字段与时间轴是否匹配](../quality-operators/timestamp/timestamp-dsf-003.md) | 无法生成 | `multi` · `modality` | `processed_input` | `2.0.0` |
+::::
+
+### TSA · 时间/样本对齐
+
+::::{div} modality-rule-table
+| Rule ID | 名称 | error 时产物 | 实例 | 阶段 | 版本 |
+| --- | --- | --- | --- | --- | --- |
+| <span id="catalog-timestamp-tsa-004"></span>`timestamp-tsa-004` | [公共时间段过短](../quality-operators/timestamp/timestamp-tsa-004.md) | 可生成 | `single` | `alignment` | `2.0.0` |
+::::
+
+### PPA · 处理/产物异常
+
+::::{div} modality-rule-table
+| Rule ID | 名称 | error 时产物 | 实例 | 阶段 | 版本 |
+| --- | --- | --- | --- | --- | --- |
+| <span id="catalog-timestamp-ppa-001"></span>`timestamp-ppa-001` | [Timestamp 产物写入异常](../quality-operators/timestamp/timestamp-ppa-001.md) | 无法生成 | `single` | `artifact` | `1.0.0` |
+::::
+
+
+```{admonition} 文档覆盖说明
+:class: note
+
+“待补充”表示 Rule ID 已在代码中注册，但尚未完成独立质检算子页面；它不表示规则未实现或
+执行时会被跳过。
+```

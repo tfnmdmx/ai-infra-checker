@@ -1,0 +1,174 @@
+(comb_camera-idc-001)=
+<div class="quality-page-kicker">QUALITY OPERATOR · input_device_compatibility</div>
+
+# `comb_camera-idc-001` — 相机文件能否完整读取且八路齐全
+
+[所属模态算子：Comb Camera](../../modality-operators/comb_camera.md)
+
+<div class="quality-meta">
+  <code class="meta-lifecycle is-active">active</code>
+  <code class="meta-artifact is-unavailable">error 时产物无法生成</code>
+  <code class="meta-cardinality">single</code>
+  <code class="meta-domain">input_device_compatibility</code>
+  <code class="meta-stage">raw</code>
+  <code class="meta-version">rule v1.0.0</code>
+  <code class="meta-version">fm-comb-camera-operator v0.3.0</code>
+</div>
+
+<p class="quality-lead">检查 MCAP 是否完整可读、8 个固定相机流是否全部有数据，以及流名和帧内相机编号是否一致。</p>
+
+## 先看懂这条规则
+
+- **检查什么：** 先把整个相机文件扫描一遍，再数 cam0 到 cam7 是否都有画面；如果帧内写了标准相机编号，还会和所在流交叉核对。
+- **为什么不是 pass：** 文件中途损坏、8 路中任何一路没有画面，或画面自报的相机编号放错流时都会失败；此时无法可靠执行后续八路联合检查。
+
+### 判定标准
+
+| 状态 | 完整条件 |
+| --- | --- |
+| **通过 `pass`** | `scan_complete=true`、检测到的活动相机数 value 恰好为 8，且 identity_mismatches 为空 |
+| **告警 `warn`** | 不会出现；本规则不使用 warn 状态。 |
+| **失败 `error`** | 文件未完整读完、活动相机数不等于八，或 topic 与规范 frame_id 冲突 |
+
+**边界怎么算：**
+
+- 活动相机数必须恰好等于 8；空或设备自定义 frame_id 不单独失败。
+
+### 具体检查项
+
+1. 从文件头扫描到文件尾；解析失败或读取中断记为 `scan_complete=false`。MCAP 提供 CRC 时校验 CRC，未提供 CRC 本身不判错。
+2. 只统计 8 个固定 topic：`/comb_camera/cam0/image` 至 `/comb_camera/cam7/image`；每个 topic 至少一条消息才算该相机存在。
+3. topic 是相机身份的权威来源。消息提供可规范化为 cam0 至 cam7 的 frame_id 时，必须与 topic 一致；空值或设备自定义 frame_id 不覆盖 topic 身份。
+
+## 版本历史
+
+| Rule 版本 | 首次对应包版本 | 更新时间（北京时间） | 变更 | 提交 |
+| --- | --- | --- | --- | --- |
+| — | — | — | 尚无基线后的版本变更 | — |
+
+仅展示文档 1.0.0 基线之后的变更。
+
+## 计算契约
+
+::::{admonition} 计算契约（不可直接调用）
+:class: quality-contract
+
+```python
+quality.comb_camera.comb_camera_idc_001(
+    input_path: MCAP,
+) -> RuleResult
+```
+::::
+
+::::{div} quality-source-links
+[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-comb-camera-operator/src/fm_comb_camera_operator/comb_camera.py#L365) ·
+[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-comb-camera-operator/src/fm_comb_camera_operator/rules.py#L50) ·
+[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-comb-camera-operator/tests/test_comb_camera_operator.py#L216) · [test 2](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-comb-camera-operator/tests/test_comb_camera_operator.py#L254) ·
+[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/docs/quality-rule-calculation-spec.md#71-%E6%96%87%E4%BB%B6%E7%9B%B8%E6%9C%BA%E4%B8%8E%E8%BA%AB%E4%BB%BD)
+::::
+
+```{admonition} 注意
+:class: note
+
+- `value` 是 8 个预期 topic 中实际有消息的相机数量，`threshold.expected_complete_count` 固定为 8。
+- `camera_counts` 按 cam0 至 cam7 顺序给出每路消息数；`present_cameras` 和 `missing_cameras` 给出相机编号。
+- 本规则失败时，解码、逐路时间、八路配对和校准检查全部写入 `summary.skipped_rules`，且不生成配对索引。
+```
+
+## 数据输入
+
+| 名称 | 来源 | dtype | shape | 单位 | 必需 | 说明 |
+| --- | --- | --- | --- | --- | --- | --- |
+| `input_path` | raw | `MCAP` | `N/A` | N/A | 是 | 单个 MCAP；预期包含 `/comb_camera/cam0/image` 至 `/comb_camera/cam7/image`，每路至少一条消息。 |
+
+## 配置参数
+
+本质检算子没有独立配置参数。
+
+## 校验逻辑
+
+## 执行关系
+
+**前置质检算子：** 无。
+
+
+**产物影响：** 本规则为 `error` 时，输出契约已经无法满足，因此本次不会登记产物；
+原因由结构化 RuleResult 记录。只要这不是运行配置错误，进程仍返回 0。
+
+**相关质检算子：**
+
+- [`comb_camera-dsf-001`](../comb_camera/comb_camera-dsf-001.md)
+- [`comb_camera-tsa-001`](../comb_camera/comb_camera-tsa-001.md)
+- [`comb_camera-scq-001`](../comb_camera/comb_camera-scq-001.md)
+
+## 输出
+
+| 字段 | 约定 |
+| --- | --- |
+| 实例模型 | `single` |
+| `value` | `integer` |
+| `unit` | cameras |
+| `threshold` | `mapping` |
+| `details` | `message`, `category`, `camera_counts`, `present_cameras`, `missing_cameras`, `scan_complete`, `identity_mismatches` |
+
+```json
+{
+  "rule_id": "comb_camera-idc-001",
+  "rule_version": "1.0.0",
+  "problem_domain": "input_device_compatibility",
+  "stage": "raw",
+  "status": "error",
+  "value": 7,
+  "unit": "cameras",
+  "threshold": {
+    "expected_complete_count": 8
+  },
+  "details": {
+    "message": "相机路数不足八路",
+    "category": "input",
+    "camera_counts": [
+      120,
+      120,
+      120,
+      120,
+      120,
+      120,
+      120,
+      0
+    ],
+    "present_cameras": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "missing_cameras": [
+      7
+    ],
+    "scan_complete": true,
+    "identity_mismatches": [],
+    "applicable": true,
+    "decision": "fail"
+  }
+}
+```
+
+## 失败后建议
+
+1. `scan_complete=false` 时先查看 `read_error`，确认 MCAP 是否完整关闭、复制完整并能被标准 MCAP 工具读到文件尾。
+2. `missing_cameras` 非空时对照 `camera_counts` 检查采集端是否启用对应相机、topic 是否拼写正确、该路是否实际发送消息。
+3. `identity_mismatches` 非空时以 topic 为准，修正消息里的 frame_id 或采集端的相机路由。
+
+## 来源与维护
+
+- 页面 owner：`data-quality/comb-camera`
+- 所属模态算子：[Comb Camera](../../modality-operators/comb_camera.md)
+- 实现：[operators/fm-comb-camera-operator/src/fm_comb_camera_operator/comb_camera.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-comb-camera-operator/src/fm_comb_camera_operator/comb_camera.py#L365)
+- 注册：[operators/fm-comb-camera-operator/src/fm_comb_camera_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-comb-camera-operator/src/fm_comb_camera_operator/rules.py#L50)
+- 测试：[operators/fm-comb-camera-operator/tests/test_comb_camera_operator.py::test_incomplete_eight_camera_is_input_error_and_skips_checks_2_to_5](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-comb-camera-operator/tests/test_comb_camera_operator.py#L216)
+- 测试：[operators/fm-comb-camera-operator/tests/test_comb_camera_operator.py::test_unreadable_mcap_is_input_error_without_misleading_ppa](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-comb-camera-operator/tests/test_comb_camera_operator.py#L254)
+- 计算规范：[docs/quality-rule-calculation-spec.md#71-文件相机与身份](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/docs/quality-rule-calculation-spec.md#71-%E6%96%87%E4%BB%B6%E7%9B%B8%E6%9C%BA%E4%B8%8E%E8%BA%AB%E4%BB%BD)
+- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator-docs/site/operator-pages/comb_camera/comb_camera-idc-001.yaml#L1)

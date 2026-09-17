@@ -1,0 +1,113 @@
+(vision-modality-operator)=
+<div class="quality-page-kicker">MODALITY OPERATOR · unimodal</div>
+
+# Vision 模态算子
+
+<p class="quality-lead">联合检查压缩视频、消息索引、源时间戳、双目标定和画面行为。</p>
+
+<div class="quality-meta">
+  <code class="meta-kind">fm-vision-operator</code>
+  <code class="meta-version">v0.9.0</code>
+  <code class="meta-stage">unimodal</code>
+  <code class="meta-domain">14 quality operators</code>
+</div>
+
+
+| 属性 | 值 |
+| --- | --- |
+| 包名 | `fm-vision-operator` |
+| 包版本 | `0.9.0` |
+| 输入边界 | 一个包含目标视频流的 MCAP |
+| 默认产物 | `<work-dir>/vision/processed.npz` |
+| 质检算子数 | 14 |
+
+## 包版本历史
+
+| 包版本 | 更新时间（北京时间） | 变更 | 提交 |
+| --- | --- | --- | --- |
+| — | — | 尚无基线后的版本变更 | — |
+
+仅展示文档 1.0.0 基线之后的变更。
+
+## 使用入口
+
+```bash
+fm-vision-operator --help
+```
+
+::::{div} quality-source-links
+[查看完整使用手册](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/docs/operator-user-guide.md#5-vision-operator) · [查看 GitHub 包源码](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/tree/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-vision-operator)
+::::
+
+## 质检算子
+
+### IDC · 输入/设备兼容性
+
+::::{div} modality-rule-table
+| Rule ID | 名称 | error 时产物 | 实例 | 阶段 | 版本 |
+| --- | --- | --- | --- | --- | --- |
+| <span id="catalog-vision-idc-001"></span>`vision-idc-001` | [视频流是否可用](../quality-operators/vision/vision-idc-001.md) | 无法生成 | `single` | `raw` | `1.2.0` |
+::::
+
+### DSF · 数据结构/格式
+
+::::{div} modality-rule-table
+| Rule ID | 名称 | error 时产物 | 实例 | 阶段 | 版本 |
+| --- | --- | --- | --- | --- | --- |
+| <span id="catalog-vision-dsf-001"></span>`vision-dsf-001` | [视频编码与画面结构是否正确](../quality-operators/vision/vision-dsf-001.md) | 无法生成 | `single` | `raw` | `1.2.0` |
+| <span id="catalog-vision-dsf-002"></span>`vision-dsf-002` | [解码帧数是否与消息数一致](../quality-operators/vision/vision-dsf-002.md) | 无法生成 | `single` | `raw` | `1.0.0` |
+::::
+
+### TSA · 时间/样本对齐
+
+::::{div} modality-rule-table
+| Rule ID | 名称 | error 时产物 | 实例 | 阶段 | 版本 |
+| --- | --- | --- | --- | --- | --- |
+| <span id="catalog-vision-tsa-001"></span>`vision-tsa-001` | [视频时间戳是否递增](../quality-operators/vision/vision-tsa-001.md) | 无法生成 | `single` | `raw` | `1.0.0` |
+| <span id="catalog-vision-tsa-002"></span>`vision-tsa-002` | [视频帧率偏差比例](../quality-operators/vision/vision-tsa-002.md) | 可生成 | `single` | `raw` | `3.0.0` |
+| <span id="catalog-vision-tsa-004"></span>`vision-tsa-004` | [最大连续缺帧时长](../quality-operators/vision/vision-tsa-004.md) | 可生成 | `single` | `raw` | `2.1.0` |
+| <span id="catalog-vision-tsa-005"></span>`vision-tsa-005` | [累计缺帧比例](../quality-operators/vision/vision-tsa-005.md) | 可生成 | `single` | `raw` | `2.2.0` |
+::::
+
+### DCR · 时长/覆盖
+
+::::{div} modality-rule-table
+| Rule ID | 名称 | error 时产物 | 实例 | 阶段 | 版本 |
+| --- | --- | --- | --- | --- | --- |
+| <span id="catalog-vision-dcr-001"></span>`vision-dcr-001` | [视频有效时长](../quality-operators/vision/vision-dcr-001.md) | 可生成 | `single` | `raw` | `3.0.0` |
+::::
+
+### SCQ · 信号/通道质量
+
+::::{div} modality-rule-table
+| Rule ID | 名称 | error 时产物 | 实例 | 阶段 | 版本 |
+| --- | --- | --- | --- | --- | --- |
+| <span id="catalog-vision-scq-001"></span>`vision-scq-001` | [双目标定](../quality-operators/vision/vision-scq-001.md) | 可生成 | `single` | `raw` | `1.1.0` |
+| <span id="catalog-vision-scq-002"></span>`vision-scq-002` | [画面冻结最长时长](../quality-operators/vision/vision-scq-002.md) | 可生成 | `single` | `raw` | `1.0.0` |
+::::
+
+### LAQ · 标签/动作质量
+
+::::{div} modality-rule-table
+| Rule ID | 名称 | error 时产物 | 实例 | 阶段 | 版本 |
+| --- | --- | --- | --- | --- | --- |
+| <span id="catalog-vision-laq-001"></span>`vision-laq-001` | [相机静止最长时长](../quality-operators/vision/vision-laq-001.md) | 可生成 | `single` | `raw` | `2.0.0` |
+| <span id="catalog-vision-laq-002"></span>`vision-laq-002` | [画面无手最长时长](../quality-operators/vision/vision-laq-002.md) | 可生成 | `single` | `raw` | `1.0.0` |
+::::
+
+### PPA · 处理/产物异常
+
+::::{div} modality-rule-table
+| Rule ID | 名称 | error 时产物 | 实例 | 阶段 | 版本 |
+| --- | --- | --- | --- | --- | --- |
+| <span id="catalog-vision-ppa-001"></span>`vision-ppa-001` | [视频处理或质检执行异常](../quality-operators/vision/vision-ppa-001.md) | 可生成 | `multi` · `check` | `raw_to_processed` | `1.0.0` |
+| <span id="catalog-vision-ppa-002"></span>`vision-ppa-002` | [帧索引写入异常](../quality-operators/vision/vision-ppa-002.md) | 无法生成 | `single` | `artifact` | `1.0.0` |
+::::
+
+
+```{admonition} 文档覆盖说明
+:class: note
+
+“待补充”表示 Rule ID 已在代码中注册，但尚未完成独立质检算子页面；它不表示规则未实现或
+执行时会被跳过。
+```
