@@ -1,0 +1,896 @@
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>comb_camera-tsa-002 — 八路画面是否全部同步配对成功 &#8212; Quality Checker Operator</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/quality-operator.css?v=fc79d945" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=34088549"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fd10adb8"></script>
+    <script src="../../_static/translations.js?v=beaddf03"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'quality-operators/comb_camera/comb_camera-tsa-002';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = '/_static/qc-operator-versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.0.0';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <script src="../../_static/operator-catalog.js?v=0b79d364"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="comb_camera-scq-001 — 每路画面是否带有有效时间校准信息" href="comb_camera-scq-001.html" />
+    <link rel="prev" title="comb_camera-tsa-001 — 每路相机是否丢帧或时间倒退" href="comb_camera-tsa-001.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  <meta name="docsearch:version" content="1.0.0" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">跳转至主要内容</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>回到顶部</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="版本警告"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="网页导航">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class=" navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Quality Checker Operator</p>
+  
+</a></div>
+    
+      <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+    
+  </div>
+  
+  <div class=" navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../modality-operators/index.html">
+    模态算子
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    质检算子
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../getting-started.html">
+    开始使用
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../result-contract.html">
+    结果契约
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../version-history.html">
+    版本与变更记录
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">搜索</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="亮色"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="暗色"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">搜索</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="当前页面">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../modality-operators/index.html">
+    模态算子
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    质检算子
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../getting-started.html">
+    开始使用
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../result-contract.html">
+    结果契约
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../version-history.html">
+    版本与变更记录
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="亮色"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="暗色"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="章节导航">
+  <p class="bd-links__title" role="heading" aria-level="1">章节导航</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../emg/emg-idc-001.html"><code class="docutils literal notranslate"><span class="pre">emg-idc-001</span></code> — EMG 必需字段是否完整</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../emg/emg-dsf-001.html"><code class="docutils literal notranslate"><span class="pre">emg-dsf-001</span></code> — EMG shape和dtype是否正确</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../emg/emg-tsa-001.html"><code class="docutils literal notranslate"><span class="pre">emg-tsa-001</span></code> — EMG 时间戳是否严格递增</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../emg/emg-tsa-002.html"><code class="docutils literal notranslate"><span class="pre">emg-tsa-002</span></code> — 最大时间间隔</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../emg/emg-tsa-003.html"><code class="docutils literal notranslate"><span class="pre">emg-tsa-003</span></code> — 采样率偏差比例</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../emg/emg-dcr-001.html"><code class="docutils literal notranslate"><span class="pre">emg-dcr-001</span></code> — 有效时长</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../emg/emg-nva-001.html"><code class="docutils literal notranslate"><span class="pre">emg-nva-001</span></code> — EMG 是否含有 NaN 或 Inf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../emg/emg-scq-001.html"><code class="docutils literal notranslate"><span class="pre">emg-scq-001</span></code> — 死通道数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../emg/emg-scq-002.html"><code class="docutils literal notranslate"><span class="pre">emg-scq-002</span></code> — 原始信号饱和异常</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../emg/emg-scq-004.html"><code class="docutils literal notranslate"><span class="pre">emg-scq-004</span></code> — 工频比例偏高通道数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../emg/emg-scq-005.html"><code class="docutils literal notranslate"><span class="pre">emg-scq-005</span></code> — 高低频带功率比</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../emg/emg-scq-006.html"><code class="docutils literal notranslate"><span class="pre">emg-scq-006</span></code> — 全局信号标准差</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../emg/emg-scq-007.html"><code class="docutils literal notranslate"><span class="pre">emg-scq-007</span></code> — 50 Hz 残留</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../emg/emg-scq-008.html"><code class="docutils literal notranslate"><span class="pre">emg-scq-008</span></code> — 处理后持续高幅异常</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../emg/emg-ppa-001.html"><code class="docutils literal notranslate"><span class="pre">emg-ppa-001</span></code> — 输入读取或处理异常</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../emg/emg-ppa-002.html"><code class="docutils literal notranslate"><span class="pre">emg-ppa-002</span></code> — EMG 产物写入异常</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../imu/imu-idc-001.html"><code class="docutils literal notranslate"><span class="pre">imu-idc-001</span></code> — IMU 必需字段是否完整</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../imu/imu-dsf-001.html"><code class="docutils literal notranslate"><span class="pre">imu-dsf-001</span></code> — IMU shape 和 dtype 是否正确</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../imu/imu-tsa-001.html"><code class="docutils literal notranslate"><span class="pre">imu-tsa-001</span></code> — IMU 时间戳是否有效</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../imu/imu-tsa-009.html"><code class="docutils literal notranslate"><span class="pre">imu-tsa-009</span></code> — 采样率偏差比例</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../imu/imu-tsa-010.html"><code class="docutils literal notranslate"><span class="pre">imu-tsa-010</span></code> — 最大时间间隔</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../imu/imu-dcr-001.html"><code class="docutils literal notranslate"><span class="pre">imu-dcr-001</span></code> — 有效时长</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../imu/imu-nva-001.html"><code class="docutils literal notranslate"><span class="pre">imu-nva-001</span></code> — IMU 三轴值是否含 NaN 或 Inf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../imu/imu-ppa-001.html"><code class="docutils literal notranslate"><span class="pre">imu-ppa-001</span></code> — 输入读取或未预期处理异常</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../imu/imu-ppa-002.html"><code class="docutils literal notranslate"><span class="pre">imu-ppa-002</span></code> — IMU 产物写入异常</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../force/force-idc-001.html"><code class="docutils literal notranslate"><span class="pre">force-idc-001</span></code> — Force 必需字段是否完整</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../force/force-idc-005.html"><code class="docutils literal notranslate"><span class="pre">force-idc-005</span></code> — 非 CMCU05B 数据</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../force/force-dsf-003.html"><code class="docutils literal notranslate"><span class="pre">force-dsf-003</span></code> — Force shape和dtype是否正确</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../force/force-tsa-003.html"><code class="docutils literal notranslate"><span class="pre">force-tsa-003</span></code> — Force 时间戳是否严格递增</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../force/force-tsa-005.html"><code class="docutils literal notranslate"><span class="pre">force-tsa-005</span></code> — 最大连续缺口</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../force/force-tsa-007.html"><code class="docutils literal notranslate"><span class="pre">force-tsa-007</span></code> — 采样率偏差比例</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../force/force-dcr-003.html"><code class="docutils literal notranslate"><span class="pre">force-dcr-003</span></code> — 有效时长</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../force/force-nva-002.html"><code class="docutils literal notranslate"><span class="pre">force-nva-002</span></code> — Force 是否含有 NaN 或 Inf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../force/force-scq-001.html"><code class="docutils literal notranslate"><span class="pre">force-scq-001</span></code> — Force 通道是否恒定</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../force/force-laq-002.html"><code class="docutils literal notranslate"><span class="pre">force-laq-002</span></code> — 首 5 秒静息受力异常</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../force/force-ppa-002.html"><code class="docutils literal notranslate"><span class="pre">force-ppa-002</span></code> — Force 处理/转换异常</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../force/force-ppa-003.html"><code class="docutils literal notranslate"><span class="pre">force-ppa-003</span></code> — Force 产物写入异常</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pose/pose-idc-001.html"><code class="docutils literal notranslate"><span class="pre">pose-idc-001</span></code> — Pose 输入是否有效</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pose/pose-dsf-003.html"><code class="docutils literal notranslate"><span class="pre">pose-dsf-003</span></code> — Pose 字段结构是否正确</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pose/pose-tsa-003.html"><code class="docutils literal notranslate"><span class="pre">pose-tsa-003</span></code> — Pose 时间戳是否有效</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pose/pose-tsa-004.html"><code class="docutils literal notranslate"><span class="pre">pose-tsa-004</span></code> — 最大连续缺口</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pose/pose-tsa-006.html"><code class="docutils literal notranslate"><span class="pre">pose-tsa-006</span></code> — 采样率偏差比例</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pose/pose-dcr-002.html"><code class="docutils literal notranslate"><span class="pre">pose-dcr-002</span></code> — 有效数据时长</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pose/pose-nva-002.html"><code class="docutils literal notranslate"><span class="pre">pose-nva-002</span></code> — 关节角是否包含非有限值</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pose/pose-laq-001.html"><code class="docutils literal notranslate"><span class="pre">pose-laq-001</span></code> — 关节角最大绝对值</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pose/pose-laq-002.html"><code class="docutils literal notranslate"><span class="pre">pose-laq-002</span></code> — 原始无效帧比例</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pose/pose-laq-005.html"><code class="docutils literal notranslate"><span class="pre">pose-laq-005</span></code> — 静止间隔比例</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pose/pose-laq-006.html"><code class="docutils literal notranslate"><span class="pre">pose-laq-006</span></code> — 高角速度间隔比例</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pose/pose-ppa-001.html"><code class="docutils literal notranslate"><span class="pre">pose-ppa-001</span></code> — Pose 处理异常</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pose/pose-ppa-002.html"><code class="docutils literal notranslate"><span class="pre">pose-ppa-002</span></code> — Pose 产物读写异常</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../vision/vision-idc-001.html"><code class="docutils literal notranslate"><span class="pre">vision-idc-001</span></code> — 视频流是否可用</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../vision/vision-dsf-001.html"><code class="docutils literal notranslate"><span class="pre">vision-dsf-001</span></code> — 视频编码与画面结构是否正确</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../vision/vision-dsf-002.html"><code class="docutils literal notranslate"><span class="pre">vision-dsf-002</span></code> — 解码帧数是否与消息数一致</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../vision/vision-tsa-001.html"><code class="docutils literal notranslate"><span class="pre">vision-tsa-001</span></code> — 视频时间戳是否递增</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../vision/vision-tsa-002.html"><code class="docutils literal notranslate"><span class="pre">vision-tsa-002</span></code> — 视频帧率偏差比例</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../vision/vision-tsa-004.html"><code class="docutils literal notranslate"><span class="pre">vision-tsa-004</span></code> — 最大连续缺帧时长</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../vision/vision-tsa-005.html"><code class="docutils literal notranslate"><span class="pre">vision-tsa-005</span></code> — 累计缺帧比例</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../vision/vision-dcr-001.html"><code class="docutils literal notranslate"><span class="pre">vision-dcr-001</span></code> — 视频有效时长</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../vision/vision-scq-001.html"><code class="docutils literal notranslate"><span class="pre">vision-scq-001</span></code> — 双目标定</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../vision/vision-scq-002.html"><code class="docutils literal notranslate"><span class="pre">vision-scq-002</span></code> — 画面冻结最长时长</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../vision/vision-laq-001.html"><code class="docutils literal notranslate"><span class="pre">vision-laq-001</span></code> — 相机静止最长时长</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../vision/vision-laq-002.html"><code class="docutils literal notranslate"><span class="pre">vision-laq-002</span></code> — 画面无手最长时长</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../vision/vision-ppa-001.html"><code class="docutils literal notranslate"><span class="pre">vision-ppa-001</span></code> — 视频处理或质检执行异常</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../vision/vision-ppa-002.html"><code class="docutils literal notranslate"><span class="pre">vision-ppa-002</span></code> — 帧索引写入异常</a></li>
+<li class="toctree-l1"><a class="reference internal" href="comb_camera-idc-001.html"><code class="docutils literal notranslate"><span class="pre">comb_camera-idc-001</span></code> — 相机文件能否完整读取且八路齐全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="comb_camera-dsf-001.html"><code class="docutils literal notranslate"><span class="pre">comb_camera-dsf-001</span></code> — 每路视频能否逐帧完整解码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="comb_camera-tsa-001.html"><code class="docutils literal notranslate"><span class="pre">comb_camera-tsa-001</span></code> — 每路相机是否丢帧或时间倒退</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">comb_camera-tsa-002</span></code> — 八路画面是否全部同步配对成功</a></li>
+<li class="toctree-l1"><a class="reference internal" href="comb_camera-scq-001.html"><code class="docutils literal notranslate"><span class="pre">comb_camera-scq-001</span></code> — 每路画面是否带有有效时间校准信息</a></li>
+<li class="toctree-l1"><a class="reference internal" href="comb_camera-ppa-001.html"><code class="docutils literal notranslate"><span class="pre">comb_camera-ppa-001</span></code> — 相机检查程序是否完整运行</a></li>
+<li class="toctree-l1"><a class="reference internal" href="comb_camera-ppa-002.html"><code class="docutils literal notranslate"><span class="pre">comb_camera-ppa-002</span></code> — 配对索引文件能否正确保存</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../timestamp/timestamp-idc-001.html"><code class="docutils literal notranslate"><span class="pre">timestamp-idc-001</span></code> — 各模态 NPZ 是否可读取</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../timestamp/timestamp-dsf-001.html"><code class="docutils literal notranslate"><span class="pre">timestamp-dsf-001</span></code> — 各模态时间轴是否正常</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../timestamp/timestamp-dsf-002.html"><code class="docutils literal notranslate"><span class="pre">timestamp-dsf-002</span></code> — 各模态时间戳 shape 和 dtype 是否正常</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../timestamp/timestamp-dsf-003.html"><code class="docutils literal notranslate"><span class="pre">timestamp-dsf-003</span></code> — 各模态数据字段与时间轴是否匹配</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../timestamp/timestamp-tsa-004.html"><code class="docutils literal notranslate"><span class="pre">timestamp-tsa-004</span></code> — 公共时间段过短</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../timestamp/timestamp-ppa-001.html"><code class="docutils literal notranslate"><span class="pre">timestamp-ppa-001</span></code> — Timestamp 产物写入异常</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="初始页面">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">质检算子</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis"><code class="docutils literal notranslate"><span class="pre">comb_camera-tsa-002</span></code> — 八路画面是否全部同步配对成功</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="quality-page-kicker">QUALITY OPERATOR · time_sample_alignment</div>
+<section id="id1">
+<h1><code class="docutils literal notranslate"><span class="pre">comb_camera-tsa-002</span></code> — 八路画面是否全部同步配对成功<a class="headerlink" href="#id1" title="Link to this heading">#</a></h1>
+<p><a class="reference internal" href="../../modality-operators/comb_camera.html"><span class="std std-doc">所属模态算子：Comb Camera</span></a></p>
+<div class="quality-meta">
+  <code class="meta-lifecycle is-active">active</code>
+  <code class="meta-artifact is-available">error 时产物可生成</code>
+  <code class="meta-cardinality">single</code>
+  <code class="meta-domain">time_sample_alignment</code>
+  <code class="meta-stage">raw</code>
+  <code class="meta-version">rule v2.0.0</code>
+  <code class="meta-version">fm-comb-camera-operator v0.3.0</code>
+</div>
+<p class="quality-lead">以每条 cam0 画面为基准，从其余 7 路选择未使用的最近画面，计算时间跨度合格的完整八目组比例。</p>
+<section id="id2">
+<h2>白话解释<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>做了什么检测：</strong> 对每张 cam0 画面，在 cam1 到 cam7 各找一张时间最接近且没有被前面分组用过的画面，组成一组后再检查最早与最晚画面的时间差。</p></li>
+<li><p><strong>为什么会告警或不通过：</strong> 只要有一张 cam0 画面缺少某路近邻、只能复用旧画面，或整组时间差超过允许范围，配对率就低于必须达到的 100%。</p></li>
+</ul>
+</section>
+<section id="id3">
+<h2>版本历史<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Rule 版本</p></th>
+<th class="head"><p>首次对应包版本</p></th>
+<th class="head"><p>日期</p></th>
+<th class="head"><p>变更</p></th>
+<th class="head"><p>提交</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>—</p></td>
+<td><p>—</p></td>
+<td><p>—</p></td>
+<td><p>尚无基线后的版本变更</p></td>
+<td><p>—</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>仅展示文档 1.0.0 基线之后的变更。</p>
+</section>
+<section id="id4">
+<h2>计算契约<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
+<div class="quality-contract admonition">
+<p class="admonition-title">计算契约（不可直接调用）</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">quality</span><span class="o">.</span><span class="n">comb_camera</span><span class="o">.</span><span class="n">comb_camera_tsa_002</span><span class="p">(</span>
+    <span class="n">camera_timelines</span><span class="p">:</span> <span class="n">int64</span> <span class="n">timestamps</span> <span class="ow">and</span> <span class="n">source</span> <span class="n">indices</span> <span class="n">cameras</span><span class="o">=</span><span class="p">[</span><span class="mi">8</span><span class="p">],</span> <span class="n">messages</span><span class="o">=</span><span class="p">[</span><span class="n">T_c</span><span class="p">],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">expected_rate_hz</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RuleResult</span>
+</pre></div>
+</div>
+</div>
+<div class="quality-source-links docutils">
+<p><a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-comb-camera-operator/src/fm_comb_camera_operator/quality_checks.py#L236">implementation</a> ·
+<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-comb-camera-operator/src/fm_comb_camera_operator/rules.py#L53">registry</a> ·
+<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-comb-camera-operator/tests/test_comb_camera_operator.py#L413">test 1</a> · <a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-comb-camera-operator/tests/test_comb_camera_operator.py#L501">test 2</a> ·
+<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/docs/quality-rule-calculation-spec.md#74-%E5%85%AB%E7%9B%AE%E6%9C%80%E8%BF%91%E6%97%B6%E9%97%B4%E9%85%8D%E5%AF%B9">计算规范</a></p>
+</div>
+<div class="note admonition">
+<p class="admonition-title">注意</p>
+<ul class="simple">
+<li><p>候选组跨度超限时不会消费任何相机帧；已经接受的组中，8 个源帧索引都永不复用。等距候选选择时间较新的帧。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">strict_sync</span></code> 仅表示组跨度不超过 5 ms，便于下游选择更严格子集；正式 pass 上限在 30 FPS 下是闭区间 10 ms。</p></li>
+<li><p>error 时只要 <code class="docutils literal notranslate"><span class="pre">accepted_groups</span> <span class="pre">&gt;</span> <span class="pre">0</span></code>，仍会生成结构安全的部分配对索引；字段包括 <code class="docutils literal notranslate"><span class="pre">timestamps[M]</span></code>、<code class="docutils literal notranslate"><span class="pre">frame_indices[M,8]</span></code>、<code class="docutils literal notranslate"><span class="pre">sync_timestamps_ns[M,8]</span></code>、<code class="docutils literal notranslate"><span class="pre">group_span_ms[M]</span></code> 和 <code class="docutils literal notranslate"><span class="pre">strict_sync[M]</span></code>。</p></li>
+</ul>
+</div>
+</section>
+<section id="id5">
+<h2>数据输入<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>名称</p></th>
+<th class="head"><p>来源</p></th>
+<th class="head"><p>dtype</p></th>
+<th class="head"><p>shape</p></th>
+<th class="head"><p>单位</p></th>
+<th class="head"><p>必需</p></th>
+<th class="head"><p>说明</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">camera_timelines</span></code></p></td>
+<td><p>raw</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int64</span> <span class="pre">timestamps</span> <span class="pre">and</span> <span class="pre">source</span> <span class="pre">indices</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">cameras=[8],</span> <span class="pre">messages=[T_c]</span></code></p></td>
+<td><p>ns</p></td>
+<td><p>是</p></td>
+<td><p>已通过完整解码和逐路时间检查的八路消息；包含每条消息的 <code class="docutils literal notranslate"><span class="pre">sync_ts_ns</span></code> 与该相机内的零基源索引。</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="id6">
+<h2>配置参数<a class="headerlink" href="#id6" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>名称</p></th>
+<th class="head"><p>类型</p></th>
+<th class="head"><p>默认值/必需</p></th>
+<th class="head"><p>来源</p></th>
+<th class="head"><p>说明</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">expected_rate_hz</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
+<td><p>必填</p></td>
+<td><p>pipeline</p></td>
+<td><p>决定允许的组跨度：恰好 30 FPS 时固定为 10 ms，其他帧率暂按 <code class="docutils literal notranslate"><span class="pre">round(1e9</span> <span class="pre">/</span> <span class="pre">expected_rate_hz)</span></code> 纳秒。</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="id7">
+<h2>计算定义<a class="headerlink" href="#id7" title="Link to this heading">#</a></h2>
+<section id="id8">
+<h3>指标含义<a class="headerlink" href="#id8" title="Link to this heading">#</a></h3>
+<p>成功组成且时间跨度合格的八目组数，占 cam0 全部原始视频消息数的比例。cam0 是固定分母，不会因为配对失败而缩小分母，也没有“达到 90% 即通过”的宽松门限。</p>
+<p>计算使用 <code class="docutils literal notranslate"><span class="pre">camera_timelines</span></code>，
+结果类型为 <code class="docutils literal notranslate"><span class="pre">number</span></code>，
+单位为 ratio。</p>
+</section>
+<section id="id9">
+<h3>计算方法<a class="headerlink" href="#id9" title="Link to this heading">#</a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>for each cam0 message in original order:
+  candidate[c] = nearest not-yet-used frame in camera c, for c = 1..7
+  # equal absolute distance selects the newer timestamp
+  group_span_ns = max(t_cam0, ..., t_cam7) - min(t_cam0, ..., t_cam7)
+  accept only if every candidate exists and group_span_ns &lt;= span_limit_ns
+  consume all 8 frame indices only after the group is accepted
+value = accepted_groups / total_cam0_messages
+span_limit_ns = 10_000_000 at 30 FPS
+                else round(1e9 / expected_rate_hz)
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>聚合口径：</strong> 每个 MCAP 发布一个文件级标量；cam0 的原始消息数是固定分母，外层不按相机拆分实例。</p></li>
+<li><p><strong>无法计算时：</strong> 输入、解码或逐路时间任一前置规则失败时不执行；按输入规则约束，正常进入本规则时 cam0 至少有一条消息。</p></li>
+</ul>
+</section>
+<section id="id10">
+<h3>判定边界<a class="headerlink" href="#id10" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>状态</p></th>
+<th class="head"><p>条件</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>pass</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">accepted_groups</span> <span class="pre">==</span> <span class="pre">denominator_messages</span></code>，因此 value 必须精确等于 1.0</p></td>
+</tr>
+<tr class="row-odd"><td><p>warn</p></td>
+<td><p>not_applicable</p></td>
+</tr>
+<tr class="row-even"><td><p>error</p></td>
+<td><p>任一 cam0 消息未能成组，即 value &lt; 1.0</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<ul class="simple">
+<li><p>30 FPS 的候选组跨度恰好 10 ms 时允许通过；严格大于 10 ms 才拒绝。</p></li>
+</ul>
+</section>
+</section>
+<section id="id11">
+<h2>执行关系<a class="headerlink" href="#id11" title="Link to this heading">#</a></h2>
+<p><strong>前置质检算子：</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="comb_camera-idc-001.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">comb_camera-idc-001</span></code></span></a></p></li>
+<li><p><a class="reference internal" href="comb_camera-dsf-001.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">comb_camera-dsf-001</span></code></span></a></p></li>
+<li><p><a class="reference internal" href="comb_camera-tsa-001.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">comb_camera-tsa-001</span></code></span></a></p></li>
+</ul>
+<p><strong>不执行条件：</strong></p>
+<ul class="simple">
+<li><p>任一输入、解码或逐路时间前置规则未通过时不执行。</p></li>
+</ul>
+<p><strong>产物影响：</strong> 本规则为 <code class="docutils literal notranslate"><span class="pre">error</span></code> 时，只记录质量异常，不阻止生成结构上有效的产物。
+如果后续处理或写入本身失败，仍可能没有产物；最终事实以 <code class="docutils literal notranslate"><span class="pre">processed_ok</span></code> 与 <code class="docutils literal notranslate"><span class="pre">artifacts</span></code>
+为准。</p>
+<p><strong>相关质检算子：</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="comb_camera-ppa-002.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">comb_camera-ppa-002</span></code></span></a></p></li>
+</ul>
+</section>
+<section id="id12">
+<h2>输出<a class="headerlink" href="#id12" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>字段</p></th>
+<th class="head"><p>约定</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>实例模型</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">single</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">value</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">number</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">unit</span></code></p></td>
+<td><p>ratio</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">threshold</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mapping</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">details</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">message</span></code>, <code class="docutils literal notranslate"><span class="pre">category</span></code>, <code class="docutils literal notranslate"><span class="pre">accepted_groups</span></code>, <code class="docutils literal notranslate"><span class="pre">rejected_groups</span></code>, <code class="docutils literal notranslate"><span class="pre">span_limit_ms</span></code>, <code class="docutils literal notranslate"><span class="pre">denominator_messages</span></code>, <code class="docutils literal notranslate"><span class="pre">failure_counts</span></code>, <code class="docutils literal notranslate"><span class="pre">rejected_cam0_indices</span></code>, <code class="docutils literal notranslate"><span class="pre">strict_sync_groups</span></code>, <code class="docutils literal notranslate"><span class="pre">strict_sync_limit_ms</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">"rule_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"comb_camera-tsa-002"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"rule_version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0.0"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"problem_domain"</span><span class="p">:</span><span class="w"> </span><span class="s2">"time_sample_alignment"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"stage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"raw"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"error"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"unit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ratio"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"threshold"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"expected"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.0</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"details"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"并非所有 cam0 原始消息都能组成未复用且跨度合格的八目组"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"category"</span><span class="p">:</span><span class="w"> </span><span class="s2">"alignment"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"denominator_camera"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cam0"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"denominator_messages"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"accepted_groups"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"rejected_groups"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"span_limit_ms"</span><span class="p">:</span><span class="w"> </span><span class="mf">10.0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"failure_counts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"no_unused_frame"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">"rejected_cam0_indices"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="mi">1</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">"strict_sync_groups"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"strict_sync_limit_ms"</span><span class="p">:</span><span class="w"> </span><span class="mf">5.0</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="id13">
+<h2>失败后建议<a class="headerlink" href="#id13" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>先看 <code class="docutils literal notranslate"><span class="pre">failure_counts</span></code>：<code class="docutils literal notranslate"><span class="pre">no_unused_frame</span></code> 表示至少一路没有剩余近邻，<code class="docutils literal notranslate"><span class="pre">span_exceeded</span></code> 表示八路都有候选但组内时间跨度过大。</p></li>
+<li><p>用 <code class="docutils literal notranslate"><span class="pre">rejected_cam0_indices</span></code> 找到失败基准帧，再对比八路 <code class="docutils literal notranslate"><span class="pre">sync_ts_ns</span></code>，检查固定时钟偏移、帧率不一致、某一路漏帧或乱序。</p></li>
+<li><p>若只有 <code class="docutils literal notranslate"><span class="pre">strict_sync_groups</span></code> 偏少但规则仍 pass，说明所有组满足正式上限、但部分超过更严格的 5 ms 诊断线；不要把 strict_sync 当成本规则失败条件。</p></li>
+</ol>
+</section>
+<section id="id14">
+<h2>来源与维护<a class="headerlink" href="#id14" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>页面 owner：<code class="docutils literal notranslate"><span class="pre">data-quality/comb-camera</span></code></p></li>
+<li><p>所属模态算子：<a class="reference internal" href="../../modality-operators/comb_camera.html"><span class="std std-doc">Comb Camera</span></a></p></li>
+<li><p>实现：<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-comb-camera-operator/src/fm_comb_camera_operator/quality_checks.py#L236">operators/fm-comb-camera-operator/src/fm_comb_camera_operator/quality_checks.py</a></p></li>
+<li><p>注册：<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-comb-camera-operator/src/fm_comb_camera_operator/rules.py#L53">operators/fm-comb-camera-operator/src/fm_comb_camera_operator/rules.py</a></p></li>
+<li><p>测试：<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-comb-camera-operator/tests/test_comb_camera_operator.py#L413">operators/fm-comb-camera-operator/tests/test_comb_camera_operator.py::test_sync_group_span_threshold_is_ten_inclusive_milliseconds_at_30_fps</a></p></li>
+<li><p>测试：<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-comb-camera-operator/tests/test_comb_camera_operator.py#L501">operators/fm-comb-camera-operator/tests/test_comb_camera_operator.py::test_sync_requires_every_cam0_message_without_ninety_percent_override</a></p></li>
+<li><p>计算规范：<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/docs/quality-rule-calculation-spec.md#74-%E5%85%AB%E7%9B%AE%E6%9C%80%E8%BF%91%E6%97%B6%E9%97%B4%E9%85%8D%E5%AF%B9">docs/quality-rule-calculation-spec.md#74-八目最近时间配对</a></p></li>
+<li><p><a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator-docs/site/operator-pages/comb_camera/comb_camera-tsa-002.yaml#L1">编辑本页 manifest</a></p></li>
+</ul>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="comb_camera-tsa-001.html"
+       title="上一页">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title"><code class="docutils literal notranslate"><span class="pre">comb_camera-tsa-001</span></code> — 每路相机是否丢帧或时间倒退</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="comb_camera-scq-001.html"
+       title="下一页">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title"><code class="docutils literal notranslate"><span class="pre">comb_camera-scq-001</span></code> — 每路画面是否带有有效时间校准信息</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 当前页面
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">白话解释</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">版本历史</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">计算契约</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">数据输入</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">配置参数</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">计算定义</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">指标含义</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">计算方法</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">判定边界</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">执行关系</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">输出</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">失败后建议</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">来源与维护</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2026, OriginFlow AI.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    由 <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3创建。
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  使用 <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1构建.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

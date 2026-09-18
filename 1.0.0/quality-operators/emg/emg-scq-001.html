@@ -1,0 +1,871 @@
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>emg-scq-001 — 死通道数 &#8212; Quality Checker Operator</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/quality-operator.css?v=fc79d945" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=34088549"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fd10adb8"></script>
+    <script src="../../_static/translations.js?v=beaddf03"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'quality-operators/emg/emg-scq-001';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = '/_static/qc-operator-versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.0.0';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <script src="../../_static/operator-catalog.js?v=0b79d364"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="emg-scq-002 — 原始信号饱和异常" href="emg-scq-002.html" />
+    <link rel="prev" title="emg-nva-001 — EMG 是否含有 NaN 或 Inf" href="emg-nva-001.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  <meta name="docsearch:version" content="1.0.0" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">跳转至主要内容</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>回到顶部</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="版本警告"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="网页导航">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class=" navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Quality Checker Operator</p>
+  
+</a></div>
+    
+      <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+    
+  </div>
+  
+  <div class=" navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../modality-operators/index.html">
+    模态算子
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    质检算子
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../getting-started.html">
+    开始使用
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../result-contract.html">
+    结果契约
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../version-history.html">
+    版本与变更记录
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">搜索</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="亮色"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="暗色"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">搜索</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="当前页面">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../modality-operators/index.html">
+    模态算子
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    质检算子
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../getting-started.html">
+    开始使用
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../result-contract.html">
+    结果契约
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../version-history.html">
+    版本与变更记录
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="亮色"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="暗色"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="章节导航">
+  <p class="bd-links__title" role="heading" aria-level="1">章节导航</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="emg-idc-001.html"><code class="docutils literal notranslate"><span class="pre">emg-idc-001</span></code> — EMG 必需字段是否完整</a></li>
+<li class="toctree-l1"><a class="reference internal" href="emg-dsf-001.html"><code class="docutils literal notranslate"><span class="pre">emg-dsf-001</span></code> — EMG shape和dtype是否正确</a></li>
+<li class="toctree-l1"><a class="reference internal" href="emg-tsa-001.html"><code class="docutils literal notranslate"><span class="pre">emg-tsa-001</span></code> — EMG 时间戳是否严格递增</a></li>
+<li class="toctree-l1"><a class="reference internal" href="emg-tsa-002.html"><code class="docutils literal notranslate"><span class="pre">emg-tsa-002</span></code> — 最大时间间隔</a></li>
+<li class="toctree-l1"><a class="reference internal" href="emg-tsa-003.html"><code class="docutils literal notranslate"><span class="pre">emg-tsa-003</span></code> — 采样率偏差比例</a></li>
+<li class="toctree-l1"><a class="reference internal" href="emg-dcr-001.html"><code class="docutils literal notranslate"><span class="pre">emg-dcr-001</span></code> — 有效时长</a></li>
+<li class="toctree-l1"><a class="reference internal" href="emg-nva-001.html"><code class="docutils literal notranslate"><span class="pre">emg-nva-001</span></code> — EMG 是否含有 NaN 或 Inf</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">emg-scq-001</span></code> — 死通道数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="emg-scq-002.html"><code class="docutils literal notranslate"><span class="pre">emg-scq-002</span></code> — 原始信号饱和异常</a></li>
+<li class="toctree-l1"><a class="reference internal" href="emg-scq-004.html"><code class="docutils literal notranslate"><span class="pre">emg-scq-004</span></code> — 工频比例偏高通道数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="emg-scq-005.html"><code class="docutils literal notranslate"><span class="pre">emg-scq-005</span></code> — 高低频带功率比</a></li>
+<li class="toctree-l1"><a class="reference internal" href="emg-scq-006.html"><code class="docutils literal notranslate"><span class="pre">emg-scq-006</span></code> — 全局信号标准差</a></li>
+<li class="toctree-l1"><a class="reference internal" href="emg-scq-007.html"><code class="docutils literal notranslate"><span class="pre">emg-scq-007</span></code> — 50 Hz 残留</a></li>
+<li class="toctree-l1"><a class="reference internal" href="emg-scq-008.html"><code class="docutils literal notranslate"><span class="pre">emg-scq-008</span></code> — 处理后持续高幅异常</a></li>
+<li class="toctree-l1"><a class="reference internal" href="emg-ppa-001.html"><code class="docutils literal notranslate"><span class="pre">emg-ppa-001</span></code> — 输入读取或处理异常</a></li>
+<li class="toctree-l1"><a class="reference internal" href="emg-ppa-002.html"><code class="docutils literal notranslate"><span class="pre">emg-ppa-002</span></code> — EMG 产物写入异常</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../imu/imu-idc-001.html"><code class="docutils literal notranslate"><span class="pre">imu-idc-001</span></code> — IMU 必需字段是否完整</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../imu/imu-dsf-001.html"><code class="docutils literal notranslate"><span class="pre">imu-dsf-001</span></code> — IMU shape 和 dtype 是否正确</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../imu/imu-tsa-001.html"><code class="docutils literal notranslate"><span class="pre">imu-tsa-001</span></code> — IMU 时间戳是否有效</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../imu/imu-tsa-009.html"><code class="docutils literal notranslate"><span class="pre">imu-tsa-009</span></code> — 采样率偏差比例</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../imu/imu-tsa-010.html"><code class="docutils literal notranslate"><span class="pre">imu-tsa-010</span></code> — 最大时间间隔</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../imu/imu-dcr-001.html"><code class="docutils literal notranslate"><span class="pre">imu-dcr-001</span></code> — 有效时长</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../imu/imu-nva-001.html"><code class="docutils literal notranslate"><span class="pre">imu-nva-001</span></code> — IMU 三轴值是否含 NaN 或 Inf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../imu/imu-ppa-001.html"><code class="docutils literal notranslate"><span class="pre">imu-ppa-001</span></code> — 输入读取或未预期处理异常</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../imu/imu-ppa-002.html"><code class="docutils literal notranslate"><span class="pre">imu-ppa-002</span></code> — IMU 产物写入异常</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../force/force-idc-001.html"><code class="docutils literal notranslate"><span class="pre">force-idc-001</span></code> — Force 必需字段是否完整</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../force/force-idc-005.html"><code class="docutils literal notranslate"><span class="pre">force-idc-005</span></code> — 非 CMCU05B 数据</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../force/force-dsf-003.html"><code class="docutils literal notranslate"><span class="pre">force-dsf-003</span></code> — Force shape和dtype是否正确</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../force/force-tsa-003.html"><code class="docutils literal notranslate"><span class="pre">force-tsa-003</span></code> — Force 时间戳是否严格递增</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../force/force-tsa-005.html"><code class="docutils literal notranslate"><span class="pre">force-tsa-005</span></code> — 最大连续缺口</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../force/force-tsa-007.html"><code class="docutils literal notranslate"><span class="pre">force-tsa-007</span></code> — 采样率偏差比例</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../force/force-dcr-003.html"><code class="docutils literal notranslate"><span class="pre">force-dcr-003</span></code> — 有效时长</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../force/force-nva-002.html"><code class="docutils literal notranslate"><span class="pre">force-nva-002</span></code> — Force 是否含有 NaN 或 Inf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../force/force-scq-001.html"><code class="docutils literal notranslate"><span class="pre">force-scq-001</span></code> — Force 通道是否恒定</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../force/force-laq-002.html"><code class="docutils literal notranslate"><span class="pre">force-laq-002</span></code> — 首 5 秒静息受力异常</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../force/force-ppa-002.html"><code class="docutils literal notranslate"><span class="pre">force-ppa-002</span></code> — Force 处理/转换异常</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../force/force-ppa-003.html"><code class="docutils literal notranslate"><span class="pre">force-ppa-003</span></code> — Force 产物写入异常</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pose/pose-idc-001.html"><code class="docutils literal notranslate"><span class="pre">pose-idc-001</span></code> — Pose 输入是否有效</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pose/pose-dsf-003.html"><code class="docutils literal notranslate"><span class="pre">pose-dsf-003</span></code> — Pose 字段结构是否正确</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pose/pose-tsa-003.html"><code class="docutils literal notranslate"><span class="pre">pose-tsa-003</span></code> — Pose 时间戳是否有效</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pose/pose-tsa-004.html"><code class="docutils literal notranslate"><span class="pre">pose-tsa-004</span></code> — 最大连续缺口</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pose/pose-tsa-006.html"><code class="docutils literal notranslate"><span class="pre">pose-tsa-006</span></code> — 采样率偏差比例</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pose/pose-dcr-002.html"><code class="docutils literal notranslate"><span class="pre">pose-dcr-002</span></code> — 有效数据时长</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pose/pose-nva-002.html"><code class="docutils literal notranslate"><span class="pre">pose-nva-002</span></code> — 关节角是否包含非有限值</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pose/pose-laq-001.html"><code class="docutils literal notranslate"><span class="pre">pose-laq-001</span></code> — 关节角最大绝对值</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pose/pose-laq-002.html"><code class="docutils literal notranslate"><span class="pre">pose-laq-002</span></code> — 原始无效帧比例</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pose/pose-laq-005.html"><code class="docutils literal notranslate"><span class="pre">pose-laq-005</span></code> — 静止间隔比例</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pose/pose-laq-006.html"><code class="docutils literal notranslate"><span class="pre">pose-laq-006</span></code> — 高角速度间隔比例</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pose/pose-ppa-001.html"><code class="docutils literal notranslate"><span class="pre">pose-ppa-001</span></code> — Pose 处理异常</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pose/pose-ppa-002.html"><code class="docutils literal notranslate"><span class="pre">pose-ppa-002</span></code> — Pose 产物读写异常</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../vision/vision-idc-001.html"><code class="docutils literal notranslate"><span class="pre">vision-idc-001</span></code> — 视频流是否可用</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../vision/vision-dsf-001.html"><code class="docutils literal notranslate"><span class="pre">vision-dsf-001</span></code> — 视频编码与画面结构是否正确</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../vision/vision-dsf-002.html"><code class="docutils literal notranslate"><span class="pre">vision-dsf-002</span></code> — 解码帧数是否与消息数一致</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../vision/vision-tsa-001.html"><code class="docutils literal notranslate"><span class="pre">vision-tsa-001</span></code> — 视频时间戳是否递增</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../vision/vision-tsa-002.html"><code class="docutils literal notranslate"><span class="pre">vision-tsa-002</span></code> — 视频帧率偏差比例</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../vision/vision-tsa-004.html"><code class="docutils literal notranslate"><span class="pre">vision-tsa-004</span></code> — 最大连续缺帧时长</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../vision/vision-tsa-005.html"><code class="docutils literal notranslate"><span class="pre">vision-tsa-005</span></code> — 累计缺帧比例</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../vision/vision-dcr-001.html"><code class="docutils literal notranslate"><span class="pre">vision-dcr-001</span></code> — 视频有效时长</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../vision/vision-scq-001.html"><code class="docutils literal notranslate"><span class="pre">vision-scq-001</span></code> — 双目标定</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../vision/vision-scq-002.html"><code class="docutils literal notranslate"><span class="pre">vision-scq-002</span></code> — 画面冻结最长时长</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../vision/vision-laq-001.html"><code class="docutils literal notranslate"><span class="pre">vision-laq-001</span></code> — 相机静止最长时长</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../vision/vision-laq-002.html"><code class="docutils literal notranslate"><span class="pre">vision-laq-002</span></code> — 画面无手最长时长</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../vision/vision-ppa-001.html"><code class="docutils literal notranslate"><span class="pre">vision-ppa-001</span></code> — 视频处理或质检执行异常</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../vision/vision-ppa-002.html"><code class="docutils literal notranslate"><span class="pre">vision-ppa-002</span></code> — 帧索引写入异常</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../comb_camera/comb_camera-idc-001.html"><code class="docutils literal notranslate"><span class="pre">comb_camera-idc-001</span></code> — 相机文件能否完整读取且八路齐全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../comb_camera/comb_camera-dsf-001.html"><code class="docutils literal notranslate"><span class="pre">comb_camera-dsf-001</span></code> — 每路视频能否逐帧完整解码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../comb_camera/comb_camera-tsa-001.html"><code class="docutils literal notranslate"><span class="pre">comb_camera-tsa-001</span></code> — 每路相机是否丢帧或时间倒退</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../comb_camera/comb_camera-tsa-002.html"><code class="docutils literal notranslate"><span class="pre">comb_camera-tsa-002</span></code> — 八路画面是否全部同步配对成功</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../comb_camera/comb_camera-scq-001.html"><code class="docutils literal notranslate"><span class="pre">comb_camera-scq-001</span></code> — 每路画面是否带有有效时间校准信息</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../comb_camera/comb_camera-ppa-001.html"><code class="docutils literal notranslate"><span class="pre">comb_camera-ppa-001</span></code> — 相机检查程序是否完整运行</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../comb_camera/comb_camera-ppa-002.html"><code class="docutils literal notranslate"><span class="pre">comb_camera-ppa-002</span></code> — 配对索引文件能否正确保存</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../timestamp/timestamp-idc-001.html"><code class="docutils literal notranslate"><span class="pre">timestamp-idc-001</span></code> — 各模态 NPZ 是否可读取</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../timestamp/timestamp-dsf-001.html"><code class="docutils literal notranslate"><span class="pre">timestamp-dsf-001</span></code> — 各模态时间轴是否正常</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../timestamp/timestamp-dsf-002.html"><code class="docutils literal notranslate"><span class="pre">timestamp-dsf-002</span></code> — 各模态时间戳 shape 和 dtype 是否正常</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../timestamp/timestamp-dsf-003.html"><code class="docutils literal notranslate"><span class="pre">timestamp-dsf-003</span></code> — 各模态数据字段与时间轴是否匹配</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../timestamp/timestamp-tsa-004.html"><code class="docutils literal notranslate"><span class="pre">timestamp-tsa-004</span></code> — 公共时间段过短</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../timestamp/timestamp-ppa-001.html"><code class="docutils literal notranslate"><span class="pre">timestamp-ppa-001</span></code> — Timestamp 产物写入异常</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="初始页面">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">质检算子</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis"><code class="docutils literal notranslate"><span class="pre">emg-scq-001</span></code> — 死通道数</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="quality-page-kicker">QUALITY OPERATOR · signal_channel_quality</div>
+<section id="id1">
+<h1><code class="docutils literal notranslate"><span class="pre">emg-scq-001</span></code> — 死通道数<a class="headerlink" href="#id1" title="Link to this heading">#</a></h1>
+<p><a class="reference internal" href="../../modality-operators/emg.html"><span class="std std-doc">所属模态算子：EMG</span></a></p>
+<div class="quality-meta">
+  <code class="meta-lifecycle is-active">active</code>
+  <code class="meta-artifact is-available">error 时产物可生成</code>
+  <code class="meta-cardinality">single</code>
+  <code class="meta-domain">signal_channel_quality</code>
+  <code class="meta-stage">processed</code>
+  <code class="meta-version">rule v2.0.0</code>
+  <code class="meta-version">fm-emg-operator v0.16.0</code>
+</div>
+<p class="quality-lead">统计处理后 EMG 中标准差低于 1.0 uV 的通道数量，并在 details.channels 中记录具体通道编号。</p>
+<section id="id2">
+<h2>白话解释<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>做了什么检测：</strong> 查看 16 路肌电信号各自有没有正常起伏，并数出几乎是一条直线的通道。</p></li>
+<li><p><strong>为什么会告警或不通过：</strong> 只要有通道几乎不变化就不通过，常见原因是电极脱落、接触不良、线缆或采集通道故障。</p></li>
+</ul>
+</section>
+<section id="id3">
+<h2>版本历史<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Rule 版本</p></th>
+<th class="head"><p>首次对应包版本</p></th>
+<th class="head"><p>日期</p></th>
+<th class="head"><p>变更</p></th>
+<th class="head"><p>提交</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>—</p></td>
+<td><p>—</p></td>
+<td><p>—</p></td>
+<td><p>尚无基线后的版本变更</p></td>
+<td><p>—</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>仅展示文档 1.0.0 基线之后的变更。</p>
+</section>
+<section id="id4">
+<h2>计算契约<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
+<div class="quality-contract admonition">
+<p class="admonition-title">计算契约（不可直接调用）</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">quality</span><span class="o">.</span><span class="n">emg</span><span class="o">.</span><span class="n">emg_scq_001</span><span class="p">(</span>
+    <span class="n">emg_record</span><span class="p">:</span> <span class="n">NPZ</span> <span class="n">arrays</span> <span class="n">timestamps</span><span class="o">=</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">emg</span><span class="o">=</span><span class="p">[</span><span class="n">T</span><span class="p">,</span><span class="mi">16</span><span class="p">],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">error_gt</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">channel_std_lt_uv</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RuleResult</span>
+</pre></div>
+</div>
+</div>
+<div class="quality-source-links docutils">
+<p><a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/emg.py#L377">implementation</a> ·
+<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/rules.py#L65">registry</a> ·
+<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-emg-operator/tests/test_emg_operator.py#L253">test 1</a> ·
+<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/docs/quality-rule-calculation-spec.md">计算规范</a></p>
+</div>
+<div class="note admonition">
+<p class="admonition-title">注意</p>
+<ul class="simple">
+<li><p>本规则为 single：value/unit 为死通道数量及 count，threshold 集中记录判定边界；具体通道编号仅记录在 details.channels。</p></li>
+<li><p>规则阶段为 processed；总状态只取已执行规则的最高严重度。</p></li>
+<li><p>质量或数据异常由 RuleResult 明确记录且进程返回 0；只有运行配置错误返回 1。</p></li>
+</ul>
+</div>
+</section>
+<section id="id5">
+<h2>数据输入<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>名称</p></th>
+<th class="head"><p>来源</p></th>
+<th class="head"><p>dtype</p></th>
+<th class="head"><p>shape</p></th>
+<th class="head"><p>单位</p></th>
+<th class="head"><p>必需</p></th>
+<th class="head"><p>说明</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">emg_record</span></code></p></td>
+<td><p>processed</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">NPZ</span> <span class="pre">arrays</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">timestamps=[T],</span> <span class="pre">emg=[T,16]</span></code></p></td>
+<td><p>N/A</p></td>
+<td><p>是</p></td>
+<td><p>EMG 原始记录及处理后信号。</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="id6">
+<h2>配置参数<a class="headerlink" href="#id6" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>名称</p></th>
+<th class="head"><p>类型</p></th>
+<th class="head"><p>默认值/必需</p></th>
+<th class="head"><p>来源</p></th>
+<th class="head"><p>说明</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">error_gt</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">0</span></code></p></td>
+<td><p>rule_threshold</p></td>
+<td><p>error_gt 判定边界；比较符含义见 decision。</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">channel_std_lt_uv</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">1.0</span></code></p></td>
+<td><p>rule_threshold</p></td>
+<td><p>channel_std_lt_uv 判定边界；比较符含义见 decision。</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="id7">
+<h2>计算定义<a class="headerlink" href="#id7" title="Link to this heading">#</a></h2>
+<section id="id8">
+<h3>指标含义<a class="headerlink" href="#id8" title="Link to this heading">#</a></h3>
+<p>表示处理后 16 个 EMG 通道中，整段标准差低于 1.0 uV 的通道数量；这些近乎恒定的通道通常无法提供有效肌电变化。</p>
+<p>计算使用 <code class="docutils literal notranslate"><span class="pre">emg_record</span></code>，
+结果类型为 <code class="docutils literal notranslate"><span class="pre">integer</span></code>，
+单位为 count。</p>
+</section>
+<section id="id9">
+<h3>计算方法<a class="headerlink" href="#id9" title="Link to this heading">#</a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>value = count(std(emg[:, channel]) &lt; 1.0 uV)
+</pre></div>
+</div>
+</section>
+<section id="id10">
+<h3>判定边界<a class="headerlink" href="#id10" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>状态</p></th>
+<th class="head"><p>条件</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>pass</p></td>
+<td><p>未命中 warn 或 error 条件</p></td>
+</tr>
+<tr class="row-odd"><td><p>warn</p></td>
+<td><p>not_applicable</p></td>
+</tr>
+<tr class="row-even"><td><p>error</p></td>
+<td><p>任一通道的标准差 &lt; 1.0 uV，即死通道数 &gt; 0</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<ul class="simple">
+<li><p>严格遵循本页判定中的 &gt;、&gt;=、&lt;、&lt;=；等号归属以明确写出的比较符为准。</p></li>
+</ul>
+</section>
+</section>
+<section id="id11">
+<h2>执行关系<a class="headerlink" href="#id11" title="Link to this heading">#</a></h2>
+<p><strong>前置质检算子：</strong> 无。</p>
+<p><strong>产物影响：</strong> 本规则为 <code class="docutils literal notranslate"><span class="pre">error</span></code> 时，只记录质量异常，不阻止生成结构上有效的产物。
+如果后续处理或写入本身失败，仍可能没有产物；最终事实以 <code class="docutils literal notranslate"><span class="pre">processed_ok</span></code> 与 <code class="docutils literal notranslate"><span class="pre">artifacts</span></code>
+为准。</p>
+<p><strong>相关质检算子：</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="emg-scq-002.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">emg-scq-002</span></code></span></a></p></li>
+</ul>
+</section>
+<section id="id12">
+<h2>输出<a class="headerlink" href="#id12" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>字段</p></th>
+<th class="head"><p>约定</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>实例模型</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">single</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">value</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">integer</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">unit</span></code></p></td>
+<td><p>count</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">threshold</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mapping</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">details</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">message</span></code>, <code class="docutils literal notranslate"><span class="pre">category</span></code>, <code class="docutils literal notranslate"><span class="pre">channels</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">"rule_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"emg-scq-001"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"rule_version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0.0"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"problem_domain"</span><span class="p">:</span><span class="w"> </span><span class="s2">"signal_channel_quality"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"stage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"processed"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"error"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"unit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"count"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"threshold"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"error_gt"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"channel_std_lt_uv"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.0</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"details"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ERROR：EMG 死通道数 1 count &gt; 0 count；通道标准差 &lt; 1 uV"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"category"</span><span class="p">:</span><span class="w"> </span><span class="s2">"quality"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"channels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="mi">0</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="id13">
+<h2>失败后建议<a class="headerlink" href="#id13" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>按 details.channels 中的通道编号检查传感器、佩戴和采集环境。</p></li>
+<li><p>保留原始数据与本规则数值用于复核。</p></li>
+</ol>
+</section>
+<section id="id14">
+<h2>来源与维护<a class="headerlink" href="#id14" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>页面 owner：<code class="docutils literal notranslate"><span class="pre">data-quality/emg</span></code></p></li>
+<li><p>所属模态算子：<a class="reference internal" href="../../modality-operators/emg.html"><span class="std std-doc">EMG</span></a></p></li>
+<li><p>实现：<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/emg.py#L377">operators/fm-emg-operator/src/fm_emg_operator/emg.py</a></p></li>
+<li><p>注册：<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/rules.py#L65">operators/fm-emg-operator/src/fm_emg_operator/rules.py</a></p></li>
+<li><p>测试：<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-emg-operator/tests/test_emg_operator.py#L253">operators/fm-emg-operator/tests/test_emg_operator.py::test_emg_rule_registry_has_unique_canonical_ids</a></p></li>
+<li><p>计算规范：<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/docs/quality-rule-calculation-spec.md">docs/quality-rule-calculation-spec.md</a></p></li>
+<li><p><a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator-docs/site/operator-pages/emg/emg-scq-001.yaml#L1">编辑本页 manifest</a></p></li>
+</ul>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="emg-nva-001.html"
+       title="上一页">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title"><code class="docutils literal notranslate"><span class="pre">emg-nva-001</span></code> — EMG 是否含有 NaN 或 Inf</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="emg-scq-002.html"
+       title="下一页">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title"><code class="docutils literal notranslate"><span class="pre">emg-scq-002</span></code> — 原始信号饱和异常</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 当前页面
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">白话解释</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">版本历史</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">计算契约</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">数据输入</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">配置参数</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">计算定义</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">指标含义</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">计算方法</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">判定边界</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">执行关系</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">输出</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">失败后建议</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">来源与维护</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2026, OriginFlow AI.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    由 <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3创建。
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  使用 <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1构建.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

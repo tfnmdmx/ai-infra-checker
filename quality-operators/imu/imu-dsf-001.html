@@ -41,7 +41,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../_static/documentation_options.js?v=34088549"></script>
+    <script src="../../_static/documentation_options.js?v=3657e1f8"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -51,10 +51,10 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'quality-operators/imu/imu-dsf-001';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'http://localhost:8000/_static/qc-operator-versions.json';
-        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.0.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = '/_static/qc-operator-versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.4.1';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
-            true;
+            false;
         </script>
     <script src="../../_static/operator-catalog.js?v=0b79d364"></script>
     <link rel="index" title="索引" href="../../genindex.html" />
@@ -63,7 +63,7 @@
     <link rel="prev" title="imu-idc-001 — IMU 必需字段是否完整" href="imu-idc-001.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="zh-CN"/>
-  <meta name="docsearch:version" content="1.0.0" />
+  <meta name="docsearch:version" content="1.4.1" />
   </head>
   
   
@@ -586,10 +586,10 @@
 </div>
 </div>
 <div class="quality-source-links docutils">
-<p><a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/imu.py#L640">implementation</a> ·
-<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/rules.py#L55">registry</a> ·
-<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-imu-operator/tests/test_imu_operator.py#L494">test 1</a> ·
-<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/docs/quality-rule-calculation-spec.md">计算规范</a></p>
+<p><a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/imu.py#L640">implementation</a> ·
+<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/rules.py#L55">registry</a> ·
+<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-imu-operator/tests/test_imu_operator.py#L494">test 1</a> ·
+<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/docs/quality-rule-calculation-spec.md">计算规范</a></p>
 </div>
 <div class="note admonition">
 <p class="admonition-title">注意</p>
@@ -718,11 +718,11 @@
 <ul class="simple">
 <li><p>页面 owner：<code class="docutils literal notranslate"><span class="pre">data-quality/imu</span></code></p></li>
 <li><p>所属模态算子：<a class="reference internal" href="../../modality-operators/imu.html"><span class="std std-doc">IMU</span></a></p></li>
-<li><p>实现：<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/imu.py#L640">operators/fm-imu-operator/src/fm_imu_operator/imu.py</a></p></li>
-<li><p>注册：<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/rules.py#L55">operators/fm-imu-operator/src/fm_imu_operator/rules.py</a></p></li>
-<li><p>测试：<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-imu-operator/tests/test_imu_operator.py#L494">operators/fm-imu-operator/tests/test_imu_operator.py::test_imu_signal_and_timestamp_format_use_one_dsf_rule</a></p></li>
-<li><p>计算规范：<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/docs/quality-rule-calculation-spec.md">docs/quality-rule-calculation-spec.md</a></p></li>
-<li><p><a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator-docs/site/operator-pages/imu/imu-dsf-001.yaml#L1">编辑本页 manifest</a></p></li>
+<li><p>实现：<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/imu.py#L640">operators/fm-imu-operator/src/fm_imu_operator/imu.py</a></p></li>
+<li><p>注册：<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/rules.py#L55">operators/fm-imu-operator/src/fm_imu_operator/rules.py</a></p></li>
+<li><p>测试：<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-imu-operator/tests/test_imu_operator.py#L494">operators/fm-imu-operator/tests/test_imu_operator.py::test_imu_signal_and_timestamp_format_use_one_dsf_rule</a></p></li>
+<li><p>计算规范：<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/docs/quality-rule-calculation-spec.md">docs/quality-rule-calculation-spec.md</a></p></li>
+<li><p><a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator-docs/site/operator-pages/imu/imu-dsf-001.yaml#L1">编辑本页 manifest</a></p></li>
 </ul>
 </section>
 </section>

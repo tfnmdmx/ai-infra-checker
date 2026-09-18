@@ -1,0 +1,149 @@
+(pose-tsa-003)=
+<div class="quality-page-kicker">QUALITY OPERATOR · time_sample_alignment</div>
+
+# `pose-tsa-003` — Pose 时间戳是否有效
+
+[所属模态算子：Pose](../../modality-operators/pose.md)
+
+<div class="quality-meta">
+  <code class="meta-lifecycle is-active">active</code>
+  <code class="meta-artifact is-unavailable">error 时产物无法生成</code>
+  <code class="meta-cardinality">single</code>
+  <code class="meta-domain">time_sample_alignment</code>
+  <code class="meta-stage">processed</code>
+  <code class="meta-version">rule v2.0.0</code>
+  <code class="meta-version">fm-pose-label-operator v0.16.0</code>
+</div>
+
+<p class="quality-lead">合并样本数量、标签与时间戳等长、有限性及严格递增检查。</p>
+
+## 白话解释
+
+- **做了什么检测：** 合并样本数量、标签与时间戳等长、有限性及严格递增检查。
+- **为什么会告警或不通过：** 时间戳少于两点、不等长、非有限或不严格递增时 error。
+
+## 版本历史
+
+| Rule 版本 | 首次对应包版本 | 日期 | 变更 | 提交 |
+| --- | --- | --- | --- | --- |
+| — | — | — | 尚无基线后的版本变更 | — |
+
+仅展示文档 1.0.0 基线之后的变更。
+
+## 计算契约
+
+::::{admonition} 计算契约（不可直接调用）
+:class: quality-contract
+
+```python
+quality.pose.pose_tsa_003(
+    pose_record: NPZ arrays timestamps=[T], joint_angles=[T,20],
+) -> RuleResult
+```
+::::
+
+::::{div} quality-source-links
+[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-pose-label-operator/src/fm_pose_label_operator/pose_processed_quality.py#L351) ·
+[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-pose-label-operator/src/fm_pose_label_operator/rules.py#L56) ·
+[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-pose-label-operator/tests/test_pose_label_operator.py#L894) ·
+[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/docs/quality-rule-calculation-spec.md)
+::::
+
+```{admonition} 注意
+:class: note
+
+- 规则阶段为 processed；总状态只取已执行规则的最高严重度。
+- 质量或数据异常由 RuleResult 明确记录且进程返回 0；只有运行配置错误返回 1。
+```
+
+## 数据输入
+
+| 名称 | 来源 | dtype | shape | 单位 | 必需 | 说明 |
+| --- | --- | --- | --- | --- | --- | --- |
+| `pose_record` | processed | `NPZ arrays` | `timestamps=[T], joint_angles=[T,20]` | N/A | 是 | Pose 原始数据及处理后关节角。 |
+
+## 配置参数
+
+本质检算子没有独立配置参数。
+
+## 校验逻辑
+### 校验含义
+
+**不通过表示：** 时间戳少于两点、不等长、非有限或不严格递增时 error。
+
+### 具体检查项
+
+1. 合并样本数量、标签与时间戳等长、有限性及严格递增检查。
+2. 时间戳少于两点、不等长、非有限或不严格递增时 error。
+
+
+### 判定边界
+
+| 状态 | 条件 |
+| --- | --- |
+| pass | 未命中异常条件。 |
+| warn | not_applicable |
+| error | 时间戳少于两点、不等长、非有限或不严格递增时 error。 |
+
+- 等号归属按上述比较符；不通过放宽阈值修复数据。
+
+## 执行关系
+
+**前置质检算子：**
+
+- [`pose-dsf-003`](../pose/pose-dsf-003.md)
+
+**不执行条件：**
+
+- 前置规则未通过时不执行，原因记录于 summary.skipped_rules。
+
+**产物影响：** 本规则为 `error` 时，输出契约已经无法满足，因此本次不会登记产物；
+原因由结构化 RuleResult 记录。只要这不是运行配置错误，进程仍返回 0。
+
+
+## 输出
+
+| 字段 | 约定 |
+| --- | --- |
+| 实例模型 | `single` |
+| `value` | `any` 或 `null` |
+| `unit` | N/A |
+| `threshold` | `any` |
+| `details` | `message`, `category`, `issues`, `timestamp_samples`, `joint_samples` |
+
+```json
+{
+  "rule_id": "pose-tsa-003",
+  "rule_version": "2.0.0",
+  "problem_domain": "time_sample_alignment",
+  "stage": "processed",
+  "status": "error",
+  "value": null,
+  "unit": null,
+  "threshold": null,
+  "details": {
+    "message": "时间戳少于两点、不等长、非有限或不严格递增时 error。",
+    "category": "alignment",
+    "issues": [
+      "时间戳必须严格递增"
+    ],
+    "timestamp_samples": 3,
+    "joint_samples": 3
+  }
+}
+```
+
+## 失败后建议
+
+1. 检查权威时间戳来源、单位、顺序、丢帧和采集时钟。
+2. 结合 details 中的字段或目标实例定位异常流。
+
+## 来源与维护
+
+- 页面 owner：`data-quality/pose`
+- 所属模态算子：[Pose](../../modality-operators/pose.md)
+- 实现：[operators/fm-pose-label-operator/src/fm_pose_label_operator/pose_processed_quality.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-pose-label-operator/src/fm_pose_label_operator/pose_processed_quality.py#L351)
+- 注册：[operators/fm-pose-label-operator/src/fm_pose_label_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-pose-label-operator/src/fm_pose_label_operator/rules.py#L56)
+- 测试：[operators/fm-pose-label-operator/tests/test_pose_label_operator.py::test_pose_timestamp_failures_share_one_rule](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-pose-label-operator/tests/test_pose_label_operator.py#L894)
+- 计算规范：[docs/quality-rule-calculation-spec.md](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/docs/quality-rule-calculation-spec.md)
+- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator-docs/site/operator-pages/pose/pose-tsa-003.yaml#L1)

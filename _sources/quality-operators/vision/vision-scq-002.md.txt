@@ -59,10 +59,10 @@ quality.vision.vision_scq_002(
 ::::
 
 ::::{div} quality-source-links
-[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/video_checks.py#L179) ·
-[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/rules.py#L69) ·
-[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-vision-operator/tests/test_vision_operator.py#L896) ·
-[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/docs/quality-rule-calculation-spec.md)
+[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/video_checks.py#L179) ·
+[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/rules.py#L69) ·
+[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-vision-operator/tests/test_vision_operator.py#L896) ·
+[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/docs/quality-rule-calculation-spec.md)
 ::::
 
 ```{admonition} 注意
@@ -168,8 +168,8 @@ value = max(interval.duration for interval in retained_intervals, default=0)
 
 - 页面 owner：`data-quality/vision`
 - 所属模态算子：[Vision](../../modality-operators/vision.md)
-- 实现：[operators/fm-vision-operator/src/fm_vision_operator/video_checks.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/video_checks.py#L179)
-- 注册：[operators/fm-vision-operator/src/fm_vision_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/rules.py#L69)
-- 测试：[operators/fm-vision-operator/tests/test_vision_operator.py::test_detected_freeze_fails_quality_but_keeps_artifact](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-vision-operator/tests/test_vision_operator.py#L896)
-- 计算规范：[docs/quality-rule-calculation-spec.md](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/docs/quality-rule-calculation-spec.md)
-- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator-docs/site/operator-pages/vision/vision-scq-002.yaml#L1)
+- 实现：[operators/fm-vision-operator/src/fm_vision_operator/video_checks.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/video_checks.py#L179)
+- 注册：[operators/fm-vision-operator/src/fm_vision_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/rules.py#L69)
+- 测试：[operators/fm-vision-operator/tests/test_vision_operator.py::test_detected_freeze_fails_quality_but_keeps_artifact](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-vision-operator/tests/test_vision_operator.py#L896)
+- 计算规范：[docs/quality-rule-calculation-spec.md](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/docs/quality-rule-calculation-spec.md)
+- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator-docs/site/operator-pages/vision/vision-scq-002.yaml#L1)

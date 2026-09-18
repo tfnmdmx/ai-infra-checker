@@ -41,7 +41,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../_static/documentation_options.js?v=34088549"></script>
+    <script src="../../_static/documentation_options.js?v=3657e1f8"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -51,10 +51,10 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'quality-operators/force/force-laq-002';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'http://localhost:8000/_static/qc-operator-versions.json';
-        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.0.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = '/_static/qc-operator-versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.4.1';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
-            true;
+            false;
         </script>
     <script src="../../_static/operator-catalog.js?v=0b79d364"></script>
     <link rel="index" title="索引" href="../../genindex.html" />
@@ -63,7 +63,7 @@
     <link rel="prev" title="force-scq-001 — Force 通道是否恒定" href="force-scq-001.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="zh-CN"/>
-  <meta name="docsearch:version" content="1.0.0" />
+  <meta name="docsearch:version" content="1.4.1" />
   </head>
   
   
@@ -590,10 +590,10 @@
 </div>
 </div>
 <div class="quality-source-links docutils">
-<p><a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-force-label-operator/src/fm_force_label_operator/force_rest_quality.py#L426">implementation</a> ·
-<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-force-label-operator/src/fm_force_label_operator/rules.py#L70">registry</a> ·
-<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-force-label-operator/tests/test_force_label_operator.py#L713">test 1</a> · <a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-force-label-operator/tests/test_force_label_operator.py#L848">test 2</a> · <a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-force-label-operator/tests/test_force_label_operator.py#L1756">test 3</a> ·
-<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/docs/quality-rule-calculation-spec.md#44-%E9%9D%99%E6%81%AF%E7%AA%97%E5%8F%A3%E4%B8%8E%E9%80%9A%E9%81%93%E4%BA%8B%E5%AE%9E">计算规范</a></p>
+<p><a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-force-label-operator/src/fm_force_label_operator/force_rest_quality.py#L426">implementation</a> ·
+<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-force-label-operator/src/fm_force_label_operator/rules.py#L70">registry</a> ·
+<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-force-label-operator/tests/test_force_label_operator.py#L713">test 1</a> · <a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-force-label-operator/tests/test_force_label_operator.py#L848">test 2</a> · <a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-force-label-operator/tests/test_force_label_operator.py#L1756">test 3</a> ·
+<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/docs/quality-rule-calculation-spec.md#44-%E9%9D%99%E6%81%AF%E7%AA%97%E5%8F%A3%E4%B8%8E%E9%80%9A%E9%81%93%E4%BA%8B%E5%AE%9E">计算规范</a></p>
 </div>
 <div class="note admonition">
 <p class="admonition-title">注意</p>
@@ -801,13 +801,13 @@ warn = not error and (value &gt; mean_warn or p95_n &gt; p95_warn or std_n &gt; 
 <ul class="simple">
 <li><p>页面 owner：<code class="docutils literal notranslate"><span class="pre">data-quality/force</span></code></p></li>
 <li><p>所属模态算子：<a class="reference internal" href="../../modality-operators/force.html"><span class="std std-doc">Force</span></a></p></li>
-<li><p>实现：<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-force-label-operator/src/fm_force_label_operator/force_rest_quality.py#L426">operators/fm-force-label-operator/src/fm_force_label_operator/force_rest_quality.py</a></p></li>
-<li><p>注册：<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-force-label-operator/src/fm_force_label_operator/rules.py#L70">operators/fm-force-label-operator/src/fm_force_label_operator/rules.py</a></p></li>
-<li><p>测试：<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-force-label-operator/tests/test_force_label_operator.py#L713">operators/fm-force-label-operator/tests/test_force_label_operator.py::test_force_required_rest_uses_only_full_first_three_seconds</a></p></li>
-<li><p>测试：<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-force-label-operator/tests/test_force_label_operator.py#L848">operators/fm-force-label-operator/tests/test_force_label_operator.py::test_force_rule_instances_are_merged_by_rule_id</a></p></li>
-<li><p>测试：<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-force-label-operator/tests/test_force_label_operator.py#L1756">operators/fm-force-label-operator/tests/test_force_label_operator.py::test_force_merged_rest_preserves_sensor_thresholds</a></p></li>
-<li><p>计算规范：<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/docs/quality-rule-calculation-spec.md#44-%E9%9D%99%E6%81%AF%E7%AA%97%E5%8F%A3%E4%B8%8E%E9%80%9A%E9%81%93%E4%BA%8B%E5%AE%9E">docs/quality-rule-calculation-spec.md#44-静息窗口与通道事实</a></p></li>
-<li><p><a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator-docs/site/operator-pages/force/force-laq-002.yaml#L1">编辑本页 manifest</a></p></li>
+<li><p>实现：<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-force-label-operator/src/fm_force_label_operator/force_rest_quality.py#L426">operators/fm-force-label-operator/src/fm_force_label_operator/force_rest_quality.py</a></p></li>
+<li><p>注册：<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-force-label-operator/src/fm_force_label_operator/rules.py#L70">operators/fm-force-label-operator/src/fm_force_label_operator/rules.py</a></p></li>
+<li><p>测试：<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-force-label-operator/tests/test_force_label_operator.py#L713">operators/fm-force-label-operator/tests/test_force_label_operator.py::test_force_required_rest_uses_only_full_first_three_seconds</a></p></li>
+<li><p>测试：<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-force-label-operator/tests/test_force_label_operator.py#L848">operators/fm-force-label-operator/tests/test_force_label_operator.py::test_force_rule_instances_are_merged_by_rule_id</a></p></li>
+<li><p>测试：<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-force-label-operator/tests/test_force_label_operator.py#L1756">operators/fm-force-label-operator/tests/test_force_label_operator.py::test_force_merged_rest_preserves_sensor_thresholds</a></p></li>
+<li><p>计算规范：<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/docs/quality-rule-calculation-spec.md#44-%E9%9D%99%E6%81%AF%E7%AA%97%E5%8F%A3%E4%B8%8E%E9%80%9A%E9%81%93%E4%BA%8B%E5%AE%9E">docs/quality-rule-calculation-spec.md#44-静息窗口与通道事实</a></p></li>
+<li><p><a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator-docs/site/operator-pages/force/force-laq-002.yaml#L1">编辑本页 manifest</a></p></li>
 </ul>
 </section>
 </section>

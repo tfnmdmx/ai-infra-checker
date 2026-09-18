@@ -1,0 +1,165 @@
+(imu-dsf-001)=
+<div class="quality-page-kicker">QUALITY OPERATOR · data_structure_format</div>
+
+# `imu-dsf-001` — IMU shape 和 dtype 是否正确
+
+[所属模态算子：IMU](../../modality-operators/imu.md)
+
+<div class="quality-meta">
+  <code class="meta-lifecycle is-active">active</code>
+  <code class="meta-artifact is-unavailable">error 时产物无法生成</code>
+  <code class="meta-cardinality">multi · field</code>
+  <code class="meta-domain">data_structure_format</code>
+  <code class="meta-stage">raw</code>
+  <code class="meta-version">rule v2.0.0</code>
+  <code class="meta-version">fm-imu-operator v0.13.0</code>
+</div>
+
+<p class="quality-lead">检查 IMU 三轴载荷及时间戳数组的维度、列数与数据类型是否符合输入格式要求。</p>
+
+## 白话解释
+
+- **做了什么检测：** 检查加速度、角速度和磁场数据是否都是“每行一个时刻、每行 X/Y/Z 三个数字”，并检查时间是不是一列数字。
+- **为什么会告警或不通过：** 任一组三轴数据不是三列数字，或时间字段不是一列数字；程序因此无法按标准惯性传感器数据解释它。
+
+## 版本历史
+
+| Rule 版本 | 首次对应包版本 | 日期 | 变更 | 提交 |
+| --- | --- | --- | --- | --- |
+| — | — | — | 尚无基线后的版本变更 | — |
+
+仅展示文档 1.0.0 基线之后的变更。
+
+## 计算契约
+
+::::{admonition} 计算契约（不可直接调用）
+:class: quality-contract
+
+```python
+quality.imu.imu_dsf_001(
+    imu_record: NPZ arrays timestamps=[T], axes=[T,3],
+) -> RuleResult
+```
+::::
+
+::::{div} quality-source-links
+[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/imu.py#L640) ·
+[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/rules.py#L55) ·
+[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-imu-operator/tests/test_imu_operator.py#L498) ·
+[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/docs/quality-rule-calculation-spec.md)
+::::
+
+```{admonition} 注意
+:class: note
+
+- 该规则 v2.0.0 将原 `imu-tsa-001` 的时间戳 shape 检查收敛到统一的数据格式检查中。
+- 规则阶段为 raw；总状态只取已执行规则的最高严重度。
+- 质量或数据异常由 RuleResult 明确记录且进程返回 0；只有运行配置错误返回 1。
+```
+
+## 数据输入
+
+| 名称 | 来源 | dtype | shape | 单位 | 必需 | 说明 |
+| --- | --- | --- | --- | --- | --- | --- |
+| `imu_record` | raw | `NPZ arrays` | `timestamps=[T], axes=[T,3]` | N/A | 是 | 输入 NPZ；三个 XYZ 字段应为数值型 `[T,3]`，硬件及所选样本时间戳应为数值型 `[T]`。 |
+
+## 配置参数
+
+本质检算子没有独立配置参数。
+
+## 校验逻辑
+### 校验含义
+
+**不通过表示：** XYZ 不是数值型 `[T,3]`，或硬件/所选样本时间戳不是数值型 `[T]` 时按字段 error
+
+### 具体检查项
+
+1. 检查 accel、gyro 和 mag 是否为数值型二维数组，并且第二维恰好为 3，对应 X、Y、Z 三轴。
+2. 检查 `emg_imu_hw_us` 及最终选用的 raw/sync 样本时间戳是否为数值型一维数组。
+3. 任一字段不符合格式时按字段发布 error，不执行隐式 reshape 或 dtype 猜测。
+4. 本规则不检查 NaN/Inf、字段等长和时间戳顺序；这些分别由 `imu-nva-001` 和 `imu-tsa-001` 判断。
+
+
+### 判定边界
+
+| 状态 | 条件 |
+| --- | --- |
+| pass | 三轴载荷和时间戳数组的 shape 与 dtype 均正确 |
+| warn | not_applicable |
+| error | XYZ 不是数值型 `[T,3]`，或硬件/所选样本时间戳不是数值型 `[T]` 时按字段 error |
+
+- 结构校验按离散条件判定，不进行隐式修复或默认跳过。
+
+## 执行关系
+
+**前置质检算子：** 无。
+
+
+**产物影响：** 本规则为 `error` 时，输出契约已经无法满足，因此本次不会登记产物；
+原因由结构化 RuleResult 记录。只要这不是运行配置错误，进程仍返回 0。
+
+
+## 输出
+
+| 字段 | 约定 |
+| --- | --- |
+| 实例模型 | `multi`；实例身份为 `field` 类型的 `(target_type, target_id)` |
+| `value` | `any` 或 `null` |
+| `unit` | N/A |
+| `threshold` | `any` |
+| `details` | `message`, `category`, `metric`, `instances`, `shape`, `dtype` |
+
+```json
+{
+  "rule_id": "imu-dsf-001",
+  "rule_version": "2.0.0",
+  "problem_domain": "data_structure_format",
+  "stage": "raw",
+  "status": "error",
+  "value": null,
+  "unit": null,
+  "threshold": null,
+  "details": {
+    "message": "emg_imu_hw_us shape=(4, 1), dtype=float64，期望数值型 (N,)",
+    "category": "schema",
+    "metric": "field shape",
+    "instances": [
+      {
+        "target_type": "field",
+        "target_id": "emg_imu_hw_us",
+        "status": "error",
+        "value": null,
+        "unit": null,
+        "threshold": null,
+        "details": {
+          "metric": "field shape",
+          "shape": [
+            4,
+            1
+          ],
+          "dtype": "float64",
+          "expected_shape": [
+            "T"
+          ],
+          "expected_dtype": "numeric"
+        }
+      }
+    ]
+  }
+}
+```
+
+## 失败后建议
+
+1. 检查 XYZ 是否为 `[T,3]`、时间戳是否为 `[T]`，且所有数组均为数值类型。
+2. 修复上游序列化或转换逻辑后重跑，避免在质检端猜测结构。
+
+## 来源与维护
+
+- 页面 owner：`data-quality/imu`
+- 所属模态算子：[IMU](../../modality-operators/imu.md)
+- 实现：[operators/fm-imu-operator/src/fm_imu_operator/imu.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/imu.py#L640)
+- 注册：[operators/fm-imu-operator/src/fm_imu_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/rules.py#L55)
+- 测试：[operators/fm-imu-operator/tests/test_imu_operator.py::test_imu_signal_and_timestamp_format_use_one_dsf_rule](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-imu-operator/tests/test_imu_operator.py#L498)
+- 计算规范：[docs/quality-rule-calculation-spec.md](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/docs/quality-rule-calculation-spec.md)
+- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator-docs/site/operator-pages/imu/imu-dsf-001.yaml#L1)

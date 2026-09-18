@@ -65,10 +65,10 @@ quality.emg.emg_scq_008(
 ::::
 
 ::::{div} quality-source-links
-[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/emg.py#L377) ·
-[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/rules.py#L74) ·
-[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-emg-operator/tests/test_emg_operator.py#L316) ·
-[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/docs/quality-rule-calculation-spec.md#23-%E5%8E%9F%E5%A7%8B%E9%A5%B1%E5%92%8C%E5%A4%84%E7%90%86%E5%90%8E%E9%AB%98%E5%B9%85%E4%B8%8E%E6%AD%BB%E9%80%9A%E9%81%93)
+[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/emg.py#L377) ·
+[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/rules.py#L74) ·
+[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-emg-operator/tests/test_emg_operator.py#L316) ·
+[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/docs/quality-rule-calculation-spec.md#23-%E5%8E%9F%E5%A7%8B%E9%A5%B1%E5%92%8C%E5%A4%84%E7%90%86%E5%90%8E%E9%AB%98%E5%B9%85%E4%B8%8E%E6%AD%BB%E9%80%9A%E9%81%93)
 ::::
 
 ```{admonition} 注意
@@ -191,8 +191,8 @@ channel_count = count(ratio[c] > 0)
 
 - 页面 owner：`data-quality/emg`
 - 所属模态算子：[EMG](../../modality-operators/emg.md)
-- 实现：[operators/fm-emg-operator/src/fm_emg_operator/emg.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/emg.py#L377)
-- 注册：[operators/fm-emg-operator/src/fm_emg_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/rules.py#L74)
-- 测试：[operators/fm-emg-operator/tests/test_emg_operator.py::test_combined_amplitude_rule_preserves_both_error_conditions](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-emg-operator/tests/test_emg_operator.py#L316)
-- 计算规范：[docs/quality-rule-calculation-spec.md#23-原始饱和处理后高幅与死通道](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/docs/quality-rule-calculation-spec.md#23-%E5%8E%9F%E5%A7%8B%E9%A5%B1%E5%92%8C%E5%A4%84%E7%90%86%E5%90%8E%E9%AB%98%E5%B9%85%E4%B8%8E%E6%AD%BB%E9%80%9A%E9%81%93)
-- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator-docs/site/operator-pages/emg/emg-scq-008.yaml#L1)
+- 实现：[operators/fm-emg-operator/src/fm_emg_operator/emg.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/emg.py#L377)
+- 注册：[operators/fm-emg-operator/src/fm_emg_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/rules.py#L74)
+- 测试：[operators/fm-emg-operator/tests/test_emg_operator.py::test_combined_amplitude_rule_preserves_both_error_conditions](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-emg-operator/tests/test_emg_operator.py#L316)
+- 计算规范：[docs/quality-rule-calculation-spec.md#23-原始饱和处理后高幅与死通道](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/docs/quality-rule-calculation-spec.md#23-%E5%8E%9F%E5%A7%8B%E9%A5%B1%E5%92%8C%E5%A4%84%E7%90%86%E5%90%8E%E9%AB%98%E5%B9%85%E4%B8%8E%E6%AD%BB%E9%80%9A%E9%81%93)
+- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator-docs/site/operator-pages/emg/emg-scq-008.yaml#L1)

@@ -1,0 +1,2264 @@
+[
+  {
+    "rule_id": "emg-idc-001",
+    "display_name": "EMG 必需字段是否完整",
+    "aliases": [
+      "input required field missing",
+      "EMG IDC 001",
+      "EMG 载荷及时间戳来源存在性"
+    ],
+    "modality_operator": "fm-emg-operator",
+    "modality": "emg",
+    "problem_domain": "input_device_compatibility",
+    "stage": "raw",
+    "operator_version": "0.16.0",
+    "rule_version": "2.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "validation",
+    "artifact_on_error": "unavailable",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "检查输入 NPZ 是否包含 EMG 信号和运行所需的时间戳字段；缺少任一项时发布 error。",
+    "inputs": [
+      "emg_record"
+    ],
+    "documented": true,
+    "url": "quality-operators/emg/emg-idc-001.html"
+  },
+  {
+    "rule_id": "emg-dsf-001",
+    "display_name": "EMG shape和dtype是否正确",
+    "aliases": [
+      "field shape",
+      "EMG DSF 001",
+      "EMG 形状和 dtype",
+      "EMG 数据格式是否正确"
+    ],
+    "modality_operator": "fm-emg-operator",
+    "modality": "emg",
+    "problem_domain": "data_structure_format",
+    "stage": "raw",
+    "operator_version": "0.16.0",
+    "rule_version": "1.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "validation",
+    "artifact_on_error": "unavailable",
+    "cardinality": "multi",
+    "target_type": "field",
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "检查 EMG 信号和硬件时间戳数组的维度、通道数与数据类型是否符合输入格式要求。",
+    "inputs": [
+      "emg_record"
+    ],
+    "documented": true,
+    "url": "quality-operators/emg/emg-dsf-001.html"
+  },
+  {
+    "rule_id": "emg-tsa-001",
+    "display_name": "EMG 时间戳是否严格递增",
+    "aliases": [
+      "timestamps invalid",
+      "EMG TSA 001",
+      "timestamps 有限、严格递增及样本事实",
+      "EMG 时间戳是否有效"
+    ],
+    "modality_operator": "fm-emg-operator",
+    "modality": "emg",
+    "problem_domain": "time_sample_alignment",
+    "stage": "raw",
+    "operator_version": "0.16.0",
+    "rule_version": "1.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "validation",
+    "artifact_on_error": "unavailable",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "检查 EMG 时间戳能否与信号样本一一对应，且每个值有效、时间顺序严格递增。",
+    "inputs": [
+      "emg_record"
+    ],
+    "documented": true,
+    "url": "quality-operators/emg/emg-tsa-001.html"
+  },
+  {
+    "rule_id": "emg-tsa-002",
+    "display_name": "最大时间间隔",
+    "aliases": [
+      "max contiguous gap",
+      "EMG TSA 002",
+      "emg_hw_us 最大真实相邻间隔 / s"
+    ],
+    "modality_operator": "fm-emg-operator",
+    "modality": "emg",
+    "problem_domain": "time_sample_alignment",
+    "stage": "raw",
+    "operator_version": "0.16.0",
+    "rule_version": "3.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "measurement",
+    "artifact_on_error": "available",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "检查EMG 数据的「最大时间间隔」，并按公开边界发布独立 RuleResult。",
+    "inputs": [
+      "emg_record"
+    ],
+    "documented": true,
+    "url": "quality-operators/emg/emg-tsa-002.html"
+  },
+  {
+    "rule_id": "emg-tsa-003",
+    "display_name": "采样率偏差比例",
+    "aliases": [
+      "signed sample rate deviation ratio",
+      "EMG TSA 003"
+    ],
+    "modality_operator": "fm-emg-operator",
+    "modality": "emg",
+    "problem_domain": "time_sample_alignment",
+    "stage": "raw",
+    "operator_version": "0.16.0",
+    "rule_version": "4.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "measurement",
+    "artifact_on_error": "available",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "检查 EMG 数据的有符号采样率偏差比例，并按绝对幅度边界发布独立 RuleResult。",
+    "inputs": [
+      "emg_record"
+    ],
+    "documented": true,
+    "url": "quality-operators/emg/emg-tsa-003.html"
+  },
+  {
+    "rule_id": "emg-dcr-001",
+    "display_name": "有效时长",
+    "aliases": [
+      "min duration",
+      "EMG DCR 001",
+      "有效时长 / s"
+    ],
+    "modality_operator": "fm-emg-operator",
+    "modality": "emg",
+    "problem_domain": "duration_coverage",
+    "stage": "raw",
+    "operator_version": "0.16.0",
+    "rule_version": "3.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "measurement",
+    "artifact_on_error": "available",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "检查EMG 数据的「有效时长」，并按公开边界发布独立 RuleResult。",
+    "inputs": [
+      "emg_record"
+    ],
+    "documented": true,
+    "url": "quality-operators/emg/emg-dcr-001.html"
+  },
+  {
+    "rule_id": "emg-nva-001",
+    "display_name": "EMG 是否含有 NaN 或 Inf",
+    "aliases": [
+      "value nonfinite",
+      "EMG NVA 001",
+      "数值有限性"
+    ],
+    "modality_operator": "fm-emg-operator",
+    "modality": "emg",
+    "problem_domain": "numeric_validity",
+    "stage": "raw_to_processed",
+    "operator_version": "0.16.0",
+    "rule_version": "1.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "validation",
+    "artifact_on_error": "unavailable",
+    "cardinality": "multi",
+    "target_type": "field",
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "检查读取到的 EMG 信号及滤波结果中是否出现 NaN 或正负无穷大。",
+    "inputs": [
+      "emg_record"
+    ],
+    "documented": true,
+    "url": "quality-operators/emg/emg-nva-001.html"
+  },
+  {
+    "rule_id": "emg-scq-001",
+    "display_name": "死通道数",
+    "aliases": [
+      "死通道数及通道实例",
+      "channel dead",
+      "EMG SCQ 001"
+    ],
+    "modality_operator": "fm-emg-operator",
+    "modality": "emg",
+    "problem_domain": "signal_channel_quality",
+    "stage": "processed",
+    "operator_version": "0.16.0",
+    "rule_version": "2.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "measurement",
+    "artifact_on_error": "available",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "统计处理后 EMG 中标准差低于 1.0 uV 的通道数量，并在 details.channels 中记录具体通道编号。",
+    "inputs": [
+      "emg_record"
+    ],
+    "documented": true,
+    "url": "quality-operators/emg/emg-scq-001.html"
+  },
+  {
+    "rule_id": "emg-scq-002",
+    "display_name": "原始信号饱和异常",
+    "aliases": [
+      "raw saturation ratio",
+      "EMG SCQ 002",
+      "原始饱和最大比例",
+      "原始饱和通道数",
+      "emg-scq-003"
+    ],
+    "modality_operator": "fm-emg-operator",
+    "modality": "emg",
+    "problem_domain": "signal_channel_quality",
+    "stage": "raw",
+    "operator_version": "0.16.0",
+    "rule_version": "3.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "measurement",
+    "artifact_on_error": "available",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "统一检查 EMG 原始饱和的最大样本比例与异常通道数，按两者最高严重度发布一条规则。",
+    "inputs": [
+      "emg_record"
+    ],
+    "documented": true,
+    "url": "quality-operators/emg/emg-scq-002.html"
+  },
+  {
+    "rule_id": "emg-scq-004",
+    "display_name": "工频比例偏高通道数",
+    "aliases": [
+      "powerline ratio high",
+      "EMG SCQ 004"
+    ],
+    "modality_operator": "fm-emg-operator",
+    "modality": "emg",
+    "problem_domain": "signal_channel_quality",
+    "stage": "processed",
+    "operator_version": "0.16.0",
+    "rule_version": "1.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "measurement",
+    "artifact_on_error": "available",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "检查EMG 数据的「工频比例偏高通道数」，并按公开边界发布独立 RuleResult。",
+    "inputs": [
+      "emg_record"
+    ],
+    "documented": true,
+    "url": "quality-operators/emg/emg-scq-004.html"
+  },
+  {
+    "rule_id": "emg-scq-005",
+    "display_name": "高低频带功率比",
+    "aliases": [
+      "high low band power ratio low",
+      "EMG SCQ 005",
+      "高低频带功率比 / dB"
+    ],
+    "modality_operator": "fm-emg-operator",
+    "modality": "emg",
+    "problem_domain": "signal_channel_quality",
+    "stage": "processed",
+    "operator_version": "0.16.0",
+    "rule_version": "2.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "measurement",
+    "artifact_on_error": "available",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "检查EMG 数据的「高低频带功率比」，并按公开边界发布独立 RuleResult。",
+    "inputs": [
+      "emg_record"
+    ],
+    "documented": true,
+    "url": "quality-operators/emg/emg-scq-005.html"
+  },
+  {
+    "rule_id": "emg-scq-006",
+    "display_name": "全局信号标准差",
+    "aliases": [
+      "signal weak",
+      "EMG SCQ 006"
+    ],
+    "modality_operator": "fm-emg-operator",
+    "modality": "emg",
+    "problem_domain": "signal_channel_quality",
+    "stage": "processed",
+    "operator_version": "0.16.0",
+    "rule_version": "1.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "measurement",
+    "artifact_on_error": "available",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "检查EMG 数据的「全局信号标准差」，并按公开边界发布独立 RuleResult。",
+    "inputs": [
+      "emg_record"
+    ],
+    "documented": true,
+    "url": "quality-operators/emg/emg-scq-006.html"
+  },
+  {
+    "rule_id": "emg-scq-007",
+    "display_name": "50 Hz 残留",
+    "aliases": [
+      "powerline residual 50hz high",
+      "EMG SCQ 007",
+      "50 Hz 残留 / dB"
+    ],
+    "modality_operator": "fm-emg-operator",
+    "modality": "emg",
+    "problem_domain": "signal_channel_quality",
+    "stage": "processed",
+    "operator_version": "0.16.0",
+    "rule_version": "1.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "measurement",
+    "artifact_on_error": "available",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "检查EMG 数据的「50 Hz 残留」，并按公开边界发布独立 RuleResult。",
+    "inputs": [
+      "emg_record"
+    ],
+    "documented": true,
+    "url": "quality-operators/emg/emg-scq-007.html"
+  },
+  {
+    "rule_id": "emg-scq-008",
+    "display_name": "处理后持续高幅异常",
+    "aliases": [
+      "processed high-amplitude ratio",
+      "EMG 持续高幅占比",
+      "持续高幅最大通道比例",
+      "持续高幅通道数",
+      "emg-scq-009"
+    ],
+    "modality_operator": "fm-emg-operator",
+    "modality": "emg",
+    "problem_domain": "signal_channel_quality",
+    "stage": "processed",
+    "operator_version": "0.16.0",
+    "rule_version": "2.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "measurement",
+    "artifact_on_error": "available",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [
+      "emg-dsf-001",
+      "emg-nva-001"
+    ],
+    "lifecycle": "active",
+    "summary": "统一检查 EMG 处理后持续高幅的最大样本比例与异常通道数，按两者最高严重度发布一条规则。",
+    "inputs": [
+      "emg"
+    ],
+    "documented": true,
+    "url": "quality-operators/emg/emg-scq-008.html"
+  },
+  {
+    "rule_id": "emg-ppa-001",
+    "display_name": "输入读取或处理异常",
+    "aliases": [
+      "operator processing failed",
+      "EMG PPA 001"
+    ],
+    "modality_operator": "fm-emg-operator",
+    "modality": "emg",
+    "problem_domain": "processing_artifact_anomaly",
+    "stage": "raw_to_processed",
+    "operator_version": "0.16.0",
+    "rule_version": "1.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "execution",
+    "artifact_on_error": "unavailable",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "检查EMG 数据的「输入读取或处理异常」，并按公开边界发布独立 RuleResult。",
+    "inputs": [
+      "emg_record"
+    ],
+    "documented": true,
+    "url": "quality-operators/emg/emg-ppa-001.html"
+  },
+  {
+    "rule_id": "emg-ppa-002",
+    "display_name": "EMG 产物写入异常",
+    "aliases": [
+      "EMG artifact write failure",
+      "processed NPZ 写入失败"
+    ],
+    "modality_operator": "fm-emg-operator",
+    "modality": "emg",
+    "problem_domain": "processing_artifact_anomaly",
+    "stage": "artifact",
+    "operator_version": "0.16.0",
+    "rule_version": "1.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "execution",
+    "artifact_on_error": "unavailable",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [
+      "emg-dsf-001",
+      "emg-nva-001"
+    ],
+    "lifecycle": "active",
+    "summary": "记录 EMG processed NPZ 创建或写入失败，区分执行异常与输入数据质量问题。",
+    "inputs": [
+      "processed_payload"
+    ],
+    "documented": true,
+    "url": "quality-operators/emg/emg-ppa-002.html"
+  },
+  {
+    "rule_id": "imu-idc-001",
+    "display_name": "IMU 必需字段是否完整",
+    "aliases": [
+      "field missing",
+      "IMU IDC 001",
+      "必需字段完整性"
+    ],
+    "modality_operator": "fm-imu-operator",
+    "modality": "imu",
+    "problem_domain": "input_device_compatibility",
+    "stage": "raw",
+    "operator_version": "0.13.0",
+    "rule_version": "1.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "validation",
+    "artifact_on_error": "unavailable",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "检查输入是否具备完整的 IMU 三轴载荷、硬件时间戳和可用的样本时间戳来源。",
+    "inputs": [
+      "imu_record"
+    ],
+    "documented": true,
+    "url": "quality-operators/imu/imu-idc-001.html"
+  },
+  {
+    "rule_id": "imu-dsf-001",
+    "display_name": "IMU shape 和 dtype 是否正确",
+    "aliases": [
+      "field shape",
+      "IMU DSF 001",
+      "三轴字段形状",
+      "IMU 数据格式是否正确"
+    ],
+    "modality_operator": "fm-imu-operator",
+    "modality": "imu",
+    "problem_domain": "data_structure_format",
+    "stage": "raw",
+    "operator_version": "0.13.0",
+    "rule_version": "2.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "validation",
+    "artifact_on_error": "unavailable",
+    "cardinality": "multi",
+    "target_type": "field",
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "检查 IMU 三轴载荷及时间戳数组的维度、列数与数据类型是否符合输入格式要求。",
+    "inputs": [
+      "imu_record"
+    ],
+    "documented": true,
+    "url": "quality-operators/imu/imu-dsf-001.html"
+  },
+  {
+    "rule_id": "imu-tsa-001",
+    "display_name": "IMU 时间戳是否有效",
+    "aliases": [
+      "timestamp shape",
+      "IMU TSA 001",
+      "timestamps invalid",
+      "IMU 时间戳是否严格递增"
+    ],
+    "modality_operator": "fm-imu-operator",
+    "modality": "imu",
+    "problem_domain": "time_sample_alignment",
+    "stage": "raw",
+    "operator_version": "0.13.0",
+    "rule_version": "2.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "validation",
+    "artifact_on_error": "unavailable",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "检查 IMU 时间戳能否与三轴样本一一对应，且每个值有限、时间顺序严格递增。",
+    "inputs": [
+      "imu_record"
+    ],
+    "documented": true,
+    "url": "quality-operators/imu/imu-tsa-001.html"
+  },
+  {
+    "rule_id": "imu-tsa-009",
+    "display_name": "采样率偏差比例",
+    "aliases": [
+      "signed sample rate deviation ratio",
+      "IMU TSA 009"
+    ],
+    "modality_operator": "fm-imu-operator",
+    "modality": "imu",
+    "problem_domain": "time_sample_alignment",
+    "stage": "raw",
+    "operator_version": "0.13.0",
+    "rule_version": "4.2.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "measurement",
+    "artifact_on_error": "available",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "检查 IMU 数据的有符号采样率偏差比例，并按绝对幅度边界发布独立 RuleResult。",
+    "inputs": [
+      "imu_record"
+    ],
+    "documented": true,
+    "url": "quality-operators/imu/imu-tsa-009.html"
+  },
+  {
+    "rule_id": "imu-tsa-010",
+    "display_name": "最大时间间隔",
+    "aliases": [
+      "max contiguous gap",
+      "IMU TSA 010",
+      "最大真实相邻间隔 / s（timestamp_source=emg_imu_hw_us）"
+    ],
+    "modality_operator": "fm-imu-operator",
+    "modality": "imu",
+    "problem_domain": "time_sample_alignment",
+    "stage": "raw",
+    "operator_version": "0.13.0",
+    "rule_version": "3.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "measurement",
+    "artifact_on_error": "available",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "检查IMU 数据的「最大时间间隔」，并按公开边界发布独立 RuleResult。",
+    "inputs": [
+      "imu_record"
+    ],
+    "documented": true,
+    "url": "quality-operators/imu/imu-tsa-010.html"
+  },
+  {
+    "rule_id": "imu-dcr-001",
+    "display_name": "有效时长",
+    "aliases": [
+      "min duration",
+      "IMU DCR 001",
+      "有效时长 / s"
+    ],
+    "modality_operator": "fm-imu-operator",
+    "modality": "imu",
+    "problem_domain": "duration_coverage",
+    "stage": "processed",
+    "operator_version": "0.13.0",
+    "rule_version": "3.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "measurement",
+    "artifact_on_error": "available",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "检查IMU 数据的「有效时长」，并按公开边界发布独立 RuleResult。",
+    "inputs": [
+      "imu_record"
+    ],
+    "documented": true,
+    "url": "quality-operators/imu/imu-dcr-001.html"
+  },
+  {
+    "rule_id": "imu-nva-001",
+    "display_name": "IMU 三轴值是否含 NaN 或 Inf",
+    "aliases": [
+      "value nonfinite",
+      "IMU NVA 001",
+      "数值有限性"
+    ],
+    "modality_operator": "fm-imu-operator",
+    "modality": "imu",
+    "problem_domain": "numeric_validity",
+    "stage": "raw",
+    "operator_version": "0.13.0",
+    "rule_version": "2.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "validation",
+    "artifact_on_error": "unavailable",
+    "cardinality": "multi",
+    "target_type": "field",
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "检查 IMU 加速度、角速度和磁力计数组是否能安全转换为有限的 float32 处理值。",
+    "inputs": [
+      "imu_record"
+    ],
+    "documented": true,
+    "url": "quality-operators/imu/imu-nva-001.html"
+  },
+  {
+    "rule_id": "imu-ppa-001",
+    "display_name": "输入读取或未预期处理异常",
+    "aliases": [
+      "operator processing failed",
+      "IMU PPA 001"
+    ],
+    "modality_operator": "fm-imu-operator",
+    "modality": "imu",
+    "problem_domain": "processing_artifact_anomaly",
+    "stage": "raw_to_processed",
+    "operator_version": "0.13.0",
+    "rule_version": "1.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "execution",
+    "artifact_on_error": "unavailable",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "检查IMU 数据的「输入读取或未预期处理异常」，并按公开边界发布独立 RuleResult。",
+    "inputs": [
+      "imu_record"
+    ],
+    "documented": true,
+    "url": "quality-operators/imu/imu-ppa-001.html"
+  },
+  {
+    "rule_id": "imu-ppa-002",
+    "display_name": "IMU 产物写入异常",
+    "aliases": [
+      "artifact write failed",
+      "IMU PPA 002"
+    ],
+    "modality_operator": "fm-imu-operator",
+    "modality": "imu",
+    "problem_domain": "processing_artifact_anomaly",
+    "stage": "artifact",
+    "operator_version": "0.13.0",
+    "rule_version": "1.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "execution",
+    "artifact_on_error": "unavailable",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "检查 IMU 数据的「IMU 产物写入异常」，并按公开边界发布独立 RuleResult。",
+    "inputs": [
+      "imu_record"
+    ],
+    "documented": true,
+    "url": "quality-operators/imu/imu-ppa-002.html"
+  },
+  {
+    "rule_id": "force-idc-001",
+    "display_name": "Force 必需字段是否完整",
+    "aliases": [
+      "input required field missing",
+      "FORCE IDC 001"
+    ],
+    "modality_operator": "fm-force-label-operator",
+    "modality": "force",
+    "problem_domain": "input_device_compatibility",
+    "stage": "raw",
+    "operator_version": "2.1.0",
+    "rule_version": "2.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "validation",
+    "artifact_on_error": "unavailable",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "检查 Force 输入是否可读取，并包含 Force 标签及其对应时间戳字段。",
+    "inputs": [
+      "force_record"
+    ],
+    "documented": true,
+    "url": "quality-operators/force/force-idc-001.html"
+  },
+  {
+    "rule_id": "force-idc-005",
+    "display_name": "非 CMCU05B 数据",
+    "aliases": [
+      "non CMCU05B data",
+      "FORCE IDC 005"
+    ],
+    "modality_operator": "fm-force-label-operator",
+    "modality": "force",
+    "problem_domain": "input_device_compatibility",
+    "stage": "raw",
+    "operator_version": "2.1.0",
+    "rule_version": "2.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "validation",
+    "artifact_on_error": "unavailable",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "检查 Force 输入是否为默认生产入口支持的 CMCU05B 数据。",
+    "inputs": [
+      "force_record"
+    ],
+    "documented": true,
+    "url": "quality-operators/force/force-idc-005.html"
+  },
+  {
+    "rule_id": "force-dsf-003",
+    "display_name": "Force shape和dtype是否正确",
+    "aliases": [
+      "force structure invalid",
+      "FORCE DSF 003"
+    ],
+    "modality_operator": "fm-force-label-operator",
+    "modality": "force",
+    "problem_domain": "data_structure_format",
+    "stage": "processed",
+    "operator_version": "2.1.0",
+    "rule_version": "2.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "validation",
+    "artifact_on_error": "unavailable",
+    "cardinality": "multi",
+    "target_type": "field",
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "统一检查 Force 标签和时间戳数组的 shape 与 dtype。",
+    "inputs": [
+      "force_record"
+    ],
+    "documented": true,
+    "url": "quality-operators/force/force-dsf-003.html"
+  },
+  {
+    "rule_id": "force-tsa-003",
+    "display_name": "Force 时间戳是否严格递增",
+    "aliases": [
+      "timestamps invalid",
+      "FORCE TSA 003"
+    ],
+    "modality_operator": "fm-force-label-operator",
+    "modality": "force",
+    "problem_domain": "time_sample_alignment",
+    "stage": "processed",
+    "operator_version": "2.1.0",
+    "rule_version": "2.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "validation",
+    "artifact_on_error": "unavailable",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "检查 Force 时间戳是否与标签等长、全部有限且严格递增；静息指标直接使用该时间轴的首 5 秒。",
+    "inputs": [
+      "force_record"
+    ],
+    "documented": true,
+    "url": "quality-operators/force/force-tsa-003.html"
+  },
+  {
+    "rule_id": "force-tsa-005",
+    "display_name": "最大连续缺口",
+    "aliases": [
+      "max contiguous gap",
+      "FORCE TSA 005",
+      "最大连续缺口 / s"
+    ],
+    "modality_operator": "fm-force-label-operator",
+    "modality": "force",
+    "problem_domain": "time_sample_alignment",
+    "stage": "raw",
+    "operator_version": "2.1.0",
+    "rule_version": "3.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "measurement",
+    "artifact_on_error": "available",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "检查FORCE 数据的「最大连续缺口」，并按公开边界发布独立 RuleResult。",
+    "inputs": [
+      "force_record"
+    ],
+    "documented": true,
+    "url": "quality-operators/force/force-tsa-005.html"
+  },
+  {
+    "rule_id": "force-tsa-007",
+    "display_name": "采样率偏差比例",
+    "aliases": [
+      "signed sample rate deviation ratio",
+      "FORCE TSA 007"
+    ],
+    "modality_operator": "fm-force-label-operator",
+    "modality": "force",
+    "problem_domain": "time_sample_alignment",
+    "stage": "raw",
+    "operator_version": "2.1.0",
+    "rule_version": "4.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "measurement",
+    "artifact_on_error": "available",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "检查 Force 数据的有符号采样率偏差比例，并按绝对幅度边界发布独立 RuleResult。",
+    "inputs": [
+      "force_record"
+    ],
+    "documented": true,
+    "url": "quality-operators/force/force-tsa-007.html"
+  },
+  {
+    "rule_id": "force-dcr-003",
+    "display_name": "有效时长",
+    "aliases": [
+      "min duration",
+      "FORCE DCR 003",
+      "有效时长 / s"
+    ],
+    "modality_operator": "fm-force-label-operator",
+    "modality": "force",
+    "problem_domain": "duration_coverage",
+    "stage": "raw",
+    "operator_version": "2.1.0",
+    "rule_version": "3.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "measurement",
+    "artifact_on_error": "available",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "检查FORCE 数据的「有效时长」，并按公开边界发布独立 RuleResult。",
+    "inputs": [
+      "force_record"
+    ],
+    "documented": true,
+    "url": "quality-operators/force/force-dcr-003.html"
+  },
+  {
+    "rule_id": "force-nva-002",
+    "display_name": "Force 是否含有 NaN 或 Inf",
+    "aliases": [
+      "label nonfinite",
+      "FORCE NVA 002"
+    ],
+    "modality_operator": "fm-force-label-operator",
+    "modality": "force",
+    "problem_domain": "numeric_validity",
+    "stage": "processed",
+    "operator_version": "2.1.0",
+    "rule_version": "2.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "validation",
+    "artifact_on_error": "unavailable",
+    "cardinality": "multi",
+    "target_type": "field",
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "检查读取到的 Force 标签是否出现 NaN 或正负无穷大。",
+    "inputs": [
+      "force_record"
+    ],
+    "documented": true,
+    "url": "quality-operators/force/force-nva-002.html"
+  },
+  {
+    "rule_id": "force-scq-001",
+    "display_name": "Force 通道是否恒定",
+    "aliases": [
+      "rest no signal",
+      "constant force channel",
+      "FORCE SCQ 001"
+    ],
+    "modality_operator": "fm-force-label-operator",
+    "modality": "force",
+    "problem_domain": "signal_channel_quality",
+    "stage": "raw",
+    "operator_version": "2.1.0",
+    "rule_version": "2.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "measurement",
+    "artifact_on_error": "available",
+    "cardinality": "multi",
+    "target_type": "sensor_finger",
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "检查 Force 通道在整段记录中是否近乎恒定，并发布逐通道 RuleResult。",
+    "inputs": [
+      "force_record"
+    ],
+    "documented": true,
+    "url": "quality-operators/force/force-scq-001.html"
+  },
+  {
+    "rule_id": "force-laq-002",
+    "display_name": "首 5 秒静息受力异常",
+    "aliases": [
+      "first five seconds resting force absolute mean",
+      "静息力均值",
+      "首 5 秒静息力 p95",
+      "首 5 秒静息力标准差",
+      "force-laq-003",
+      "force-laq-004"
+    ],
+    "modality_operator": "fm-force-label-operator",
+    "modality": "force",
+    "problem_domain": "label_action_quality",
+    "stage": "raw",
+    "operator_version": "2.1.0",
+    "rule_version": "4.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "measurement",
+    "artifact_on_error": "available",
+    "cardinality": "multi",
+    "target_type": "sensor_finger",
+    "prerequisites": [
+      "force-dsf-003",
+      "force-nva-002",
+      "force-tsa-003"
+    ],
+    "lifecycle": "active",
+    "summary": "按传感器和通道联合检查完整首 5 秒的平均受力、高位受力（p95）和波动（标准差），保留三项独立证据。",
+    "inputs": [
+      "force",
+      "timestamps"
+    ],
+    "documented": true,
+    "url": "quality-operators/force/force-laq-002.html"
+  },
+  {
+    "rule_id": "force-ppa-002",
+    "display_name": "Force 处理/转换异常",
+    "aliases": [
+      "output conversion failed",
+      "FORCE PPA 002"
+    ],
+    "modality_operator": "fm-force-label-operator",
+    "modality": "force",
+    "problem_domain": "processing_artifact_anomaly",
+    "stage": "raw_to_processed",
+    "operator_version": "2.1.0",
+    "rule_version": "2.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "execution",
+    "artifact_on_error": "unavailable",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "记录 Force 静息质检或标签转换过程中未被数据契约算子覆盖的执行异常。",
+    "inputs": [
+      "force_record"
+    ],
+    "documented": true,
+    "url": "quality-operators/force/force-ppa-002.html"
+  },
+  {
+    "rule_id": "force-ppa-003",
+    "display_name": "Force 产物写入异常",
+    "aliases": [
+      "artifact write failed",
+      "FORCE PPA 003"
+    ],
+    "modality_operator": "fm-force-label-operator",
+    "modality": "force",
+    "problem_domain": "processing_artifact_anomaly",
+    "stage": "artifact",
+    "operator_version": "2.1.0",
+    "rule_version": "2.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "execution",
+    "artifact_on_error": "unavailable",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "检查 Force 数据的「Force 产物写入异常」，并按公开边界发布独立 RuleResult。",
+    "inputs": [
+      "force_record"
+    ],
+    "documented": true,
+    "url": "quality-operators/force/force-ppa-003.html"
+  },
+  {
+    "rule_id": "pose-idc-001",
+    "display_name": "Pose 输入是否有效",
+    "aliases": [
+      "input read failed",
+      "POSE IDC 001",
+      "Pose 输入是否可读取"
+    ],
+    "modality_operator": "fm-pose-label-operator",
+    "modality": "pose",
+    "problem_domain": "input_device_compatibility",
+    "stage": "raw",
+    "operator_version": "0.16.0",
+    "rule_version": "2.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "validation",
+    "artifact_on_error": "unavailable",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "合并 NPZ 读取、手侧、必需载荷/时间戳及有效时间轴读取失败。",
+    "inputs": [
+      "pose_record"
+    ],
+    "documented": true,
+    "url": "quality-operators/pose/pose-idc-001.html"
+  },
+  {
+    "rule_id": "pose-dsf-003",
+    "display_name": "Pose 字段结构是否正确",
+    "aliases": [
+      "schema joint angles shape",
+      "POSE DSF 003",
+      "joint_angles 形状"
+    ],
+    "modality_operator": "fm-pose-label-operator",
+    "modality": "pose",
+    "problem_domain": "data_structure_format",
+    "stage": "processed",
+    "operator_version": "0.16.0",
+    "rule_version": "2.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "validation",
+    "artifact_on_error": "unavailable",
+    "cardinality": "multi",
+    "target_type": "field",
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "按字段合并必需字段、shape 和 dtype 检查；每个字段仅一个实例。",
+    "inputs": [
+      "pose_record"
+    ],
+    "documented": true,
+    "url": "quality-operators/pose/pose-dsf-003.html"
+  },
+  {
+    "rule_id": "pose-tsa-003",
+    "display_name": "Pose 时间戳是否有效",
+    "aliases": [
+      "schema timestamps order",
+      "POSE TSA 003",
+      "timestamps 有限且递增"
+    ],
+    "modality_operator": "fm-pose-label-operator",
+    "modality": "pose",
+    "problem_domain": "time_sample_alignment",
+    "stage": "processed",
+    "operator_version": "0.16.0",
+    "rule_version": "2.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "validation",
+    "artifact_on_error": "unavailable",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [
+      "pose-dsf-003"
+    ],
+    "lifecycle": "active",
+    "summary": "合并样本数量、标签与时间戳等长、有限性及严格递增检查。",
+    "inputs": [
+      "pose_record"
+    ],
+    "documented": true,
+    "url": "quality-operators/pose/pose-tsa-003.html"
+  },
+  {
+    "rule_id": "pose-tsa-004",
+    "display_name": "最大连续缺口",
+    "aliases": [
+      "max contiguous gap",
+      "POSE TSA 004",
+      "过滤前最大连续缺口 / s",
+      "过滤前最大连续缺口"
+    ],
+    "modality_operator": "fm-pose-label-operator",
+    "modality": "pose",
+    "problem_domain": "time_sample_alignment",
+    "stage": "raw",
+    "operator_version": "0.16.0",
+    "rule_version": "3.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "measurement",
+    "artifact_on_error": "available",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "按期望周期估算过滤前最大连续缺失时长；局部停顿独立判级。",
+    "inputs": [
+      "pose_record"
+    ],
+    "documented": true,
+    "url": "quality-operators/pose/pose-tsa-004.html"
+  },
+  {
+    "rule_id": "pose-tsa-006",
+    "display_name": "采样率偏差比例",
+    "aliases": [
+      "signed sample rate deviation ratio",
+      "POSE TSA 006",
+      "采样率偏差比例"
+    ],
+    "modality_operator": "fm-pose-label-operator",
+    "modality": "pose",
+    "problem_domain": "time_sample_alignment",
+    "stage": "raw",
+    "operator_version": "0.16.0",
+    "rule_version": "4.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "measurement",
+    "artifact_on_error": "available",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "发布过滤前有符号采样率偏差；累计缺失率仅作为诊断。",
+    "inputs": [
+      "pose_record"
+    ],
+    "documented": true,
+    "url": "quality-operators/pose/pose-tsa-006.html"
+  },
+  {
+    "rule_id": "pose-dcr-002",
+    "display_name": "有效数据时长",
+    "aliases": [
+      "min duration",
+      "POSE DCR 002",
+      "有效时长 / s",
+      "有效时长"
+    ],
+    "modality_operator": "fm-pose-label-operator",
+    "modality": "pose",
+    "problem_domain": "duration_coverage",
+    "stage": "raw",
+    "operator_version": "0.16.0",
+    "rule_version": "3.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "measurement",
+    "artifact_on_error": "available",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "检查过滤后有效 Pose 时间轴的首尾覆盖时长。",
+    "inputs": [
+      "pose_record"
+    ],
+    "documented": true,
+    "url": "quality-operators/pose/pose-dcr-002.html"
+  },
+  {
+    "rule_id": "pose-nva-002",
+    "display_name": "关节角是否包含非有限值",
+    "aliases": [
+      "values joint angles nonfinite",
+      "POSE NVA 002",
+      "joint_angles 有限性"
+    ],
+    "modality_operator": "fm-pose-label-operator",
+    "modality": "pose",
+    "problem_domain": "numeric_validity",
+    "stage": "processed",
+    "operator_version": "0.16.0",
+    "rule_version": "2.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "validation",
+    "artifact_on_error": "unavailable",
+    "cardinality": "multi",
+    "target_type": "field",
+    "prerequisites": [
+      "pose-dsf-003"
+    ],
+    "lifecycle": "active",
+    "summary": "统计处理后关节角 NaN/Inf 数量，并作为运动计算前置条件。",
+    "inputs": [
+      "pose_record"
+    ],
+    "documented": true,
+    "url": "quality-operators/pose/pose-nva-002.html"
+  },
+  {
+    "rule_id": "pose-laq-001",
+    "display_name": "关节角最大绝对值",
+    "aliases": [
+      "units joint angles",
+      "POSE LAQ 001",
+      "最大绝对关节角 / rad",
+      "最大绝对关节角"
+    ],
+    "modality_operator": "fm-pose-label-operator",
+    "modality": "pose",
+    "problem_domain": "label_action_quality",
+    "stage": "processed",
+    "operator_version": "0.16.0",
+    "rule_version": "2.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "measurement",
+    "artifact_on_error": "available",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [
+      "pose-dsf-003",
+      "pose-nva-002",
+      "pose-tsa-003"
+    ],
+    "lifecycle": "active",
+    "summary": "检查关节角通用幅值上限；不能仅凭数值断定角度单位或解剖学合理性。",
+    "inputs": [
+      "pose_record"
+    ],
+    "documented": true,
+    "url": "quality-operators/pose/pose-laq-001.html"
+  },
+  {
+    "rule_id": "pose-laq-002",
+    "display_name": "原始无效帧比例",
+    "aliases": [
+      "raw invalid ratio",
+      "POSE LAQ 002",
+      "原始无效帧比例"
+    ],
+    "modality_operator": "fm-pose-label-operator",
+    "modality": "pose",
+    "problem_domain": "label_action_quality",
+    "stage": "raw",
+    "operator_version": "0.16.0",
+    "rule_version": "1.2.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "measurement",
+    "artifact_on_error": "available",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "统计过滤前显式 invalid、时间戳非有限或姿态值非有限的帧占比。",
+    "inputs": [
+      "pose_record"
+    ],
+    "documented": true,
+    "url": "quality-operators/pose/pose-laq-002.html"
+  },
+  {
+    "rule_id": "pose-laq-005",
+    "display_name": "静止间隔比例",
+    "aliases": [
+      "motion static",
+      "POSE LAQ 005",
+      "静止比例及最长静止时长"
+    ],
+    "modality_operator": "fm-pose-label-operator",
+    "modality": "pose",
+    "problem_domain": "label_action_quality",
+    "stage": "processed",
+    "operator_version": "0.16.0",
+    "rule_version": "2.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "measurement",
+    "artifact_on_error": "available",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [
+      "pose-dsf-003",
+      "pose-nva-002",
+      "pose-tsa-003",
+      "pose-laq-001"
+    ],
+    "lifecycle": "active",
+    "summary": "统计有效相邻评估点中最大关节角变化小于 0.001 rad 的间隔比例；达到 100% 时 error。",
+    "inputs": [
+      "pose_record"
+    ],
+    "documented": true,
+    "url": "quality-operators/pose/pose-laq-005.html"
+  },
+  {
+    "rule_id": "pose-laq-006",
+    "display_name": "高角速度间隔比例",
+    "aliases": [
+      "high angular velocity",
+      "POSE LAQ 006",
+      "高角速度帧比例"
+    ],
+    "modality_operator": "fm-pose-label-operator",
+    "modality": "pose",
+    "problem_domain": "label_action_quality",
+    "stage": "processed",
+    "operator_version": "0.16.0",
+    "rule_version": "2.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "measurement",
+    "artifact_on_error": "available",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [
+      "pose-dsf-003",
+      "pose-nva-002",
+      "pose-tsa-003",
+      "pose-laq-001"
+    ],
+    "lifecycle": "active",
+    "summary": "按真实时间差计算有效相邻采样点之间的角速度，统计超过 50 rad/s 的间隔比例。",
+    "inputs": [
+      "pose_record"
+    ],
+    "documented": true,
+    "url": "quality-operators/pose/pose-laq-006.html"
+  },
+  {
+    "rule_id": "pose-ppa-001",
+    "display_name": "Pose 处理异常",
+    "aliases": [
+      "output conversion failed",
+      "POSE PPA 001",
+      "Pose 转换异常"
+    ],
+    "modality_operator": "fm-pose-label-operator",
+    "modality": "pose",
+    "problem_domain": "processing_artifact_anomaly",
+    "stage": "raw_to_processed",
+    "operator_version": "0.16.0",
+    "rule_version": "2.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "execution",
+    "artifact_on_error": "unavailable",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "合并 Pose 转换与质检器执行异常。",
+    "inputs": [
+      "pose_record"
+    ],
+    "documented": true,
+    "url": "quality-operators/pose/pose-ppa-001.html"
+  },
+  {
+    "rule_id": "pose-ppa-002",
+    "display_name": "Pose 产物读写异常",
+    "aliases": [
+      "output read failed",
+      "POSE PPA 002",
+      "产物读取异常"
+    ],
+    "modality_operator": "fm-pose-label-operator",
+    "modality": "pose",
+    "problem_domain": "processing_artifact_anomaly",
+    "stage": "artifact",
+    "operator_version": "0.16.0",
+    "rule_version": "2.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "execution",
+    "artifact_on_error": "unavailable",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "合并临时产物读取、质检加载、写入或原子发布异常。",
+    "inputs": [
+      "pose_record"
+    ],
+    "documented": true,
+    "url": "quality-operators/pose/pose-ppa-002.html"
+  },
+  {
+    "rule_id": "vision-idc-001",
+    "display_name": "视频流是否可用",
+    "aliases": [
+      "video input discovery",
+      "视频 Topic 存在性",
+      "Vision 输入是否可读取"
+    ],
+    "modality_operator": "fm-vision-operator",
+    "modality": "vision",
+    "problem_domain": "input_device_compatibility",
+    "stage": "raw",
+    "operator_version": "0.9.0",
+    "rule_version": "1.2.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "validation",
+    "artifact_on_error": "unavailable",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "在 MCAP 中选择唯一可用的视频流，成功时返回压缩消息数。",
+    "inputs": [
+      "input_path"
+    ],
+    "documented": true,
+    "url": "quality-operators/vision/vision-idc-001.html"
+  },
+  {
+    "rule_id": "vision-dsf-001",
+    "display_name": "视频编码与画面结构是否正确",
+    "aliases": [
+      "video structure",
+      "VISION DSF 001",
+      "protobuf/编码、消息索引、解码尺寸和双目并排几何"
+    ],
+    "modality_operator": "fm-vision-operator",
+    "modality": "vision",
+    "problem_domain": "data_structure_format",
+    "stage": "raw",
+    "operator_version": "0.9.0",
+    "rule_version": "1.2.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "validation",
+    "artifact_on_error": "unavailable",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "核对压缩消息索引、H.264/H.265 编码和左右并排双目画面的尺寸。",
+    "inputs": [
+      "video_stream"
+    ],
+    "documented": true,
+    "url": "quality-operators/vision/vision-dsf-001.html"
+  },
+  {
+    "rule_id": "vision-dsf-002",
+    "display_name": "解码帧数是否与消息数一致",
+    "aliases": [
+      "decoded frame correspondence",
+      "VISION DSF 002",
+      "完整解码帧数与 MCAP 消息索引数"
+    ],
+    "modality_operator": "fm-vision-operator",
+    "modality": "vision",
+    "problem_domain": "data_structure_format",
+    "stage": "raw",
+    "operator_version": "0.9.0",
+    "rule_version": "1.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "validation",
+    "artifact_on_error": "unavailable",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "核对完整解码帧数与 MCAP 压缩消息数，保证帧索引逐帧对应。",
+    "inputs": [
+      "video_stream"
+    ],
+    "documented": true,
+    "url": "quality-operators/vision/vision-dsf-002.html"
+  },
+  {
+    "rule_id": "vision-tsa-001",
+    "display_name": "视频时间戳是否递增",
+    "aliases": [
+      "timestamp order",
+      "VISION TSA 001",
+      "源采集时间戳严格递增"
+    ],
+    "modality_operator": "fm-vision-operator",
+    "modality": "vision",
+    "problem_domain": "time_sample_alignment",
+    "stage": "raw",
+    "operator_version": "0.9.0",
+    "rule_version": "1.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "validation",
+    "artifact_on_error": "unavailable",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "检查至少有两条视频消息，且源采集时间戳不重复、不倒退。",
+    "inputs": [
+      "video_stream"
+    ],
+    "documented": true,
+    "url": "quality-operators/vision/vision-tsa-001.html"
+  },
+  {
+    "rule_id": "vision-tsa-002",
+    "display_name": "视频帧率偏差比例",
+    "aliases": [
+      "signed sample rate deviation ratio",
+      "VISION TSA 002",
+      "采样率偏差比例"
+    ],
+    "modality_operator": "fm-vision-operator",
+    "modality": "vision",
+    "problem_domain": "time_sample_alignment",
+    "stage": "raw",
+    "operator_version": "0.9.0",
+    "rule_version": "3.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "measurement",
+    "artifact_on_error": "available",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "比较源采集时间戳推得的实测帧率与配置帧率，按偏差的绝对值判级。",
+    "inputs": [
+      "video_stream"
+    ],
+    "documented": true,
+    "url": "quality-operators/vision/vision-tsa-002.html"
+  },
+  {
+    "rule_id": "vision-tsa-004",
+    "display_name": "最大连续缺帧时长",
+    "aliases": [
+      "max contiguous gap",
+      "VISION TSA 004",
+      "最大连续缺口 / s",
+      "最大连续缺口"
+    ],
+    "modality_operator": "fm-vision-operator",
+    "modality": "vision",
+    "problem_domain": "time_sample_alignment",
+    "stage": "raw",
+    "operator_version": "0.9.0",
+    "rule_version": "2.1.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "measurement",
+    "artifact_on_error": "available",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "将相邻源时间戳间隔折算为缺失帧周期，报告最长一次连续缺口。",
+    "inputs": [
+      "video_stream"
+    ],
+    "documented": true,
+    "url": "quality-operators/vision/vision-tsa-004.html"
+  },
+  {
+    "rule_id": "vision-tsa-005",
+    "display_name": "累计缺帧比例",
+    "aliases": [
+      "cumulative missing ratio",
+      "VISION TSA 005",
+      "累计缺失比例"
+    ],
+    "modality_operator": "fm-vision-operator",
+    "modality": "vision",
+    "problem_domain": "time_sample_alignment",
+    "stage": "raw",
+    "operator_version": "0.9.0",
+    "rule_version": "2.2.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "measurement",
+    "artifact_on_error": "available",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "按首尾源时间戳与配置帧率估算整段净缺帧比例，仅单独判告警。",
+    "inputs": [
+      "video_stream"
+    ],
+    "documented": true,
+    "url": "quality-operators/vision/vision-tsa-005.html"
+  },
+  {
+    "rule_id": "vision-dcr-001",
+    "display_name": "视频有效时长",
+    "aliases": [
+      "video minimum duration",
+      "视频最小时长"
+    ],
+    "modality_operator": "fm-vision-operator",
+    "modality": "vision",
+    "problem_domain": "duration_coverage",
+    "stage": "raw",
+    "operator_version": "0.9.0",
+    "rule_version": "3.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "measurement",
+    "artifact_on_error": "available",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [
+      "vision-tsa-001"
+    ],
+    "lifecycle": "active",
+    "summary": "用首尾源采集时间戳计算视频覆盖时长，默认要求至少 30 秒。",
+    "inputs": [
+      "capture_timestamps"
+    ],
+    "documented": true,
+    "url": "quality-operators/vision/vision-dcr-001.html"
+  },
+  {
+    "rule_id": "vision-scq-001",
+    "display_name": "双目标定",
+    "aliases": [
+      "stereo calibration",
+      "VISION SCQ 001",
+      "双目标定 max(abs(P1_fx/K1_fx-1), abs(P2_fx/K2_fx-1))"
+    ],
+    "modality_operator": "fm-vision-operator",
+    "modality": "vision",
+    "problem_domain": "signal_channel_quality",
+    "stage": "raw",
+    "operator_version": "0.9.0",
+    "rule_version": "1.1.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "validation",
+    "artifact_on_error": "available",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "检查左右眼校正前后水平焦距的最大相对偏差，以及标定字段的有效性。",
+    "inputs": [
+      "video_stream"
+    ],
+    "documented": true,
+    "url": "quality-operators/vision/vision-scq-001.html"
+  },
+  {
+    "rule_id": "vision-scq-002",
+    "display_name": "画面冻结最长时长",
+    "aliases": [
+      "video freeze",
+      "VISION SCQ 002",
+      "视频冻结最长区间 / s",
+      "视频冻结最长区间"
+    ],
+    "modality_operator": "fm-vision-operator",
+    "modality": "vision",
+    "problem_domain": "signal_channel_quality",
+    "stage": "raw",
+    "operator_version": "0.9.0",
+    "rule_version": "1.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "measurement",
+    "artifact_on_error": "available",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "识别抽样画面长期几乎不变的片段，报告达到冻结门限的最长区间。",
+    "inputs": [
+      "video_stream"
+    ],
+    "documented": true,
+    "url": "quality-operators/vision/vision-scq-002.html"
+  },
+  {
+    "rule_id": "vision-laq-001",
+    "display_name": "相机静止最长时长",
+    "aliases": [
+      "camera stationary",
+      "VISION LAQ 001",
+      "头戴相机全局静止最长区间 / s",
+      "头戴相机全局静止最长区间"
+    ],
+    "modality_operator": "fm-vision-operator",
+    "modality": "vision",
+    "problem_domain": "label_action_quality",
+    "stage": "raw",
+    "operator_version": "0.9.0",
+    "rule_version": "2.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "measurement",
+    "artifact_on_error": "available",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "估计左眼抽样画面的相机运动，抑制明显前景活动后报告最长静止区间。",
+    "inputs": [
+      "video_stream"
+    ],
+    "documented": true,
+    "url": "quality-operators/vision/vision-laq-001.html"
+  },
+  {
+    "rule_id": "vision-laq-002",
+    "display_name": "画面无手最长时长",
+    "aliases": [
+      "hand absence",
+      "VISION LAQ 002",
+      "画面无手最长区间 / s",
+      "画面无手最长区间"
+    ],
+    "modality_operator": "fm-vision-operator",
+    "modality": "vision",
+    "problem_domain": "label_action_quality",
+    "stage": "raw",
+    "operator_version": "0.9.0",
+    "rule_version": "1.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "measurement",
+    "artifact_on_error": "available",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "检测抽样画面中是否有手，合并无手比例至少 90% 的窗口并报告最长区间。",
+    "inputs": [
+      "video_stream"
+    ],
+    "documented": true,
+    "url": "quality-operators/vision/vision-laq-002.html"
+  },
+  {
+    "rule_id": "vision-ppa-001",
+    "display_name": "视频处理或质检执行异常",
+    "aliases": [
+      "operator processing failed",
+      "VISION PPA 001",
+      "MCAP 读取、提取或视频质检运行异常"
+    ],
+    "modality_operator": "fm-vision-operator",
+    "modality": "vision",
+    "problem_domain": "processing_artifact_anomaly",
+    "stage": "raw_to_processed",
+    "operator_version": "0.9.0",
+    "rule_version": "1.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "execution",
+    "artifact_on_error": "available",
+    "cardinality": "multi",
+    "target_type": "check",
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "按失败检查阶段汇总 MCAP 读取、码流探测、解码和视频质检的运行异常。",
+    "inputs": [
+      "video_stream"
+    ],
+    "documented": true,
+    "url": "quality-operators/vision/vision-ppa-001.html"
+  },
+  {
+    "rule_id": "vision-ppa-002",
+    "display_name": "帧索引写入异常",
+    "aliases": [
+      "artifact write failed",
+      "VISION PPA 002",
+      "帧索引 NPZ 写入"
+    ],
+    "modality_operator": "fm-vision-operator",
+    "modality": "vision",
+    "problem_domain": "processing_artifact_anomaly",
+    "stage": "artifact",
+    "operator_version": "0.9.0",
+    "rule_version": "1.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "execution",
+    "artifact_on_error": "unavailable",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "记录帧索引目录创建、NPZ 写入或原子发布失败；失败时不登记产物。",
+    "inputs": [
+      "video_stream"
+    ],
+    "documented": true,
+    "url": "quality-operators/vision/vision-ppa-002.html"
+  },
+  {
+    "rule_id": "comb_camera-idc-001",
+    "display_name": "相机文件能否完整读取且八路齐全",
+    "aliases": [
+      "eight-camera input",
+      "相机 Topic 完整性"
+    ],
+    "modality_operator": "fm-comb-camera-operator",
+    "modality": "comb_camera",
+    "problem_domain": "input_device_compatibility",
+    "stage": "raw",
+    "operator_version": "0.3.0",
+    "rule_version": "1.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "validation",
+    "artifact_on_error": "unavailable",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "检查 MCAP 是否完整可读、8 个固定相机流是否全部有数据，以及流名和帧内相机编号是否一致。",
+    "inputs": [
+      "input_path"
+    ],
+    "documented": true,
+    "url": "quality-operators/comb_camera/comb_camera-idc-001.html"
+  },
+  {
+    "rule_id": "comb_camera-dsf-001",
+    "display_name": "每路视频能否逐帧完整解码",
+    "aliases": [
+      "eight-view decode",
+      "压缩帧解码映射"
+    ],
+    "modality_operator": "fm-comb-camera-operator",
+    "modality": "comb_camera",
+    "problem_domain": "data_structure_format",
+    "stage": "raw",
+    "operator_version": "0.3.0",
+    "rule_version": "1.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "validation",
+    "artifact_on_error": "unavailable",
+    "cardinality": "multi",
+    "target_type": "camera",
+    "prerequisites": [
+      "comb_camera-idc-001"
+    ],
+    "lifecycle": "active",
+    "summary": "逐路完整解码 H.264/H.265，确认每条压缩消息只产生一张有效图片，且真实宽高与帧内声明一致。",
+    "inputs": [
+      "camera_streams"
+    ],
+    "documented": true,
+    "url": "quality-operators/comb_camera/comb_camera-dsf-001.html"
+  },
+  {
+    "rule_id": "comb_camera-tsa-001",
+    "display_name": "每路相机是否丢帧或时间倒退",
+    "aliases": [
+      "camera frame loss ratio",
+      "sync_ts_ns 时间线"
+    ],
+    "modality_operator": "fm-comb-camera-operator",
+    "modality": "comb_camera",
+    "problem_domain": "time_sample_alignment",
+    "stage": "raw",
+    "operator_version": "0.3.0",
+    "rule_version": "2.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "measurement",
+    "artifact_on_error": "unavailable",
+    "cardinality": "multi",
+    "target_type": "camera",
+    "prerequisites": [
+      "comb_camera-idc-001"
+    ],
+    "lifecycle": "active",
+    "summary": "分别检查 8 路同步时间戳是否有效且严格递增，并结合时间间隔与帧序号估算每路疑似丢帧比例。",
+    "inputs": [
+      "camera_timelines"
+    ],
+    "documented": true,
+    "url": "quality-operators/comb_camera/comb_camera-tsa-001.html"
+  },
+  {
+    "rule_id": "comb_camera-tsa-002",
+    "display_name": "八路画面是否全部同步配对成功",
+    "aliases": [
+      "eight-view synchronization",
+      "cam0 驱动配对"
+    ],
+    "modality_operator": "fm-comb-camera-operator",
+    "modality": "comb_camera",
+    "problem_domain": "time_sample_alignment",
+    "stage": "raw",
+    "operator_version": "0.3.0",
+    "rule_version": "2.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "measurement",
+    "artifact_on_error": "available",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [
+      "comb_camera-idc-001",
+      "comb_camera-dsf-001",
+      "comb_camera-tsa-001"
+    ],
+    "lifecycle": "active",
+    "summary": "以每条 cam0 画面为基准，从其余 7 路选择未使用的最近画面，计算时间跨度合格的完整八目组比例。",
+    "inputs": [
+      "camera_timelines"
+    ],
+    "documented": true,
+    "url": "quality-operators/comb_camera/comb_camera-tsa-002.html"
+  },
+  {
+    "rule_id": "comb_camera-scq-001",
+    "display_name": "每路画面是否带有有效时间校准信息",
+    "aliases": [
+      "camera timing calibration",
+      "calibration metadata quality"
+    ],
+    "modality_operator": "fm-comb-camera-operator",
+    "modality": "comb_camera",
+    "problem_domain": "signal_channel_quality",
+    "stage": "raw",
+    "operator_version": "0.3.0",
+    "rule_version": "1.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "measurement",
+    "artifact_on_error": "available",
+    "cardinality": "multi",
+    "target_type": "camera",
+    "prerequisites": [
+      "comb_camera-idc-001"
+    ],
+    "lifecycle": "active",
+    "summary": "分别统计 8 路画面中未标记“已完成时间校准”或未填写校准来源的比例，判断时间元数据是否可信。",
+    "inputs": [
+      "frame_calibration_metadata"
+    ],
+    "documented": true,
+    "url": "quality-operators/comb_camera/comb_camera-scq-001.html"
+  },
+  {
+    "rule_id": "comb_camera-ppa-001",
+    "display_name": "相机检查程序是否完整运行",
+    "aliases": [
+      "comb camera processing failed",
+      "video runtime failure"
+    ],
+    "modality_operator": "fm-comb-camera-operator",
+    "modality": "comb_camera",
+    "problem_domain": "processing_artifact_anomaly",
+    "stage": "raw_to_processed",
+    "operator_version": "0.3.0",
+    "rule_version": "1.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "execution",
+    "artifact_on_error": "available",
+    "cardinality": "multi",
+    "target_type": "check",
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "记录 MCAP 二次扫描、ffmpeg/ffprobe 环境检查或视频解码任务自身崩溃等运行问题，避免把“没有执行完”误报为数据通过。",
+    "inputs": [
+      "processing_run"
+    ],
+    "documented": true,
+    "url": "quality-operators/comb_camera/comb_camera-ppa-001.html"
+  },
+  {
+    "rule_id": "comb_camera-ppa-002",
+    "display_name": "配对索引文件能否正确保存",
+    "aliases": [
+      "comb camera artifact write failed",
+      "sync index write failure"
+    ],
+    "modality_operator": "fm-comb-camera-operator",
+    "modality": "comb_camera",
+    "problem_domain": "processing_artifact_anomaly",
+    "stage": "artifact",
+    "operator_version": "0.3.0",
+    "rule_version": "1.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "execution",
+    "artifact_on_error": "unavailable",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "把已接受的八目配对结果写入临时 NPZ，重新读取并校验字段、形状和时间轴后，再原子发布为正式索引文件。",
+    "inputs": [
+      "accepted_sync_groups"
+    ],
+    "documented": true,
+    "url": "quality-operators/comb_camera/comb_camera-ppa-002.html"
+  },
+  {
+    "rule_id": "timestamp-idc-001",
+    "display_name": "各模态 NPZ 是否可读取",
+    "aliases": [
+      "input read failed",
+      "TIMESTAMP IDC 001"
+    ],
+    "modality_operator": "fm-timestamp-operator",
+    "modality": "timestamp",
+    "problem_domain": "input_device_compatibility",
+    "stage": "processed_input",
+    "operator_version": "0.15.0",
+    "rule_version": "1.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "validation",
+    "artifact_on_error": "unavailable",
+    "cardinality": "multi",
+    "target_type": "modality",
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "逐模态读取输入 NPZ，仅在读取失败时发布 RuleResult。",
+    "inputs": [
+      "streams"
+    ],
+    "documented": true,
+    "url": "quality-operators/timestamp/timestamp-idc-001.html"
+  },
+  {
+    "rule_id": "timestamp-dsf-001",
+    "display_name": "各模态时间轴是否正常",
+    "aliases": [
+      "time axis invalid",
+      "TIMESTAMP DSF 001"
+    ],
+    "modality_operator": "fm-timestamp-operator",
+    "modality": "timestamp",
+    "problem_domain": "data_structure_format",
+    "stage": "processed_input",
+    "operator_version": "0.15.0",
+    "rule_version": "2.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "validation",
+    "artifact_on_error": "unavailable",
+    "cardinality": "multi",
+    "target_type": "modality",
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "检查各模态时间轴是否存在、数值有限且严格递增。",
+    "inputs": [
+      "streams"
+    ],
+    "documented": true,
+    "url": "quality-operators/timestamp/timestamp-dsf-001.html"
+  },
+  {
+    "rule_id": "timestamp-dsf-002",
+    "display_name": "各模态时间戳 shape 和 dtype 是否正常",
+    "aliases": [
+      "timestamps shape dtype invalid",
+      "TIMESTAMP DSF 002"
+    ],
+    "modality_operator": "fm-timestamp-operator",
+    "modality": "timestamp",
+    "problem_domain": "data_structure_format",
+    "stage": "processed_input",
+    "operator_version": "0.15.0",
+    "rule_version": "2.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "validation",
+    "artifact_on_error": "unavailable",
+    "cardinality": "multi",
+    "target_type": "modality",
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "检查各模态 timestamps 是否为至少含两个样本的一维浮点数组。",
+    "inputs": [
+      "streams"
+    ],
+    "documented": true,
+    "url": "quality-operators/timestamp/timestamp-dsf-002.html"
+  },
+  {
+    "rule_id": "timestamp-dsf-003",
+    "display_name": "各模态数据字段与时间轴是否匹配",
+    "aliases": [
+      "data field alignment invalid",
+      "TIMESTAMP DSF 003"
+    ],
+    "modality_operator": "fm-timestamp-operator",
+    "modality": "timestamp",
+    "problem_domain": "data_structure_format",
+    "stage": "processed_input",
+    "operator_version": "0.15.0",
+    "rule_version": "2.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "validation",
+    "artifact_on_error": "unavailable",
+    "cardinality": "multi",
+    "target_type": "modality",
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "检查各模态数据字段结构及其样本数是否与时间轴匹配。",
+    "inputs": [
+      "streams"
+    ],
+    "documented": true,
+    "url": "quality-operators/timestamp/timestamp-dsf-003.html"
+  },
+  {
+    "rule_id": "timestamp-tsa-004",
+    "display_name": "公共时间段过短",
+    "aliases": [
+      "common duration too short",
+      "TIMESTAMP TSA 004"
+    ],
+    "modality_operator": "fm-timestamp-operator",
+    "modality": "timestamp",
+    "problem_domain": "time_sample_alignment",
+    "stage": "alignment",
+    "operator_version": "0.15.0",
+    "rule_version": "2.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "validation",
+    "artifact_on_error": "available",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "检查各模态公共时间段是否达到固定的 30 秒下界。",
+    "inputs": [
+      "streams"
+    ],
+    "documented": true,
+    "url": "quality-operators/timestamp/timestamp-tsa-004.html"
+  },
+  {
+    "rule_id": "timestamp-ppa-001",
+    "display_name": "Timestamp 产物写入异常",
+    "aliases": [
+      "artifact write failed",
+      "TIMESTAMP PPA 001"
+    ],
+    "modality_operator": "fm-timestamp-operator",
+    "modality": "timestamp",
+    "problem_domain": "processing_artifact_anomaly",
+    "stage": "artifact",
+    "operator_version": "0.15.0",
+    "rule_version": "1.0.0",
+    "version_history": [],
+    "history_baseline": "1.0.0",
+    "kind": "execution",
+    "artifact_on_error": "unavailable",
+    "cardinality": "single",
+    "target_type": null,
+    "prerequisites": [],
+    "lifecycle": "active",
+    "summary": "记录 Timestamp 单流直通或多流裁剪产物写入、发布过程中发生的异常。",
+    "inputs": [
+      "streams"
+    ],
+    "documented": true,
+    "url": "quality-operators/timestamp/timestamp-ppa-001.html"
+  }
+]

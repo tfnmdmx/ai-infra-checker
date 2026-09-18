@@ -36,7 +36,7 @@ fm-comb-camera-operator --help
 ```
 
 ::::{div} quality-source-links
-[查看完整使用手册](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/docs/operator-user-guide.md#6-comb-camera-operator) · [查看 GitHub 包源码](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/tree/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-comb-camera-operator)
+[查看完整使用手册](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/docs/operator-user-guide.md#6-comb-camera-operator) · [查看 GitHub 包源码](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/tree/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-comb-camera-operator)
 ::::
 
 ## 质检算子

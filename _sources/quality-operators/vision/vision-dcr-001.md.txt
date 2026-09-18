@@ -59,10 +59,10 @@ quality.vision.vision_dcr_001(
 ::::
 
 ::::{div} quality-source-links
-[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/vision.py#L84) ·
-[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/rules.py#L65) ·
-[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-vision-operator/tests/test_vision_operator.py#L483) · [test 2](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-vision-operator/tests/test_vision_operator.py#L527) ·
-[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/docs/quality-rule-calculation-spec.md#22-%E7%BB%93%E6%9E%84%E6%95%B0%E5%80%BC%E6%89%A7%E8%A1%8C%E5%92%8C%E6%97%B6%E9%95%BF%E8%A7%84%E5%88%99)
+[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/vision.py#L84) ·
+[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/rules.py#L65) ·
+[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-vision-operator/tests/test_vision_operator.py#L483) · [test 2](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-vision-operator/tests/test_vision_operator.py#L527) ·
+[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/docs/quality-rule-calculation-spec.md#22-%E7%BB%93%E6%9E%84%E6%95%B0%E5%80%BC%E6%89%A7%E8%A1%8C%E5%92%8C%E6%97%B6%E9%95%BF%E8%A7%84%E5%88%99)
 ::::
 
 ```{admonition} 注意
@@ -156,9 +156,9 @@ duration_s = (capture_timestamps[-1] - capture_timestamps[0]) / 1e9
 
 - 页面 owner：`data-quality/vision`
 - 所属模态算子：[Vision](../../modality-operators/vision.md)
-- 实现：[operators/fm-vision-operator/src/fm_vision_operator/vision.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/vision.py#L84)
-- 注册：[operators/fm-vision-operator/src/fm_vision_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/rules.py#L65)
-- 测试：[operators/fm-vision-operator/tests/test_vision_operator.py::test_short_duration_keeps_video_checks_and_artifact](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-vision-operator/tests/test_vision_operator.py#L483)
-- 测试：[operators/fm-vision-operator/tests/test_vision_operator.py::test_exact_30_second_video_continues_and_writes_artifact](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-vision-operator/tests/test_vision_operator.py#L527)
-- 计算规范：[docs/quality-rule-calculation-spec.md#22-结构数值执行和时长规则](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/docs/quality-rule-calculation-spec.md#22-%E7%BB%93%E6%9E%84%E6%95%B0%E5%80%BC%E6%89%A7%E8%A1%8C%E5%92%8C%E6%97%B6%E9%95%BF%E8%A7%84%E5%88%99)
-- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator-docs/site/operator-pages/vision/vision-dcr-001.yaml#L1)
+- 实现：[operators/fm-vision-operator/src/fm_vision_operator/vision.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/vision.py#L84)
+- 注册：[operators/fm-vision-operator/src/fm_vision_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/rules.py#L65)
+- 测试：[operators/fm-vision-operator/tests/test_vision_operator.py::test_short_duration_keeps_video_checks_and_artifact](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-vision-operator/tests/test_vision_operator.py#L483)
+- 测试：[operators/fm-vision-operator/tests/test_vision_operator.py::test_exact_30_second_video_continues_and_writes_artifact](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-vision-operator/tests/test_vision_operator.py#L527)
+- 计算规范：[docs/quality-rule-calculation-spec.md#22-结构数值执行和时长规则](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/docs/quality-rule-calculation-spec.md#22-%E7%BB%93%E6%9E%84%E6%95%B0%E5%80%BC%E6%89%A7%E8%A1%8C%E5%92%8C%E6%97%B6%E9%95%BF%E8%A7%84%E5%88%99)
+- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator-docs/site/operator-pages/vision/vision-dcr-001.yaml#L1)

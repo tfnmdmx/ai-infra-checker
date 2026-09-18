@@ -1,8 +1,13 @@
 [
   {
-    "name": "1.0.0",
+    "name": "稳定版 1.0.0",
     "version": "1.0.0",
-    "url": "http://localhost:8000/",
+    "url": "/1.0.0/"
+  },
+  {
+    "name": "当前版 1.4.1",
+    "version": "1.4.1",
+    "url": "/",
     "preferred": true
   }
 ]

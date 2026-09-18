@@ -63,10 +63,10 @@ quality.emg.emg_tsa_001(
 ::::
 
 ::::{div} quality-source-links
-[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/emg.py#L836) ·
-[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/rules.py#L57) ·
-[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-emg-operator/tests/test_emg_operator.py#L253) ·
-[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/docs/quality-rule-calculation-spec.md)
+[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/emg.py#L836) ·
+[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/rules.py#L57) ·
+[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-emg-operator/tests/test_emg_operator.py#L253) ·
+[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/docs/quality-rule-calculation-spec.md)
 ::::
 
 ```{admonition} 注意
@@ -140,8 +140,8 @@ quality.emg.emg_tsa_001(
 
 - 页面 owner：`data-quality/emg`
 - 所属模态算子：[EMG](../../modality-operators/emg.md)
-- 实现：[operators/fm-emg-operator/src/fm_emg_operator/emg.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/emg.py#L836)
-- 注册：[operators/fm-emg-operator/src/fm_emg_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/rules.py#L57)
-- 测试：[operators/fm-emg-operator/tests/test_emg_operator.py::test_emg_rule_registry_has_unique_canonical_ids](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-emg-operator/tests/test_emg_operator.py#L253)
-- 计算规范：[docs/quality-rule-calculation-spec.md](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/docs/quality-rule-calculation-spec.md)
-- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator-docs/site/operator-pages/emg/emg-tsa-001.yaml#L1)
+- 实现：[operators/fm-emg-operator/src/fm_emg_operator/emg.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/emg.py#L836)
+- 注册：[operators/fm-emg-operator/src/fm_emg_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/rules.py#L57)
+- 测试：[operators/fm-emg-operator/tests/test_emg_operator.py::test_emg_rule_registry_has_unique_canonical_ids](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-emg-operator/tests/test_emg_operator.py#L253)
+- 计算规范：[docs/quality-rule-calculation-spec.md](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/docs/quality-rule-calculation-spec.md)
+- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator-docs/site/operator-pages/emg/emg-tsa-001.yaml#L1)

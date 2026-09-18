@@ -60,10 +60,10 @@ quality.imu.imu_tsa_009(
 ::::
 
 ::::{div} quality-source-links
-[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/imu.py#L640) ·
-[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/rules.py#L61) ·
-[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-imu-operator/tests/test_imu_operator.py#L347) ·
-[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/docs/quality-rule-calculation-spec.md)
+[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/imu.py#L640) ·
+[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/rules.py#L61) ·
+[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-imu-operator/tests/test_imu_operator.py#L347) ·
+[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/docs/quality-rule-calculation-spec.md)
 ::::
 
 ```{admonition} 注意
@@ -153,8 +153,8 @@ value = (measured_rate_hz - expected_rate_hz) / expected_rate_hz
 
 - 页面 owner：`data-quality/imu`
 - 所属模态算子：[IMU](../../modality-operators/imu.md)
-- 实现：[operators/fm-imu-operator/src/fm_imu_operator/imu.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/imu.py#L640)
-- 注册：[operators/fm-imu-operator/src/fm_imu_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/rules.py#L61)
-- 测试：[operators/fm-imu-operator/tests/test_imu_operator.py::test_imu_sample_rate_deviation_ratio_errors_but_keeps_aligned_artifact](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-imu-operator/tests/test_imu_operator.py#L347)
-- 计算规范：[docs/quality-rule-calculation-spec.md](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/docs/quality-rule-calculation-spec.md)
-- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator-docs/site/operator-pages/imu/imu-tsa-009.yaml#L1)
+- 实现：[operators/fm-imu-operator/src/fm_imu_operator/imu.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/imu.py#L640)
+- 注册：[operators/fm-imu-operator/src/fm_imu_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/rules.py#L61)
+- 测试：[operators/fm-imu-operator/tests/test_imu_operator.py::test_imu_sample_rate_deviation_ratio_errors_but_keeps_aligned_artifact](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-imu-operator/tests/test_imu_operator.py#L347)
+- 计算规范：[docs/quality-rule-calculation-spec.md](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/docs/quality-rule-calculation-spec.md)
+- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator-docs/site/operator-pages/imu/imu-tsa-009.yaml#L1)

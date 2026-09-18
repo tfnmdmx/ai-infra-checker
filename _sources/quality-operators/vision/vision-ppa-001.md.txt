@@ -61,10 +61,10 @@ quality.vision.vision_ppa_001(
 ::::
 
 ::::{div} quality-source-links
-[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/vision.py#L473) ·
-[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/rules.py#L72) ·
-[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-vision-operator/tests/test_vision_operator.py#L1071) ·
-[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/docs/quality-rule-calculation-spec.md)
+[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/vision.py#L473) ·
+[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/rules.py#L72) ·
+[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-vision-operator/tests/test_vision_operator.py#L1071) ·
+[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/docs/quality-rule-calculation-spec.md)
 ::::
 
 ```{admonition} 注意
@@ -150,8 +150,8 @@ quality.vision.vision_ppa_001(
 
 - 页面 owner：`data-quality/vision`
 - 所属模态算子：[Vision](../../modality-operators/vision.md)
-- 实现：[operators/fm-vision-operator/src/fm_vision_operator/vision.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/vision.py#L473)
-- 注册：[operators/fm-vision-operator/src/fm_vision_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/rules.py#L72)
-- 测试：[operators/fm-vision-operator/tests/test_vision_operator.py::test_missing_shared_decode_count_blocks_artifact_after_individual_fallback](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/operators/fm-vision-operator/tests/test_vision_operator.py#L1071)
-- 计算规范：[docs/quality-rule-calculation-spec.md](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator/docs/quality-rule-calculation-spec.md)
-- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7f345f75b29fa40b85ffcc818311314f1c836090/QC-operator-docs/site/operator-pages/vision/vision-ppa-001.yaml#L1)
+- 实现：[operators/fm-vision-operator/src/fm_vision_operator/vision.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/vision.py#L473)
+- 注册：[operators/fm-vision-operator/src/fm_vision_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/rules.py#L72)
+- 测试：[operators/fm-vision-operator/tests/test_vision_operator.py::test_missing_shared_decode_count_blocks_artifact_after_individual_fallback](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/operators/fm-vision-operator/tests/test_vision_operator.py#L1071)
+- 计算规范：[docs/quality-rule-calculation-spec.md](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator/docs/quality-rule-calculation-spec.md)
+- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/a889266197259410548211072a09a1abbfde8fff/QC-operator-docs/site/operator-pages/vision/vision-ppa-001.yaml#L1)

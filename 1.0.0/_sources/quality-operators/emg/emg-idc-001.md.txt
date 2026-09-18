@@ -1,0 +1,143 @@
+(emg-idc-001)=
+<div class="quality-page-kicker">QUALITY OPERATOR · input_device_compatibility</div>
+
+# `emg-idc-001` — EMG 必需字段是否完整
+
+[所属模态算子：EMG](../../modality-operators/emg.md)
+
+<div class="quality-meta">
+  <code class="meta-lifecycle is-active">active</code>
+  <code class="meta-artifact is-unavailable">error 时产物无法生成</code>
+  <code class="meta-cardinality">single</code>
+  <code class="meta-domain">input_device_compatibility</code>
+  <code class="meta-stage">raw</code>
+  <code class="meta-version">rule v2.0.0</code>
+  <code class="meta-version">fm-emg-operator v0.16.0</code>
+</div>
+
+<p class="quality-lead">检查输入 NPZ 是否包含 EMG 信号和运行所需的时间戳字段；缺少任一项时发布 error。</p>
+
+## 白话解释
+
+- **做了什么检测：** 检查输入里有没有肌电信号，以及后续处理和质检所需的时间信息。
+- **为什么会告警或不通过：** 缺少肌电信号或找不到可用时间轴；没有这些基础字段，就无法知道测到了什么、每个样本发生在什么时候。
+
+## 版本历史
+
+| Rule 版本 | 首次对应包版本 | 日期 | 变更 | 提交 |
+| --- | --- | --- | --- | --- |
+| — | — | — | 尚无基线后的版本变更 | — |
+
+仅展示文档 1.0.0 基线之后的变更。
+
+## 计算契约
+
+::::{admonition} 计算契约（不可直接调用）
+:class: quality-contract
+
+```python
+quality.emg.emg_idc_001(
+    emg_record: NPZ arrays timestamps=[T], emg=[T,16],
+) -> RuleResult
+```
+::::
+
+::::{div} quality-source-links
+[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/emg.py#L836) ·
+[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/rules.py#L54) ·
+[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-emg-operator/tests/test_emg_operator.py#L1320) ·
+[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/docs/quality-rule-calculation-spec.md)
+::::
+
+```{admonition} 注意
+:class: note
+
+- “时间戳字段”指 NPZ 内数组的字段名，不是外部文件、服务或设备来源。
+- 规则阶段为 raw；总状态只取已执行规则的最高严重度。
+- 质量或数据异常由 RuleResult 明确记录且进程返回 0；只有运行配置错误返回 1。
+```
+
+## 数据输入
+
+| 名称 | 来源 | dtype | shape | 单位 | 必需 | 说明 |
+| --- | --- | --- | --- | --- | --- | --- |
+| `emg_record` | raw | `NPZ arrays` | `timestamps=[T], emg=[T,16]` | N/A | 是 | 输入包含 emg 及处理/质检时间轴；preprocess 控制是否滤波，不改变字段要求。 |
+
+## 配置参数
+
+本质检算子没有独立配置参数。
+
+## 校验逻辑
+### 校验含义
+
+**不通过表示：** 主入口缺少 emg、处理或质检时间轴候选
+
+### 具体检查项
+
+1. 检查是否存在 `emg` 信号字段。
+2. 主入口处理轴候选依次为 `sync_ts_ns`/`syncTsNs`、`emg_timestamps_raw`、`emg_timestamps`、`emg_sys_timestamps`。
+3. 主入口质检轴候选依次为 sync、`hw_ts_ns`/`hwTsNs`、`emg_hw_us`、`emg_hw_timestamps`、`emg_sys_timestamps`。
+4. 主入口的时间戳 shape、长度、有限性和递增性由结构及时间轴规则判断；不能因存在 emg_raw 而替代 emg。
+
+
+### 判定边界
+
+| 状态 | 条件 |
+| --- | --- |
+| pass | 信号及必需时间戳齐全；成功时不单独发布本规则 |
+| warn | not_applicable |
+| error | 主入口缺少 emg、处理或质检时间轴候选 |
+
+- 结构校验按离散条件判定，不进行隐式修复或默认跳过。
+
+## 执行关系
+
+**前置质检算子：** 无。
+
+
+**产物影响：** 本规则为 `error` 时，输出契约已经无法满足，因此本次不会登记产物；
+原因由结构化 RuleResult 记录。只要这不是运行配置错误，进程仍返回 0。
+
+
+## 输出
+
+| 字段 | 约定 |
+| --- | --- |
+| 实例模型 | `single` |
+| `value` | `any` 或 `null` |
+| `unit` | N/A |
+| `threshold` | `any` |
+| `details` | `message`, `category`, `metric` |
+
+```json
+{
+  "rule_id": "emg-idc-001",
+  "rule_version": "2.0.0",
+  "problem_domain": "input_device_compatibility",
+  "stage": "raw",
+  "status": "error",
+  "value": null,
+  "unit": null,
+  "threshold": null,
+  "details": {
+    "message": "检测到：EMG 输入缺少信号或必需时间戳字段",
+    "category": "input",
+    "metric": "input required field missing"
+  }
+}
+```
+
+## 失败后建议
+
+1. 检查输入 NPZ 是否包含 `emg`、处理时间轴与质检时间轴候选；兼容逐样本 `emg_sys_timestamps`。
+2. 配置错误应修正后重跑；不要把配置问题降级为质量告警。
+
+## 来源与维护
+
+- 页面 owner：`data-quality/emg`
+- 所属模态算子：[EMG](../../modality-operators/emg.md)
+- 实现：[operators/fm-emg-operator/src/fm_emg_operator/emg.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/emg.py#L836)
+- 注册：[operators/fm-emg-operator/src/fm_emg_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/rules.py#L54)
+- 测试：[operators/fm-emg-operator/tests/test_emg_operator.py::test_emg_missing_required_input_uses_idc_rule](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-emg-operator/tests/test_emg_operator.py#L1320)
+- 计算规范：[docs/quality-rule-calculation-spec.md](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/docs/quality-rule-calculation-spec.md)
+- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator-docs/site/operator-pages/emg/emg-idc-001.yaml#L1)
