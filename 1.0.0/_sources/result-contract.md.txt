@@ -1,0 +1,43 @@
+# 结果契约
+
+所有模态算子使用 `fm-operator-result/v4`。每条质检算子事实位于 `rule_results[]`，稳定身份由
+`rule_id` 和 `rule_version` 组成。
+
+| 字段 | 含义 |
+| --- | --- |
+| `rule_id` | 质检算子的稳定机器身份 |
+| `rule_version` | 公式、阈值或执行语义版本 |
+| `problem_domain` | IDC、DSF、TSA、DCR、NVA、SCQ、LAQ 或 PPA 对应的问题域 |
+| `stage` | 原始输入、处理后、对齐或产物等执行阶段 |
+| `status` | `pass`、`warn` 或 `error` |
+| `value` / `unit` | 当前规则的代表值和单位；多实例规则可在顶层使用 `null` |
+| `threshold` | 可机器解释的比较边界 |
+| `details` | 诊断证据；多实例规则使用 `details.instances[]` |
+
+规则级 `details.category` 和 `details.message` 均为可选诊断字段；缺失时不影响
+`pass`、`warn` 或 `error` 结果发布。
+多实例规则继续通过 `details.instances[]` 定位目标，不增加另一套错误码或消息结构。
+数值阈值触发的 `message` 使用 `WARN/ERROR：指标 实际值 单位 比较符 阈值 单位`
+的简短格式；没有数值阈值的结构、输入或执行异常只写明确原因。
+
+质检算子的 `RuleDescriptor` 在各模态包 `rules.py` 中声明 `kind`、`cardinality`、
+`target_type` 和 `prerequisites`。文档 manifest 必须与这些运行时元数据完全一致：
+
+- `kind` 为 `measurement`、`validation` 或 `execution`；
+- `artifact_on_error` 是文档属性：`available` 表示该质量异常不妨碍结构有效产物，
+  `unavailable` 表示此错误本身已使输出契约无法满足；
+- 运行时不公开短路、停止或阻断产物等动作子类型；
+- 最终是否完成处理以及有哪些可用产物，统一查看 `processed_ok` 和 `artifacts`；
+- 已结构化记录原因的数据、质量、转换、运行和产物异常均返回退出码 0；只有运行
+  配置缺失或非法返回 1，并且不发布伪装成质量事实的 RuleResult；
+
+- `single` 规则不发布 `details.instances`；
+- `multi` 规则以 `(target_type, target_id)` 唯一标识实例，并按该身份稳定排序；
+- 多次记录同一实例时合并证据，实例与规则级 `status` 均取最严重状态；
+- 多实例规则可保留规则级聚合值，也可将顶层 `value/unit/threshold` 置为 `null`；
+- 前置条件失败导致规则未运行时不伪造结果；只有配置显式关闭才写入
+  `summary.skipped_rules`。
+
+[下载当前 fm-operator-result/v4 JSON Schema](_downloads/fm-operator-result-v4.schema.json)
+
+页面示例全部使用合成数据，并在构建时嵌入该 Schema 验证。

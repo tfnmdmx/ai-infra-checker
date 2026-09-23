@@ -1,0 +1,115 @@
+(emg-modality-operator)=
+<div class="quality-page-kicker">MODALITY OPERATOR · unimodal</div>
+
+# EMG 模态算子
+
+<p class="quality-lead">在原生采样率上预处理和检查 16 通道 EMG 信号。</p>
+
+<div class="quality-meta">
+  <code class="meta-kind">fm-emg-operator</code>
+  <code class="meta-version">v0.16.0</code>
+  <code class="meta-stage">unimodal</code>
+  <code class="meta-domain">16 quality operators</code>
+</div>
+
+
+| 属性 | 值 |
+| --- | --- |
+| 包名 | `fm-emg-operator` |
+| 包版本 | `0.16.0` |
+| 输入边界 | 一个原始 EMG NPZ |
+| 默认产物 | `<work-dir>/emg/processed.npz` |
+| 质检算子数 | 16 |
+
+## 包版本历史
+
+| 包版本 | 日期 | 变更 | 提交 |
+| --- | --- | --- | --- |
+| — | — | 尚无基线后的版本变更 | — |
+
+仅展示文档 1.0.0 基线之后的变更。
+
+## 使用入口
+
+```bash
+fm-emg-operator --help
+```
+
+::::{div} quality-source-links
+[查看完整使用手册](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/docs/operator-user-guide.md#1-emg-operator) · [查看 GitHub 包源码](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/tree/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-emg-operator)
+::::
+
+## 质检算子
+
+### IDC · 输入/设备兼容性
+
+::::{div} modality-rule-table
+| Rule ID | 名称 | error 时产物 | 实例 | 阶段 | 版本 |
+| --- | --- | --- | --- | --- | --- |
+| <span id="catalog-emg-idc-001"></span>`emg-idc-001` | [EMG 必需字段是否完整](../quality-operators/emg/emg-idc-001.md) | 无法生成 | `single` | `raw` | `2.0.0` |
+::::
+
+### DSF · 数据结构/格式
+
+::::{div} modality-rule-table
+| Rule ID | 名称 | error 时产物 | 实例 | 阶段 | 版本 |
+| --- | --- | --- | --- | --- | --- |
+| <span id="catalog-emg-dsf-001"></span>`emg-dsf-001` | [EMG shape和dtype是否正确](../quality-operators/emg/emg-dsf-001.md) | 无法生成 | `multi` · `field` | `raw` | `1.0.0` |
+::::
+
+### TSA · 时间/样本对齐
+
+::::{div} modality-rule-table
+| Rule ID | 名称 | error 时产物 | 实例 | 阶段 | 版本 |
+| --- | --- | --- | --- | --- | --- |
+| <span id="catalog-emg-tsa-001"></span>`emg-tsa-001` | [EMG 时间戳是否严格递增](../quality-operators/emg/emg-tsa-001.md) | 无法生成 | `single` | `raw` | `1.0.0` |
+| <span id="catalog-emg-tsa-002"></span>`emg-tsa-002` | [最大时间间隔](../quality-operators/emg/emg-tsa-002.md) | 可生成 | `single` | `raw` | `3.0.0` |
+| <span id="catalog-emg-tsa-003"></span>`emg-tsa-003` | [采样率偏差比例](../quality-operators/emg/emg-tsa-003.md) | 可生成 | `single` | `raw` | `4.0.0` |
+::::
+
+### DCR · 时长/覆盖
+
+::::{div} modality-rule-table
+| Rule ID | 名称 | error 时产物 | 实例 | 阶段 | 版本 |
+| --- | --- | --- | --- | --- | --- |
+| <span id="catalog-emg-dcr-001"></span>`emg-dcr-001` | [有效时长](../quality-operators/emg/emg-dcr-001.md) | 可生成 | `single` | `raw` | `3.0.0` |
+::::
+
+### NVA · 数值有效性
+
+::::{div} modality-rule-table
+| Rule ID | 名称 | error 时产物 | 实例 | 阶段 | 版本 |
+| --- | --- | --- | --- | --- | --- |
+| <span id="catalog-emg-nva-001"></span>`emg-nva-001` | [EMG 是否含有 NaN 或 Inf](../quality-operators/emg/emg-nva-001.md) | 无法生成 | `multi` · `field` | `raw_to_processed` | `1.0.0` |
+::::
+
+### SCQ · 信号/通道质量
+
+::::{div} modality-rule-table
+| Rule ID | 名称 | error 时产物 | 实例 | 阶段 | 版本 |
+| --- | --- | --- | --- | --- | --- |
+| <span id="catalog-emg-scq-001"></span>`emg-scq-001` | [死通道数](../quality-operators/emg/emg-scq-001.md) | 可生成 | `single` | `processed` | `2.0.0` |
+| <span id="catalog-emg-scq-002"></span>`emg-scq-002` | [原始信号饱和异常](../quality-operators/emg/emg-scq-002.md) | 可生成 | `single` | `raw` | `3.0.0` |
+| <span id="catalog-emg-scq-004"></span>`emg-scq-004` | [工频比例偏高通道数](../quality-operators/emg/emg-scq-004.md) | 可生成 | `single` | `processed` | `1.0.0` |
+| <span id="catalog-emg-scq-005"></span>`emg-scq-005` | [高低频带功率比](../quality-operators/emg/emg-scq-005.md) | 可生成 | `single` | `processed` | `2.0.0` |
+| <span id="catalog-emg-scq-006"></span>`emg-scq-006` | [全局信号标准差](../quality-operators/emg/emg-scq-006.md) | 可生成 | `single` | `processed` | `1.0.0` |
+| <span id="catalog-emg-scq-007"></span>`emg-scq-007` | [50 Hz 残留](../quality-operators/emg/emg-scq-007.md) | 可生成 | `single` | `processed` | `1.0.0` |
+| <span id="catalog-emg-scq-008"></span>`emg-scq-008` | [处理后持续高幅异常](../quality-operators/emg/emg-scq-008.md) | 可生成 | `single` | `processed` | `2.0.0` |
+::::
+
+### PPA · 处理/产物异常
+
+::::{div} modality-rule-table
+| Rule ID | 名称 | error 时产物 | 实例 | 阶段 | 版本 |
+| --- | --- | --- | --- | --- | --- |
+| <span id="catalog-emg-ppa-001"></span>`emg-ppa-001` | [输入读取或处理异常](../quality-operators/emg/emg-ppa-001.md) | 无法生成 | `single` | `raw_to_processed` | `1.0.0` |
+| <span id="catalog-emg-ppa-002"></span>`emg-ppa-002` | [EMG 产物写入异常](../quality-operators/emg/emg-ppa-002.md) | 无法生成 | `single` | `artifact` | `1.0.0` |
+::::
+
+
+```{admonition} 文档覆盖说明
+:class: note
+
+“待补充”表示 Rule ID 已在代码中注册，但尚未完成独立质检算子页面；它不表示规则未实现或
+执行时会被跳过。
+```

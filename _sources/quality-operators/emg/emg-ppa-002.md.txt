@@ -1,0 +1,149 @@
+(emg-ppa-002)=
+<div class="quality-page-kicker">QUALITY OPERATOR · processing_artifact_anomaly</div>
+
+# `emg-ppa-002` — EMG 产物写入异常
+
+[所属模态算子：EMG](../../modality-operators/emg.md)
+
+<div class="quality-meta">
+  <code class="meta-lifecycle is-active">active</code>
+  <code class="meta-artifact is-unavailable">error 时产物无法生成</code>
+  <code class="meta-cardinality">single</code>
+  <code class="meta-domain">processing_artifact_anomaly</code>
+  <code class="meta-stage">artifact</code>
+  <code class="meta-version">rule v1.0.0</code>
+  <code class="meta-version">fm-emg-operator v0.17.0</code>
+</div>
+
+<p class="quality-lead">记录 EMG processed NPZ 创建或写入失败，区分执行异常与输入数据质量问题。</p>
+
+## 先看懂这条规则
+
+- **检查什么：** 检查处理好的肌电数据能不能完整保存成输出文件。
+- **什么情况下不通过：** 创建目录或写文件失败，意味着结果没有可靠落盘；即使前面的检测做完了，也不能把不完整文件当成可用产物。
+
+### 判定标准
+
+| 状态 | 怎么判 |
+| --- | --- |
+| **`pass`** | 不发布；processed NPZ 成功写入并登记 artifact 时没有这条异常结果。 |
+| **`warn`** | 不会出现；本规则不使用 warn 状态。 |
+| **`error`** | 创建目录或写入 processed NPZ 抛出异常 |
+
+**边界怎么算：**
+
+- 这是事件型异常规则，不存在数值阈值和等号边界。
+
+### 具体捕获点
+
+1. 创建目标父目录，先写入压缩 NPZ 临时文件，再原子替换。
+2. 捕获写入异常，记录异常类型和原因。
+3. 只有成功写入后才能登记 artifact。
+
+## 版本历史
+
+| Rule 版本 | 首次对应包版本 | 更新时间 | 变更 | 提交 |
+| --- | --- | --- | --- | --- |
+| — | — | — | 尚无基线后的版本变更 | — |
+
+仅展示文档 1.0.0 基线之后的变更。
+
+## 计算契约
+
+::::{admonition} 计算契约（不可直接调用）
+:class: quality-contract
+
+```python
+quality.emg.emg_ppa_002(
+    processed_payload: float32 and float64 arrays emg=[T,16], timestamps=[T],
+    *,
+    destination: Path,
+) -> RuleResult
+```
+::::
+
+::::{div} quality-source-links
+[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/emg.py#L836) ·
+[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/rules.py#L80) ·
+[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-emg-operator/tests/test_emg_operator.py#L1349) ·
+[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/docs/quality-rule-calculation-spec.md#22-%E7%BB%93%E6%9E%84%E6%95%B0%E5%80%BC%E6%89%A7%E8%A1%8C%E5%92%8C%E6%97%B6%E9%95%BF%E8%A7%84%E5%88%99)
+::::
+
+```{admonition} 注意
+:class: note
+
+- 该规则表达执行失败，不说明 EMG 信号本身质量差。
+```
+
+## 数据输入
+
+| 名称 | 来源 | dtype | shape | 单位 | 必需 | 说明 |
+| --- | --- | --- | --- | --- | --- | --- |
+| `processed_payload` | artifact | `float32 and float64 arrays` | `emg=[T,16], timestamps=[T]` | N/A | 是 | 准备写入 NPZ 的 EMG 与时间戳数组。 |
+
+## 配置参数
+
+| 名称 | 类型 | 默认值/必需 | 来源 | 说明 |
+| --- | --- | --- | --- | --- |
+| `destination` | `Path` | 必填 | work_dir | 目标 processed.npz 路径。 |
+
+## 执行异常处理
+
+## 执行关系
+
+**前置质检算子：**
+
+- [`emg-dsf-001`](../emg/emg-dsf-001.md)
+- [`emg-nva-001`](../emg/emg-nva-001.md)
+
+
+**产物影响：** 本规则为 `error` 时，输出契约已经无法满足，因此本次不会登记产物；
+原因由结构化 RuleResult 记录。只要这不是运行配置错误，进程仍返回 0。
+
+**相关质检算子：**
+
+- [`emg-ppa-001`](../emg/emg-ppa-001.md)
+
+## 输出
+
+| 字段 | 约定 |
+| --- | --- |
+| 实例模型 | `single` |
+| `value` | `null` |
+| `unit` | N/A |
+| `threshold` | `null` |
+| `details` | `message`, `category`, `exception_type`, `reason` |
+
+```json
+{
+  "rule_id": "emg-ppa-002",
+  "rule_version": "1.0.0",
+  "problem_domain": "processing_artifact_anomaly",
+  "stage": "artifact",
+  "status": "error",
+  "value": null,
+  "unit": null,
+  "threshold": null,
+  "details": {
+    "message": "EMG 产物写入失败",
+    "category": "artifact",
+    "exception_type": "OSError",
+    "reason": "disk full"
+  }
+}
+```
+
+## 失败后建议
+
+1. 检查工作目录权限、剩余空间、文件系统健康状态和并发路径冲突。
+2. 修复执行环境后重试，不应通过修改质量阈值绕过。
+
+## 来源与维护
+
+- 页面 owner：`data-quality/emg`
+- 所属模态算子：[EMG](../../modality-operators/emg.md)
+- 实现：[operators/fm-emg-operator/src/fm_emg_operator/emg.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/emg.py#L836)
+- 注册：[operators/fm-emg-operator/src/fm_emg_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/rules.py#L80)
+- 测试：[operators/fm-emg-operator/tests/test_emg_operator.py::test_emg_artifact_write_failure_is_reported](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-emg-operator/tests/test_emg_operator.py#L1349)
+- 计算规范：[docs/quality-rule-calculation-spec.md#22-结构数值执行和时长规则](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/docs/quality-rule-calculation-spec.md#22-%E7%BB%93%E6%9E%84%E6%95%B0%E5%80%BC%E6%89%A7%E8%A1%8C%E5%92%8C%E6%97%B6%E9%95%BF%E8%A7%84%E5%88%99)
+- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator-docs/site/operator-pages/emg/emg-ppa-002.yaml#L1)

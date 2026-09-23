@@ -1,0 +1,181 @@
+(force-dsf-003)=
+<div class="quality-page-kicker">QUALITY OPERATOR · data_structure_format</div>
+
+# `force-dsf-003` — Force shape和dtype是否正确
+
+[所属模态算子：Force](../../modality-operators/force.md)
+
+<div class="quality-meta">
+  <code class="meta-lifecycle is-active">active</code>
+  <code class="meta-artifact is-unavailable">error 时产物无法生成</code>
+  <code class="meta-cardinality">multi · field</code>
+  <code class="meta-domain">data_structure_format</code>
+  <code class="meta-stage">processed</code>
+  <code class="meta-version">rule v3.0.0</code>
+  <code class="meta-version">fm-force-label-operator v3.6.0</code>
+</div>
+
+<p class="quality-lead">统一检查 Force 标签和时间戳数组的 shape 与 dtype。</p>
+
+## 先看懂这条规则
+
+- **检查什么：** 检查时间戳是否为浮点一维数组，并按设备检查 Force 标签的维度、列数和数值类型。
+- **什么情况下不通过：** 字段维度、列数或数据类型不符合设备约定时，程序无法可靠解释每一列的含义。
+
+### 判定标准
+
+| 状态 | 怎么判 |
+| --- | --- |
+| **`pass`** | timestamps 是浮点一维数组，且每个 Force 字段的 shape 和数值 dtype 都符合对应设备约定。 |
+| **`warn`** | 不会出现；本规则不使用 warn 状态。 |
+| **`error`** | 时间轴或 Force 标签的 shape、dtype 违反结构契约时 error |
+
+**边界怎么算：**
+
+- 结构校验按离散条件判定，不进行隐式修复或默认跳过。
+
+### 具体检查项
+
+1. `timestamps` 必须是一维并使用浮点 dtype；样本数量及时间顺序由 `force-tsa-003` 判断。
+2. CMCU 五指矩阵必须为 `[T,5]`；兼容的 `[T,9]` 输入直接保留前五列，不检查后四列是否全零。
+3. Gen3 标准矩阵必须为 `[T,15]`，其他支持字段必须为一维或二维数值数组。
+4. 同一字段的 shape 和 dtype 异常合并到一个实例的 `details.issues` 中。
+
+## 版本历史
+
+| Rule 版本 | 首次对应包版本 | 更新时间 | 变更 | 提交 |
+| --- | --- | --- | --- | --- |
+| `3.0.0` | `3.0.0` | 2026-09-16 11:36:12 | 历史 9 列五指矩阵直接保留前 5 列，不再校验后 4 列是否全零。 | [`b3e1f07`](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/b3e1f07698c7307af6f19f88eb9997cdc73fbc4e) |
+
+仅展示文档 1.0.0 基线之后的变更。
+
+## 计算契约
+
+::::{admonition} 计算契约（不可直接调用）
+:class: quality-contract
+
+```python
+quality.force.force_dsf_003(
+    force_record: NPZ arrays timestamps=[T], force=[T,C],
+) -> RuleResult
+```
+::::
+
+::::{div} quality-source-links
+[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-force-label-operator/src/fm_force_label_operator/force_label_schema.py#L153) ·
+[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-force-label-operator/src/fm_force_label_operator/rules.py#L58) ·
+[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-force-label-operator/tests/test_force_label_operator.py#L569) ·
+[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/docs/quality-rule-calculation-spec.md)
+::::
+
+```{admonition} 注意
+:class: note
+
+- 规则阶段为 processed；总状态只取已执行规则的最高严重度。
+- 质量或数据异常由 RuleResult 明确记录且进程返回 0；只有运行配置错误返回 1。
+```
+
+## 数据输入
+
+| 名称 | 来源 | dtype | shape | 单位 | 必需 | 说明 |
+| --- | --- | --- | --- | --- | --- | --- |
+| `force_record` | processed | `NPZ arrays` | `timestamps=[T], force=[T,C]` | N/A | 是 | Force 原始标签及处理后的原生时间轴与力数据。 |
+
+## 配置参数
+
+本质检算子没有独立配置参数。
+
+## 校验逻辑
+
+## 执行关系
+
+**前置质检算子：** 无。
+
+
+**产物影响：** 本规则为 `error` 时，输出契约已经无法满足，因此本次不会登记产物；
+原因由结构化 RuleResult 记录。只要这不是运行配置错误，进程仍返回 0。
+
+**相关质检算子：**
+
+- [`force-idc-001`](../force/force-idc-001.md)
+- [`force-nva-002`](../force/force-nva-002.md)
+- [`force-tsa-003`](../force/force-tsa-003.md)
+- [`force-laq-002`](../force/force-laq-002.md)
+
+## 输出
+
+| 字段 | 约定 |
+| --- | --- |
+| 实例模型 | `multi`；实例身份为 `field` 类型的 `(target_type, target_id)` |
+| `value` | `any` 或 `null` |
+| `unit` | N/A |
+| `threshold` | `any` |
+| `details` | `message`, `category`, `instances`, `issues` |
+
+```json
+{
+  "rule_id": "force-dsf-003",
+  "rule_version": "3.0.0",
+  "problem_domain": "data_structure_format",
+  "stage": "processed",
+  "status": "error",
+  "value": null,
+  "unit": null,
+  "threshold": null,
+  "details": {
+    "message": "Force 产物字段结构不符合约定",
+    "category": "schema",
+    "instances": [
+      {
+        "target_type": "field",
+        "target_id": "cmcu05b_left_force_mn",
+        "status": "error",
+        "value": null,
+        "unit": null,
+        "threshold": null,
+        "details": {
+          "issues": [
+            {
+              "reason": "dtype",
+              "actual": "str32",
+              "expected": "number"
+            }
+          ]
+        }
+      },
+      {
+        "target_type": "field",
+        "target_id": "timestamps",
+        "status": "error",
+        "value": null,
+        "unit": null,
+        "threshold": null,
+        "details": {
+          "issues": [
+            {
+              "reason": "dtype",
+              "actual": "int64",
+              "expected": "floating"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+```
+
+## 失败后建议
+
+1. 检查生产端字段名、dtype、shape 和样本维契约。
+2. 修复上游序列化或转换逻辑后重跑，避免在质检端猜测结构。
+
+## 来源与维护
+
+- 页面 owner：`data-quality/force`
+- 所属模态算子：[Force](../../modality-operators/force.md)
+- 实现：[operators/fm-force-label-operator/src/fm_force_label_operator/force_label_schema.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-force-label-operator/src/fm_force_label_operator/force_label_schema.py#L153)
+- 注册：[operators/fm-force-label-operator/src/fm_force_label_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-force-label-operator/src/fm_force_label_operator/rules.py#L58)
+- 测试：[operators/fm-force-label-operator/tests/test_force_label_operator.py::test_force_processed_shape_dtype_failures_share_dsf_003](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-force-label-operator/tests/test_force_label_operator.py#L569)
+- 计算规范：[docs/quality-rule-calculation-spec.md](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/docs/quality-rule-calculation-spec.md)
+- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator-docs/site/operator-pages/force/force-dsf-003.yaml#L1)

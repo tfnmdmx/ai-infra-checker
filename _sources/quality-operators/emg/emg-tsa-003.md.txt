@@ -1,0 +1,159 @@
+(emg-tsa-003)=
+<div class="quality-page-kicker">QUALITY OPERATOR · time_sample_alignment</div>
+
+# `emg-tsa-003` — 采样率偏差比例
+
+[所属模态算子：EMG](../../modality-operators/emg.md)
+
+<div class="quality-meta">
+  <code class="meta-lifecycle is-active">active</code>
+  <code class="meta-artifact is-available">error 时产物可生成</code>
+  <code class="meta-cardinality">single</code>
+  <code class="meta-domain">time_sample_alignment</code>
+  <code class="meta-stage">raw</code>
+  <code class="meta-version">rule v4.1.0</code>
+  <code class="meta-version">fm-emg-operator v0.17.0</code>
+</div>
+
+<p class="quality-lead">检查 EMG 数据的有符号采样率偏差比例，并按绝对幅度边界发布独立 RuleResult。</p>
+
+## 先看懂这条规则
+
+- **检查什么：** 用实际时间间隔算出采样速度，并和应有的每秒 2000 个样本比较。
+- **什么情况下不通过：** 偏差超过 0.2% 会告警，超过 0.5% 会失败；这通常表示设备时钟、时间单位或采集配置不正确。
+
+### 判定标准
+
+| 状态 | 怎么判 |
+| --- | --- |
+| **`pass`** | abs(value)<=0.2% |
+| **`warn`** | abs(value)>0.2% 且 <=0.5% |
+| **`error`** | abs(value)>0.5% |
+
+**边界怎么算：**
+
+- abs(value) 恰好为 0.2% 时为 pass；恰好为 0.5% 时为 warn。
+
+
+## 版本历史
+
+| Rule 版本 | 首次对应包版本 | 更新时间 | 变更 | 提交 |
+| --- | --- | --- | --- | --- |
+| `4.1.0` | `0.17.0` | 2026-09-15 21:39:58 | 将 EMG 采样率偏差告警阈值从 0.1% 调整为 0.2%，失败阈值保持 0.5%。 [阈值统计依据](https://originflowai.feishu.cn/wiki/KBdCwyQjsiFlEyky4ysc4Z0mnqg)。具体阈值对模型的影响需要使用模型评估，短期无法确定，本文档仅根据实际数据统计确定阈值。根据 Codex 建议，只有 EMG、IMU 的 warn 阈值放宽，其余阈值不变或收缩。本次仅对 EMG、IMU 的 warn 阈值进行放宽，预计 0916 集成到 pipeline。 | [`4682951`](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/46829517fc715a059b316486f7d2f454e46c95e8) |
+
+仅展示文档 1.0.0 基线之后的变更。
+
+## 计算契约
+
+::::{admonition} 计算契约（不可直接调用）
+:class: quality-contract
+
+```python
+quality.emg.emg_tsa_003(
+    emg_record: NPZ arrays timestamps=[T], emg=[T,16],
+    *,
+    warn_abs_gt: float = 0.002,
+    error_abs_gt: float = 0.005,
+) -> RuleResult
+```
+::::
+
+::::{div} quality-source-links
+[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/emg.py#L836) ·
+[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/rules.py#L59) ·
+[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-emg-operator/tests/test_emg_operator.py#L704) ·
+[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/docs/quality-rule-calculation-spec.md)
+::::
+
+```{admonition} 注意
+:class: note
+
+- 规则阶段为 raw；总状态只取已执行规则的最高严重度。
+- 质量或数据异常由 RuleResult 明确记录且进程返回 0；只有运行配置错误返回 1。
+```
+
+## 数据输入
+
+| 名称 | 来源 | dtype | shape | 单位 | 必需 | 说明 |
+| --- | --- | --- | --- | --- | --- | --- |
+| `emg_record` | raw | `NPZ arrays` | `timestamps=[T], emg=[T,16]` | N/A | 是 | EMG 原始记录及处理后信号。 |
+
+## 配置参数
+
+| 名称 | 类型 | 默认值/必需 | 来源 | 说明 |
+| --- | --- | --- | --- | --- |
+| `warn_abs_gt` | `float` | `0.002` | rule_threshold | abs(value) 严格大于 0.002（0.2%）时至少为 warn。 |
+| `error_abs_gt` | `float` | `0.005` | rule_threshold | abs(value) 严格大于 0.005（0.5%）时为 error。 |
+
+## 计算定义
+计算使用 `emg_record`，
+结果类型为 `number`，
+单位为 ratio。
+
+### 计算方法
+
+```text
+value = (measured_rate_hz - expected_rate_hz) / expected_rate_hz
+```
+
+
+
+## 执行关系
+
+**前置质检算子：** 无。
+
+
+**产物影响：** 本规则为 `error` 时，只记录质量异常，不阻止生成结构上有效的产物。
+如果后续处理或写入本身失败，仍可能没有产物；最终事实以 `processed_ok` 与 `artifacts`
+为准。
+
+**相关质检算子：**
+
+- [`emg-tsa-001`](../emg/emg-tsa-001.md)
+- [`emg-tsa-002`](../emg/emg-tsa-002.md)
+
+## 输出
+
+| 字段 | 约定 |
+| --- | --- |
+| 实例模型 | `single` |
+| `value` | `number` |
+| `unit` | ratio |
+| `threshold` | `mapping` |
+| `details` | `message`, `category`, `metric` |
+
+```json
+{
+  "rule_id": "emg-tsa-003",
+  "rule_version": "4.1.0",
+  "problem_domain": "time_sample_alignment",
+  "stage": "raw",
+  "status": "warn",
+  "value": -0.003,
+  "unit": "ratio",
+  "threshold": {
+    "warn_abs_gt": 0.002,
+    "error_abs_gt": 0.005
+  },
+  "details": {
+    "message": "WARN：EMG 采样率偏差比例 -0.003 ratio，绝对值 > 0.002 ratio",
+    "category": "alignment",
+    "metric": "signed sample rate deviation ratio"
+  }
+}
+```
+
+## 失败后建议
+
+1. 检查权威时间戳来源、单位、顺序、丢帧和采集时钟。
+2. 结合 details 中的字段或目标实例定位异常流。
+
+## 来源与维护
+
+- 页面 owner：`data-quality/emg`
+- 所属模态算子：[EMG](../../modality-operators/emg.md)
+- 实现：[operators/fm-emg-operator/src/fm_emg_operator/emg.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/emg.py#L836)
+- 注册：[operators/fm-emg-operator/src/fm_emg_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/rules.py#L59)
+- 测试：[operators/fm-emg-operator/tests/test_emg_operator.py::test_emg_sample_rate_deviation_ratio_above_half_percent_is_error](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-emg-operator/tests/test_emg_operator.py#L704)
+- 计算规范：[docs/quality-rule-calculation-spec.md](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/docs/quality-rule-calculation-spec.md)
+- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator-docs/site/operator-pages/emg/emg-tsa-003.yaml#L1)

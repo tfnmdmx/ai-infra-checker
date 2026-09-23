@@ -1,0 +1,124 @@
+(force-modality-operator)=
+<div class="quality-page-kicker">MODALITY OPERATOR · unimodal</div>
+
+# Force 模态算子
+
+<p class="quality-lead">转换 Force 标签，并检查结构、时间质量和静息动作质量。</p>
+
+<div class="quality-meta">
+  <code class="meta-kind">fm-force-label-operator</code>
+  <code class="meta-version">v3.6.0</code>
+  <code class="meta-stage">unimodal</code>
+  <code class="meta-domain">12 quality operators</code>
+</div>
+
+
+| 属性 | 值 |
+| --- | --- |
+| 包名 | `fm-force-label-operator` |
+| 包版本 | `3.6.0` |
+| 输入边界 | 一个原始 Force NPZ |
+| 默认产物 | `<work-dir>/force/processed.npz` |
+| 质检算子数 | 12 |
+
+## 包版本历史
+
+| 包版本 | 更新时间 | 变更 | 提交 |
+| --- | --- | --- | --- |
+| `3.6.0` | 2026-09-22 21:26:08 | 删除 Gen3 的 force-laq-002 warn 级别，p95/std 不再触发 warn。 | [`21fb32a`](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/21fb32aa792280ec63c0ccaae8e2417202acc81b) |
+| `3.5.0` | 2026-09-22 21:26:08 | force-laq-002 的 Gen3 静息均值 error 门槛从 0.50 N 提高到 1.00 N，p95/std 不单独升级为 error。 | [`21fb32a`](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/21fb32aa792280ec63c0ccaae8e2417202acc81b) |
+| `3.4.0` | 2026-09-22 20:41:07 | force-tsa-005 最大连续缺口达到 4 个期望周期时仅判为 warn，不再设置 error。 | [`90a7511`](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/90a751126816063fd33c53ccd3353c25772a4e28) |
+| `3.3.0` | 2026-09-22 13:31:58 | 新增 force-laq-005，全程五指受力模式检查。 | [`3c07e4b`](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/3c07e4b9802b5635480d8a35d936a6ed0896fc69) |
+| `3.2.0` | 2026-09-16 17:14:09 | force-tsa-005 仅在最大连续缺口达到四个周期且累计净缺失比例超过 1% 时判为 error。 | [`b8654d8`](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/b8654d808b777d1f6a0182de078e5431e6009d05) |
+| `3.1.0` | 2026-09-16 16:29:24 | 将 force-laq-002 的静息受力统计窗口从前 5 秒改为前 3 秒，均值、p95、std 阈值不变。 | [`95f5140`](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/95f51400b3a2c8a4e2fbd800f65d2283e9a7ef35) |
+| `3.0.0` | 2026-09-16 11:36:12 | 移除 Force adapter，由字段名选择 CMCU05/CMCU05B 或 Gen3；所有输入执行静息检查，CMCU 9 列输入直接取前 5 列，并删除 force-idc-005。 | [`b3e1f07`](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/b3e1f07698c7307af6f19f88eb9997cdc73fbc4e) |
+
+仅展示文档 1.0.0 基线之后的变更。
+
+## 使用入口
+
+```bash
+fm-force-label-operator --help
+```
+
+::::{div} quality-source-links
+[查看完整使用手册](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/docs/operator-user-guide.md#3-force-label-operator) · [查看 GitHub 包源码](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/tree/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-force-label-operator)
+::::
+
+## 质检算子
+
+### IDC · 输入/设备兼容性
+
+::::{div} modality-rule-table
+| Rule ID | 名称 | error 时产物 | 实例 | 阶段 | 版本 |
+| --- | --- | --- | --- | --- | --- |
+| <span id="catalog-force-idc-001"></span>`force-idc-001` | [Force 必需字段是否完整](../quality-operators/force/force-idc-001.md) | 无法生成 | `single` | `raw` | `3.0.0` |
+::::
+
+### DSF · 数据结构/格式
+
+::::{div} modality-rule-table
+| Rule ID | 名称 | error 时产物 | 实例 | 阶段 | 版本 |
+| --- | --- | --- | --- | --- | --- |
+| <span id="catalog-force-dsf-003"></span>`force-dsf-003` | [Force shape和dtype是否正确](../quality-operators/force/force-dsf-003.md) | 无法生成 | `multi` · `field` | `processed` | `3.0.0` |
+::::
+
+### TSA · 时间/样本对齐
+
+::::{div} modality-rule-table
+| Rule ID | 名称 | error 时产物 | 实例 | 阶段 | 版本 |
+| --- | --- | --- | --- | --- | --- |
+| <span id="catalog-force-tsa-003"></span>`force-tsa-003` | [Force 时间戳是否严格递增](../quality-operators/force/force-tsa-003.md) | 无法生成 | `single` | `processed` | `2.0.0` |
+| <span id="catalog-force-tsa-005"></span>`force-tsa-005` | [最大连续缺口](../quality-operators/force/force-tsa-005.md) | 可生成 | `single` | `raw` | `5.0.0` |
+| <span id="catalog-force-tsa-007"></span>`force-tsa-007` | [采样率偏差比例](../quality-operators/force/force-tsa-007.md) | 可生成 | `single` | `raw` | `4.0.0` |
+::::
+
+### DCR · 时长/覆盖
+
+::::{div} modality-rule-table
+| Rule ID | 名称 | error 时产物 | 实例 | 阶段 | 版本 |
+| --- | --- | --- | --- | --- | --- |
+| <span id="catalog-force-dcr-003"></span>`force-dcr-003` | [有效时长](../quality-operators/force/force-dcr-003.md) | 可生成 | `single` | `raw` | `3.0.0` |
+::::
+
+### NVA · 数值有效性
+
+::::{div} modality-rule-table
+| Rule ID | 名称 | error 时产物 | 实例 | 阶段 | 版本 |
+| --- | --- | --- | --- | --- | --- |
+| <span id="catalog-force-nva-002"></span>`force-nva-002` | [Force 是否含有 NaN 或 Inf](../quality-operators/force/force-nva-002.md) | 无法生成 | `multi` · `field` | `processed` | `2.0.0` |
+::::
+
+### SCQ · 信号/通道质量
+
+::::{div} modality-rule-table
+| Rule ID | 名称 | error 时产物 | 实例 | 阶段 | 版本 |
+| --- | --- | --- | --- | --- | --- |
+| <span id="catalog-force-scq-001"></span>`force-scq-001` | [Force 通道是否恒定](../quality-operators/force/force-scq-001.md) | 可生成 | `multi` · `sensor_finger` | `raw` | `3.0.0` |
+::::
+
+### LAQ · 标签/动作质量
+
+::::{div} modality-rule-table
+| Rule ID | 名称 | error 时产物 | 实例 | 阶段 | 版本 |
+| --- | --- | --- | --- | --- | --- |
+| <span id="catalog-force-laq-002"></span>`force-laq-002` | [前 3 秒静息受力异常](../quality-operators/force/force-laq-002.md) | 可生成 | `multi` · `sensor_finger` | `raw` | `8.0.0` |
+| <span id="catalog-force-laq-005"></span>`force-laq-005` | [全程五指受力模式](../quality-operators/force/force-laq-005.md) | 可生成 | `multi` · `finger_group` | `raw` | `1.0.0` |
+::::
+
+### PPA · 处理/产物异常
+
+::::{div} modality-rule-table
+| Rule ID | 名称 | error 时产物 | 实例 | 阶段 | 版本 |
+| --- | --- | --- | --- | --- | --- |
+| <span id="catalog-force-ppa-002"></span>`force-ppa-002` | [Force 处理/转换异常](../quality-operators/force/force-ppa-002.md) | 无法生成 | `single` | `raw_to_processed` | `2.0.0` |
+| <span id="catalog-force-ppa-003"></span>`force-ppa-003` | [Force 产物写入异常](../quality-operators/force/force-ppa-003.md) | 无法生成 | `single` | `artifact` | `2.0.0` |
+::::
+
+
+```{admonition} 文档覆盖说明
+:class: note
+
+“待补充”表示 Rule ID 已在代码中注册，但尚未完成独立质检算子页面；它不表示规则未实现或
+执行时会被跳过。
+```

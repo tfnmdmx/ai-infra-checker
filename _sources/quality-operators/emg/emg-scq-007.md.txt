@@ -1,0 +1,159 @@
+(emg-scq-007)=
+<div class="quality-page-kicker">QUALITY OPERATOR · signal_channel_quality</div>
+
+# `emg-scq-007` — 50 Hz 残留
+
+[所属模态算子：EMG](../../modality-operators/emg.md)
+
+<div class="quality-meta">
+  <code class="meta-lifecycle is-active">active</code>
+  <code class="meta-artifact is-available">error 时产物可生成</code>
+  <code class="meta-cardinality">single</code>
+  <code class="meta-domain">signal_channel_quality</code>
+  <code class="meta-stage">processed</code>
+  <code class="meta-version">rule v1.0.0</code>
+  <code class="meta-version">fm-emg-operator v0.17.0</code>
+</div>
+
+<p class="quality-lead">计算陷波后 50 Hz 功率相对 40–200 Hz 平均功率高出的 dB 数。</p>
+
+## 先看懂这条规则
+
+- **检查什么：** 检查去除市电干扰后，信号里是否还残留突出的 50 Hz 嗡声。
+- **什么情况下不通过：** 仍有明显残留时会告警，残留很强时会失败，通常说明工频干扰严重或滤波没有充分抑制它。
+
+### 判定标准
+
+| 状态 | 怎么判 |
+| --- | --- |
+| **`pass`** | value <= 0 dB。 |
+| **`warn`** | 0 dB < value <= 5 dB。 |
+| **`error`** | value > 5 dB。 |
+
+**边界怎么算：**
+
+- value 恰好为 0 dB 时是 pass；恰好为 5 dB 时是 warn。
+
+
+## 版本历史
+
+| Rule 版本 | 首次对应包版本 | 更新时间 | 变更 | 提交 |
+| --- | --- | --- | --- | --- |
+| — | — | — | 尚无基线后的版本变更 | — |
+
+仅展示文档 1.0.0 基线之后的变更。
+
+## 计算契约
+
+::::{admonition} 计算契约（不可直接调用）
+:class: quality-contract
+
+```python
+quality.emg.emg_scq_007(
+    emg_record: NPZ arrays timestamps=[T], emg=[T,16],
+    *,
+    warn_gt: float = 0.0,
+    error_gt: float = 5.0,
+) -> RuleResult
+```
+::::
+
+::::{div} quality-source-links
+[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/emg.py#L333) ·
+[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/rules.py#L73) ·
+[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-emg-operator/tests/test_emg_operator.py#L1187) ·
+[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/docs/quality-rule-calculation-spec.md)
+::::
+
+```{admonition} 注意
+:class: note
+
+- 规则阶段为 processed；总状态只取已执行规则的最高严重度。
+- 质量或数据异常由 RuleResult 明确记录且进程返回 0；只有运行配置错误返回 1。
+```
+
+## 数据输入
+
+| 名称 | 来源 | dtype | shape | 单位 | 必需 | 说明 |
+| --- | --- | --- | --- | --- | --- | --- |
+| `emg_record` | processed | `NPZ arrays` | `timestamps=[T], emg=[T,16]` | N/A | 是 | EMG 原始记录及处理后信号。 |
+
+## 配置参数
+
+| 名称 | 类型 | 默认值/必需 | 来源 | 说明 |
+| --- | --- | --- | --- | --- |
+| `warn_gt` | `float` | `0.0` | rule_threshold | value 严格大于 0 dB 时至少为 warn。 |
+| `error_gt` | `float` | `5.0` | rule_threshold | value 严格大于 5 dB 时为 error。 |
+
+## 计算定义
+计算使用 `emg_record`，
+结果类型为 `number`，
+单位为 dB。
+
+### 计算方法
+
+```text
+value = residual 50 Hz power expressed in dB
+```
+
+
+
+## 执行关系
+
+**前置质检算子：** 无。
+
+
+**产物影响：** 本规则为 `error` 时，只记录质量异常，不阻止生成结构上有效的产物。
+如果后续处理或写入本身失败，仍可能没有产物；最终事实以 `processed_ok` 与 `artifacts`
+为准。
+
+**相关质检算子：**
+
+- [`emg-scq-001`](../emg/emg-scq-001.md)
+- [`emg-scq-002`](../emg/emg-scq-002.md)
+
+## 输出
+
+| 字段 | 约定 |
+| --- | --- |
+| 实例模型 | `single` |
+| `value` | `number` |
+| `unit` | dB |
+| `threshold` | `mapping` |
+| `details` | `message`, `category`, `metric` |
+
+```json
+{
+  "rule_id": "emg-scq-007",
+  "rule_version": "1.0.0",
+  "problem_domain": "signal_channel_quality",
+  "stage": "processed",
+  "status": "warn",
+  "value": 2.0,
+  "unit": "dB",
+  "threshold": {
+    "warn_gt": 0.0,
+    "error_gt": 5.0
+  },
+  "details": {
+    "message": "WARN：EMG 50 Hz 残留 2 dB > 0 dB",
+    "category": "quality",
+    "metric": "powerline residual 50hz high"
+  }
+}
+```
+
+## 失败后建议
+
+1. 按 details 中的通道或视频证据检查传感器、佩戴和采集环境。
+2. 保留原始数据与本规则数值用于复核。
+
+## 来源与维护
+
+- 页面 owner：`data-quality/emg`
+- 所属模态算子：[EMG](../../modality-operators/emg.md)
+- 实现：[operators/fm-emg-operator/src/fm_emg_operator/emg.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/emg.py#L333)
+- 注册：[operators/fm-emg-operator/src/fm_emg_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/rules.py#L73)
+- 测试：[operators/fm-emg-operator/tests/test_emg_operator.py::test_emg_50hz_residual_warning_threshold](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-emg-operator/tests/test_emg_operator.py#L1187)
+- 计算规范：[docs/quality-rule-calculation-spec.md](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/docs/quality-rule-calculation-spec.md)
+- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator-docs/site/operator-pages/emg/emg-scq-007.yaml#L1)

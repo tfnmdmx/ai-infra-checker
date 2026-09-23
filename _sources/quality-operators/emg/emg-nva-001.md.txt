@@ -1,0 +1,158 @@
+(emg-nva-001)=
+<div class="quality-page-kicker">QUALITY OPERATOR · numeric_validity</div>
+
+# `emg-nva-001` — EMG 是否含有 NaN 或 Inf
+
+[所属模态算子：EMG](../../modality-operators/emg.md)
+
+<div class="quality-meta">
+  <code class="meta-lifecycle is-active">active</code>
+  <code class="meta-artifact is-unavailable">error 时产物无法生成</code>
+  <code class="meta-cardinality">multi · field</code>
+  <code class="meta-domain">numeric_validity</code>
+  <code class="meta-stage">raw_to_processed</code>
+  <code class="meta-version">rule v1.0.0</code>
+  <code class="meta-version">fm-emg-operator v0.17.0</code>
+</div>
+
+<p class="quality-lead">检查读取到的 EMG 信号及滤波结果中是否出现 NaN 或正负无穷大。</p>
+
+## 先看懂这条规则
+
+- **检查什么：** 逐个查看原始和滤波后的肌电数值，确认没有“不是数字”或无限大的异常值。
+- **什么情况下不通过：** 只要出现一个无法参与正常计算的数值，就说明信号已经损坏或处理产生了异常，后续统计也会失真。
+
+### 判定标准
+
+| 状态 | 怎么判 |
+| --- | --- |
+| **`pass`** | EMG 输入和滤波结果均不含 NaN 或 Inf |
+| **`warn`** | 不会出现；本规则不使用 warn 状态。 |
+| **`error`** | EMG 输入或滤波结果中出现任意 NaN 或 Inf 时为 error |
+
+**边界怎么算：**
+
+- 结构校验按离散条件判定，不进行隐式修复或默认跳过。
+
+### 具体检查项
+
+1. 检查 `emg` 中的每个值是否都不是 NaN 或正负无穷大。
+2. 执行滤波时，再检查滤波结果中是否产生 NaN 或正负无穷大。
+3. 本规则不检查数组维度和通道数，也不检查时间戳；这些分别由 `emg-dsf-001` 和 `emg-tsa-001` 判断。
+
+## 版本历史
+
+| Rule 版本 | 首次对应包版本 | 更新时间 | 变更 | 提交 |
+| --- | --- | --- | --- | --- |
+| — | — | — | 尚无基线后的版本变更 | — |
+
+仅展示文档 1.0.0 基线之后的变更。
+
+## 计算契约
+
+::::{admonition} 计算契约（不可直接调用）
+:class: quality-contract
+
+```python
+quality.emg.emg_nva_001(
+    emg_record: NPZ arrays timestamps=[T], emg=[T,16],
+) -> RuleResult
+```
+::::
+
+::::{div} quality-source-links
+[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/emg.py#L836) ·
+[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/rules.py#L56) ·
+[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-emg-operator/tests/test_emg_operator.py#L253) ·
+[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/docs/quality-rule-calculation-spec.md)
+::::
+
+```{admonition} 注意
+:class: note
+
+- raw_to_processed 表示本规则覆盖输入 EMG 的数值检查和滤波结果的再次检查；跳过滤波时仍检查输入。
+- “NaN 或 Inf”表示无法参与后续可靠计算的非有限数值。
+- 规则阶段为 raw_to_processed；总状态只取已执行规则的最高严重度。
+- 质量或数据异常由 RuleResult 明确记录且进程返回 0；只有运行配置错误返回 1。
+```
+
+## 数据输入
+
+| 名称 | 来源 | dtype | shape | 单位 | 必需 | 说明 |
+| --- | --- | --- | --- | --- | --- | --- |
+| `emg_record` | raw_to_processed | `NPZ arrays` | `timestamps=[T], emg=[T,16]` | N/A | 是 | 从输入 NPZ 读取的 EMG 信号以及滤波后的 EMG 信号。 |
+
+## 配置参数
+
+本质检算子没有独立配置参数。
+
+## 校验逻辑
+
+## 执行关系
+
+**前置质检算子：** 无。
+
+
+**产物影响：** 本规则为 `error` 时，输出契约已经无法满足，因此本次不会登记产物；
+原因由结构化 RuleResult 记录。只要这不是运行配置错误，进程仍返回 0。
+
+**相关质检算子：**
+
+- [`emg-scq-008`](../emg/emg-scq-008.md)
+- [`emg-ppa-002`](../emg/emg-ppa-002.md)
+
+## 输出
+
+| 字段 | 约定 |
+| --- | --- |
+| 实例模型 | `multi`；实例身份为 `field` 类型的 `(target_type, target_id)` |
+| `value` | `any` 或 `null` |
+| `unit` | N/A |
+| `threshold` | `any` |
+| `details` | `message`, `category`, `metric`, `instances` |
+
+```json
+{
+  "rule_id": "emg-nva-001",
+  "rule_version": "1.0.0",
+  "problem_domain": "numeric_validity",
+  "stage": "raw_to_processed",
+  "status": "error",
+  "value": null,
+  "unit": null,
+  "threshold": null,
+  "details": {
+    "message": "检测到：EMG 中含有 NaN 或 Inf",
+    "category": "schema",
+    "metric": "value nonfinite",
+    "instances": [
+      {
+        "target_type": "field",
+        "target_id": "emg",
+        "status": "error",
+        "value": null,
+        "unit": null,
+        "threshold": null,
+        "details": {
+          "metric": "value nonfinite"
+        }
+      }
+    ]
+  }
+}
+```
+
+## 失败后建议
+
+1. 定位 NaN/Inf 的来源并修复采集或转换。
+2. 不要用静默填零掩盖非有限值。
+
+## 来源与维护
+
+- 页面 owner：`data-quality/emg`
+- 所属模态算子：[EMG](../../modality-operators/emg.md)
+- 实现：[operators/fm-emg-operator/src/fm_emg_operator/emg.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/emg.py#L836)
+- 注册：[operators/fm-emg-operator/src/fm_emg_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/rules.py#L56)
+- 测试：[operators/fm-emg-operator/tests/test_emg_operator.py::test_emg_rule_registry_has_unique_canonical_ids](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-emg-operator/tests/test_emg_operator.py#L253)
+- 计算规范：[docs/quality-rule-calculation-spec.md](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/docs/quality-rule-calculation-spec.md)
+- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator-docs/site/operator-pages/emg/emg-nva-001.yaml#L1)

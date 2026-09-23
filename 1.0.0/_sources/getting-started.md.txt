@@ -1,0 +1,31 @@
+# 开始使用
+
+质检算子不是独立 CLI。选择所属模态算子执行后，它会在统一的
+`fm-operator-result/v4` 结果中发布一条 `RuleResult`。
+
+## 1. 选择模态算子
+
+- EMG、IMU、Force 和 Pose 接收上游准备的原始 NPZ；
+- Vision 直接接收一个包含目标视频流的 MCAP；
+- Comb Camera 接收一个包含 `/comb_camera/cam0/image` 至 `/comb_camera/cam7/image` 的 MCAP；
+- Timestamp 接收一个或多个已经处理的模态 NPZ；单流原样发布，多流执行对齐和裁剪。
+
+每个[模态算子页面](modality-operators/index.md)都提供准确的包名、输入边界、默认产物和固定
+GitHub 使用手册链接。
+
+## 2. 查看 CLI
+
+```bash
+fm-emg-operator --help
+fm-imu-operator --help
+fm-force-label-operator --help
+fm-pose-label-operator --help
+fm-vision-operator --help
+fm-comb-camera-operator --help
+fm-timestamp-operator --help
+```
+
+## 3. 查找规则事实
+
+执行完成后，从 `rule_results[].rule_id` 进入[质检算子](quality-operators/index.md)，
+查看输入、公式或校验逻辑、精确阈值边界、输出解释及失败后建议。

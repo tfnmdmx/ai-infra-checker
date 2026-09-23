@@ -1,0 +1,174 @@
+(vision-tsa-005)=
+<div class="quality-page-kicker">QUALITY OPERATOR · time_sample_alignment</div>
+
+# `vision-tsa-005` — 累计缺帧比例
+
+[所属模态算子：Vision](../../modality-operators/vision.md)
+
+<div class="quality-meta">
+  <code class="meta-lifecycle is-active">active</code>
+  <code class="meta-artifact is-available">本规则最高为 warn</code>
+  <code class="meta-cardinality">single</code>
+  <code class="meta-domain">time_sample_alignment</code>
+  <code class="meta-stage">raw</code>
+  <code class="meta-version">rule v2.2.0</code>
+  <code class="meta-version">fm-vision-operator v0.9.0</code>
+</div>
+
+<p class="quality-lead">按首尾源时间戳与配置帧率估算整段净缺帧比例，仅单独判告警。</p>
+
+## 先看懂这条规则
+
+- **检查什么：** 根据视频首尾拍摄时间和配置帧率估算应有帧数，再计算实际少了多少帧及其占比。
+- **什么情况下不通过：** 整段净缺帧比例超过 0.1% 会告警，本规则不单独判失败；帧率设置或时钟偏差也可能造成该估计偏高。
+
+### 判定标准
+
+| 状态 | 怎么判 |
+| --- | --- |
+| **`pass`** | value <= 0.001 |
+| **`warn`** | value > 0.001 |
+| **`error`** | 不会出现；本规则不使用 error 状态。 |
+
+**边界怎么算：**
+
+- 恰好 0.1% 为 pass；本规则不输出 error。
+- rint 取最近整数，半整数取偶数；实际消息数超过理论数时 value 为 0，额外帧数保留在 details.surplus_count。
+
+
+## 版本历史
+
+| Rule 版本 | 首次对应包版本 | 更新时间 | 变更 | 提交 |
+| --- | --- | --- | --- | --- |
+| — | — | — | 尚无基线后的版本变更 | — |
+
+仅展示文档 1.0.0 基线之后的变更。
+
+## 计算契约
+
+::::{admonition} 计算契约（不可直接调用）
+:class: quality-contract
+
+```python
+quality.vision.vision_tsa_005(
+    video_stream: MCAP/protobuf messages=[T], decoded_frames=[T,H,W,C],
+    *,
+    expected_rate_hz: float = null,
+    warn_gt: float = 0.001,
+) -> RuleResult
+```
+::::
+
+::::{div} quality-source-links
+[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/vision.py#L473) ·
+[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/rules.py#L61) ·
+[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-vision-operator/tests/test_vision_operator.py#L302) ·
+[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/docs/quality-rule-calculation-spec.md)
+::::
+
+```{admonition} 注意
+:class: note
+
+- 规则阶段为 raw；总状态只取已执行规则的最高严重度。
+- 质量或数据异常由 RuleResult 明确记录且进程返回 0；只有运行配置错误返回 1。
+```
+
+## 数据输入
+
+| 名称 | 来源 | dtype | shape | 单位 | 必需 | 说明 |
+| --- | --- | --- | --- | --- | --- | --- |
+| `video_stream` | raw | `MCAP/protobuf` | `messages=[T], decoded_frames=[T,H,W,C]` | N/A | 是 | 选定视频 topic、消息索引、标定和解码帧。 |
+
+## 配置参数
+
+| 名称 | 类型 | 默认值/必需 | 来源 | 说明 |
+| --- | --- | --- | --- | --- |
+| `expected_rate_hz` | `float` | `null` | CLI | --expected-rate-hz 必填；本次采集的有限正数标称帧率，不从视频声明或实测帧率推断。 |
+| `warn_gt` | `float` | `0.001` | rule_threshold | value 严格大于 0.001（0.1%）时为 warn；本规则不设 error 阈值。 |
+
+## 计算定义
+计算使用 `video_stream`，
+结果类型为 `number`，
+单位为 ratio。
+
+### 计算方法
+
+```text
+expected_count = max(rint((last_timestamp - first_timestamp) * expected_fps) + 1, 1); value = max(expected_count - actual_count, 0) / expected_count
+```
+
+- **聚合口径：** 单条规则发布一个标量值；总状态取已执行规则的最高严重度。
+- **无法计算时：** 视频输入或源采集时间戳前置失败时不发布本规则；检查在解码前执行，不依赖画面结构或完整解码。
+
+
+## 执行关系
+
+**前置质检算子：** 无。
+
+
+**产物影响：** 本规则最高只发布 `warn`，不会单独阻止产物生成。
+
+**相关质检算子：**
+
+- [`vision-tsa-001`](../vision/vision-tsa-001.md)
+- [`vision-tsa-002`](../vision/vision-tsa-002.md)
+
+## 输出
+
+| 字段 | 约定 |
+| --- | --- |
+| 实例模型 | `single` |
+| `value` | `number` |
+| `unit` | ratio |
+| `threshold` | `mapping` |
+| `details` | `message`, `category`, `timestamp_source`, `expected_rate_source`, `expected_sample_rate_hz`, `measured_sample_rate_hz`, `actual_count`, `expected_count`, `skipped_count`, `global_missing_count`, `gap_count`, `gap_skipped_count`, `max_skip_run`, `expected_interval_s`, `max_interval_s`, `max_contiguous_gap_s`, `missing_ratio`, `surplus_count` |
+
+```json
+{
+  "rule_id": "vision-tsa-005",
+  "rule_version": "2.2.0",
+  "problem_domain": "time_sample_alignment",
+  "stage": "raw",
+  "status": "warn",
+  "value": 0.0014992503748125937,
+  "unit": "ratio",
+  "threshold": {
+    "warn_gt": 0.001
+  },
+  "details": {
+    "timestamp_source": "compressed_video.capture_timestamp",
+    "expected_rate_source": "configured",
+    "expected_sample_rate_hz": 100.0,
+    "measured_sample_rate_hz": 99.85,
+    "actual_count": 1998,
+    "expected_count": 2001,
+    "skipped_count": 3,
+    "global_missing_count": 3,
+    "gap_count": 3,
+    "gap_skipped_count": 3,
+    "max_skip_run": 1,
+    "expected_interval_s": 0.01,
+    "max_interval_s": 0.02,
+    "max_contiguous_gap_s": 0.01,
+    "missing_ratio": 0.0014992503748125937,
+    "surplus_count": 0,
+    "message": "WARN：视频累计缺帧比例 0.00149925 ratio > 0.001 ratio",
+    "category": "alignment"
+  }
+}
+```
+
+## 失败后建议
+
+1. 检查权威时间戳来源、单位、顺序、丢帧和采集时钟。
+2. 结合 details 中的字段或目标实例定位异常流。
+
+## 来源与维护
+
+- 页面 owner：`data-quality/vision`
+- 所属模态算子：[Vision](../../modality-operators/vision.md)
+- 实现：[operators/fm-vision-operator/src/fm_vision_operator/vision.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/vision.py#L473)
+- 注册：[operators/fm-vision-operator/src/fm_vision_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/rules.py#L61)
+- 测试：[operators/fm-vision-operator/tests/test_vision_operator.py::test_rule_registry_is_unique_and_rejects_foreign_rule](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-vision-operator/tests/test_vision_operator.py#L302)
+- 计算规范：[docs/quality-rule-calculation-spec.md](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/docs/quality-rule-calculation-spec.md)
+- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator-docs/site/operator-pages/vision/vision-tsa-005.yaml#L1)

@@ -1,0 +1,158 @@
+(vision-ppa-001)=
+<div class="quality-page-kicker">QUALITY OPERATOR · processing_artifact_anomaly</div>
+
+# `vision-ppa-001` — 视频处理或质检执行异常
+
+[所属模态算子：Vision](../../modality-operators/vision.md)
+
+<div class="quality-meta">
+  <code class="meta-lifecycle is-active">active</code>
+  <code class="meta-artifact is-available">error 时产物可生成</code>
+  <code class="meta-cardinality">multi · check</code>
+  <code class="meta-domain">processing_artifact_anomaly</code>
+  <code class="meta-stage">raw_to_processed</code>
+  <code class="meta-version">rule v1.0.0</code>
+  <code class="meta-version">fm-vision-operator v0.9.0</code>
+</div>
+
+<p class="quality-lead">按失败检查阶段汇总 MCAP 读取、码流探测、解码和视频质检的运行异常。</p>
+
+## 白话解释
+
+- **做了什么检测：** 观察读取视频容器、选流、提取和解码视频，以及运行各项画面质检的流程是否完整完成。
+- **为什么会告警或不通过：** 流程中发生其他具体规则未覆盖的异常，表示相关检测没有可靠执行完，不能把未检查当成通过。
+
+## 版本历史
+
+| Rule 版本 | 首次对应包版本 | 日期 | 变更 | 提交 |
+| --- | --- | --- | --- | --- |
+| — | — | — | 尚无基线后的版本变更 | — |
+
+仅展示文档 1.0.0 基线之后的变更。
+
+## 计算契约
+
+::::{admonition} 计算契约（不可直接调用）
+:class: quality-contract
+
+```python
+quality.vision.vision_ppa_001(
+    video_stream: MCAP/protobuf messages=[T], decoded_frames=[T,H,W,C],
+) -> RuleResult
+```
+::::
+
+::::{div} quality-source-links
+[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/vision.py#L473) ·
+[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/rules.py#L72) ·
+[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-vision-operator/tests/test_vision_operator.py#L1071) ·
+[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/docs/quality-rule-calculation-spec.md)
+::::
+
+```{admonition} 注意
+:class: note
+
+- 规则阶段为 raw_to_processed；总状态只取已执行规则的最高严重度。
+- 质量或数据异常由 RuleResult 明确记录且进程返回 0；只有运行配置错误返回 1。
+- 此规则按 check 聚合：单项画质检查失败仍允许发布结构有效的帧索引；读取、探测或完整解码失败时可能没有产物，最终以 artifacts 为准。
+```
+
+## 数据输入
+
+| 名称 | 来源 | dtype | shape | 单位 | 必需 | 说明 |
+| --- | --- | --- | --- | --- | --- | --- |
+| `video_stream` | raw_to_processed | `MCAP/protobuf` | `messages=[T], decoded_frames=[T,H,W,C]` | N/A | 是 | 选定视频 topic、消息索引、标定和解码帧。 |
+
+## 配置参数
+
+本质检算子没有独立配置参数。
+
+## 执行异常处理
+### 事件含义
+
+**发布 error 表示：** 未被输入/结构规则覆盖的异常为 error；按检查实例记录
+
+### 具体捕获点
+
+1. 扫描 MCAP、选择视频流、提取码流，并运行 ffprobe/ffmpeg、OpenCV 与 ONNX 质量检查。
+2. 捕获未被输入发现、编码结构或具体视频质量规则覆盖的运行异常。
+3. 按失败检查阶段发布实例并记录异常类型和消息，避免把未执行完成的检查当作 pass。
+
+### 判定边界
+
+| 状态 | 条件 |
+| --- | --- |
+| pass | 未发生异常时不发布本规则 |
+| warn | not_applicable |
+| error | 未被输入/结构规则覆盖的异常为 error；按检查实例记录 |
+
+- 事件型规则没有数值等号边界。
+
+## 执行关系
+
+**前置质检算子：** 无。
+
+
+**产物影响：** 本规则为 `error` 时，只记录质量异常，不阻止生成结构上有效的产物。
+如果后续处理或写入本身失败，仍可能没有产物；最终事实以 `processed_ok` 与 `artifacts`
+为准。
+
+**相关质检算子：**
+
+- [`vision-ppa-002`](../vision/vision-ppa-002.md)
+
+## 输出
+
+| 字段 | 约定 |
+| --- | --- |
+| 实例模型 | `multi`；实例身份为 `check` 类型的 `(target_type, target_id)` |
+| `value` | `any` 或 `null` |
+| `unit` | N/A |
+| `threshold` | `any` |
+| `details` | `message`, `category`, `instances` |
+
+```json
+{
+  "rule_id": "vision-ppa-001",
+  "rule_version": "1.0.0",
+  "problem_domain": "processing_artifact_anomaly",
+  "stage": "raw_to_processed",
+  "status": "error",
+  "value": null,
+  "unit": null,
+  "threshold": null,
+  "details": {
+    "message": "Vision 检查执行失败: video_probe",
+    "category": "runtime",
+    "instances": [
+      {
+        "target_type": "check",
+        "target_id": "video_probe",
+        "status": "error",
+        "value": null,
+        "unit": null,
+        "threshold": null,
+        "details": {
+          "exception_type": "RuntimeError",
+          "reason": "ffprobe could not identify the video stream"
+        }
+      }
+    ]
+  }
+}
+```
+
+## 失败后建议
+
+1. 查看 details.instances 中的 target_id，以及实例 details.exception_type 和 reason，定位失败阶段。
+2. 修复依赖、输入读取或质检环境后重跑；产物是否可用以 artifacts 为准。
+
+## 来源与维护
+
+- 页面 owner：`data-quality/vision`
+- 所属模态算子：[Vision](../../modality-operators/vision.md)
+- 实现：[operators/fm-vision-operator/src/fm_vision_operator/vision.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/vision.py#L473)
+- 注册：[operators/fm-vision-operator/src/fm_vision_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/rules.py#L72)
+- 测试：[operators/fm-vision-operator/tests/test_vision_operator.py::test_missing_shared_decode_count_blocks_artifact_after_individual_fallback](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-vision-operator/tests/test_vision_operator.py#L1071)
+- 计算规范：[docs/quality-rule-calculation-spec.md](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/docs/quality-rule-calculation-spec.md)
+- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator-docs/site/operator-pages/vision/vision-ppa-001.yaml#L1)

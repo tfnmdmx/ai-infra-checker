@@ -1,0 +1,48 @@
+# 版本与变更记录
+
+本站以 **1.0.0** 作为文档基线，从此开始展示后续变更。基线之前的修改记录已归档为
+**0.0.1 历史**，不在页面上显示。
+
+文档版本、模态算子的 Python 包版本，以及质检规则公式、阈值或执行语义的 `rule_version`
+独立演进。建立文档基线不改变现有包版本或规则版本。
+
+## 当前模态算子版本
+
+| 模态算子 | 包名 | 当前包版本 | 质检规则数 |
+| --- | --- | --- | ---: |
+| [EMG](modality-operators/emg.md) | `fm-emg-operator` | `0.16.0` | 16 |
+| [IMU](modality-operators/imu.md) | `fm-imu-operator` | `0.13.0` | 9 |
+| [Force](modality-operators/force.md) | `fm-force-label-operator` | `2.1.0` | 12 |
+| [Pose](modality-operators/pose.md) | `fm-pose-label-operator` | `0.16.0` | 13 |
+| [Vision](modality-operators/vision.md) | `fm-vision-operator` | `0.9.0` | 14 |
+| [Comb Camera](modality-operators/comb_camera.md) | `fm-comb-camera-operator` | `0.3.0` | 7 |
+| [Timestamp](modality-operators/timestamp.md) | `fm-timestamp-operator` | `0.15.0` | 6 |
+
+## 模态算子包版本历史
+
+| 日期 | 模态算子 | 包版本 | 变更 | 提交 |
+| --- | --- | --- | --- | --- |
+| — | — | — | 尚无基线后的版本变更 | — |
+
+## 质检规则版本变更
+
+下表及各规则页面仅展示文档 1.0.0 基线之后的规则版本更新。
+
+| 日期 | Rule ID | Rule 版本 | 首次对应包版本 | 变更 | 提交 |
+| --- | --- | --- | --- | --- | --- |
+| — | — | — | — | 尚无基线后的版本变更 | — |
+
+## 历史文档快照
+
+页面顶部的版本选择器由 `versions.json` 驱动，当前文档版本为 `1.0.0`。发布稳定快照时，需将
+该提交构建到不可变的版本路径，在 `versions.json` 中登记版本和路径，并将 `preferred` 移到
+新的稳定版本。旧快照继续读取同一个版本清单，因此能够跳转到后续版本。
+
+```{admonition} 版本维护规则
+:class: important
+
+- 公式、阈值或执行语义改变时，必须递增运行时 `rule_version`，并在对应 manifest 顶部追加记录；
+- 版本历史按新到旧排列，第一条必须与运行时注册表中的当前 `rule_version` 一致；
+- `package_version` 记录该规则版本首次出现时所属包的版本，不随无关的包版本升级改写；
+- `commit` 必须使用完整的 40 位 Git SHA，保证链接长期可追溯。
+```

@@ -1,0 +1,179 @@
+(vision-tsa-002)=
+<div class="quality-page-kicker">QUALITY OPERATOR · time_sample_alignment</div>
+
+# `vision-tsa-002` — 视频帧率偏差比例
+
+[所属模态算子：Vision](../../modality-operators/vision.md)
+
+<div class="quality-meta">
+  <code class="meta-lifecycle is-active">active</code>
+  <code class="meta-artifact is-available">error 时产物可生成</code>
+  <code class="meta-cardinality">single</code>
+  <code class="meta-domain">time_sample_alignment</code>
+  <code class="meta-stage">raw</code>
+  <code class="meta-version">rule v3.0.0</code>
+  <code class="meta-version">fm-vision-operator v0.9.0</code>
+</div>
+
+<p class="quality-lead">比较源采集时间戳推得的实测帧率与配置帧率，按偏差的绝对值判级。</p>
+
+## 白话解释
+
+- **做了什么检测：** 根据真实拍摄时间算出实际帧率，并和视频应有的每秒帧数比较。
+- **为什么会告警或不通过：** 偏差超过 5% 会告警，超过 10% 会失败；可能是掉帧、相机设置或时间单位不正确。
+
+## 版本历史
+
+| Rule 版本 | 首次对应包版本 | 日期 | 变更 | 提交 |
+| --- | --- | --- | --- | --- |
+| — | — | — | 尚无基线后的版本变更 | — |
+
+仅展示文档 1.0.0 基线之后的变更。
+
+## 计算契约
+
+::::{admonition} 计算契约（不可直接调用）
+:class: quality-contract
+
+```python
+quality.vision.vision_tsa_002(
+    video_stream: MCAP/protobuf messages=[T], decoded_frames=[T,H,W,C],
+    *,
+    expected_rate_hz: float = null,
+    warn_abs_gt: float = 0.05,
+    error_abs_gt: float = 0.1,
+) -> RuleResult
+```
+::::
+
+::::{div} quality-source-links
+[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/vision.py#L473) ·
+[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/rules.py#L58) ·
+[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-vision-operator/tests/test_vision_operator.py#L302) ·
+[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/docs/quality-rule-calculation-spec.md)
+::::
+
+```{admonition} 注意
+:class: note
+
+- 规则阶段为 raw；总状态只取已执行规则的最高严重度。
+- 质量或数据异常由 RuleResult 明确记录且进程返回 0；只有运行配置错误返回 1。
+```
+
+## 数据输入
+
+| 名称 | 来源 | dtype | shape | 单位 | 必需 | 说明 |
+| --- | --- | --- | --- | --- | --- | --- |
+| `video_stream` | raw | `MCAP/protobuf` | `messages=[T], decoded_frames=[T,H,W,C]` | N/A | 是 | 选定视频 topic、消息索引、标定和解码帧。 |
+
+## 配置参数
+
+| 名称 | 类型 | 默认值/必需 | 来源 | 说明 |
+| --- | --- | --- | --- | --- |
+| `expected_rate_hz` | `float` | `null` | CLI | --expected-rate-hz 必填；本次采集的有限正数标称帧率，不从视频声明或实测帧率推断。 |
+| `warn_abs_gt` | `float` | `0.05` | rule_threshold | abs(value) 的 warn 判定边界；比较符含义见 decision。 |
+| `error_abs_gt` | `float` | `0.1` | rule_threshold | abs(value) 的 error 判定边界；比较符含义见 decision。 |
+
+## 计算定义
+### 指标含义
+
+表示源时间戳推得的实测视频帧率相对期望 FPS 的有符号偏差；正值代表帧率偏高，负值代表偏低，状态按绝对偏差判断。
+
+计算使用 `video_stream`，
+结果类型为 `number`，
+单位为 ratio。
+
+### 计算方法
+
+```text
+value = (measured_fps - expected_fps) / expected_fps
+```
+
+- **聚合口径：** 单条规则发布一个标量值；总状态取已执行规则的最高严重度。
+- **无法计算时：** 视频输入或源采集时间戳前置失败时不发布本规则；检查在解码前执行，不依赖画面结构或完整解码。
+
+
+### 判定边界
+
+| 状态 | 条件 |
+| --- | --- |
+| pass | 未命中 warn 或 error 条件 |
+| warn | abs(value)>5% 且 <=10% |
+| error | abs(value)>10% |
+
+- 严格遵循本页判定中的 >、>=、<、<=；等号归属以明确写出的比较符为准。
+
+## 执行关系
+
+**前置质检算子：** 无。
+
+
+**产物影响：** 本规则为 `error` 时，只记录质量异常，不阻止生成结构上有效的产物。
+如果后续处理或写入本身失败，仍可能没有产物；最终事实以 `processed_ok` 与 `artifacts`
+为准。
+
+**相关质检算子：**
+
+- [`vision-tsa-001`](../vision/vision-tsa-001.md)
+- [`vision-tsa-004`](../vision/vision-tsa-004.md)
+
+## 输出
+
+| 字段 | 约定 |
+| --- | --- |
+| 实例模型 | `single` |
+| `value` | `number` |
+| `unit` | ratio |
+| `threshold` | `mapping` |
+| `details` | `message`, `category`, `timestamp_source`, `expected_rate_source`, `expected_sample_rate_hz`, `measured_sample_rate_hz`, `actual_count`, `expected_count`, `skipped_count`, `global_missing_count`, `gap_count`, `gap_skipped_count`, `max_skip_run`, `expected_interval_s`, `max_interval_s`, `max_contiguous_gap_s`, `missing_ratio`, `surplus_count` |
+
+```json
+{
+  "rule_id": "vision-tsa-002",
+  "rule_version": "3.0.0",
+  "problem_domain": "time_sample_alignment",
+  "stage": "raw",
+  "status": "warn",
+  "value": -0.07,
+  "unit": "ratio",
+  "threshold": {
+    "warn_abs_gt": 0.05,
+    "error_abs_gt": 0.1
+  },
+  "details": {
+    "timestamp_source": "compressed_video.capture_timestamp",
+    "expected_rate_source": "configured",
+    "expected_sample_rate_hz": 100.0,
+    "measured_sample_rate_hz": 93.0,
+    "actual_count": 1861,
+    "expected_count": 2001,
+    "skipped_count": 140,
+    "global_missing_count": 140,
+    "gap_count": 0,
+    "gap_skipped_count": 0,
+    "max_skip_run": 0,
+    "expected_interval_s": 0.01,
+    "max_interval_s": 0.01075268900000026,
+    "max_contiguous_gap_s": 0.0,
+    "missing_ratio": 0.06996501749125437,
+    "surplus_count": 0,
+    "message": "WARN：视频帧率偏差比例 -0.07 ratio，绝对值 > 0.05 ratio",
+    "category": "alignment"
+  }
+}
+```
+
+## 失败后建议
+
+1. 检查权威时间戳来源、单位、顺序、丢帧和采集时钟。
+2. 结合 details 中的字段或目标实例定位异常流。
+
+## 来源与维护
+
+- 页面 owner：`data-quality/vision`
+- 所属模态算子：[Vision](../../modality-operators/vision.md)
+- 实现：[operators/fm-vision-operator/src/fm_vision_operator/vision.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/vision.py#L473)
+- 注册：[operators/fm-vision-operator/src/fm_vision_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/rules.py#L58)
+- 测试：[operators/fm-vision-operator/tests/test_vision_operator.py::test_rule_registry_is_unique_and_rejects_foreign_rule](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-vision-operator/tests/test_vision_operator.py#L302)
+- 计算规范：[docs/quality-rule-calculation-spec.md](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/docs/quality-rule-calculation-spec.md)
+- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator-docs/site/operator-pages/vision/vision-tsa-002.yaml#L1)

@@ -1,0 +1,155 @@
+(force-tsa-005)=
+<div class="quality-page-kicker">QUALITY OPERATOR · time_sample_alignment</div>
+
+# `force-tsa-005` — 最大连续缺口
+
+[所属模态算子：Force](../../modality-operators/force.md)
+
+<div class="quality-meta">
+  <code class="meta-lifecycle is-active">active</code>
+  <code class="meta-artifact is-available">error 时产物可生成</code>
+  <code class="meta-cardinality">single</code>
+  <code class="meta-domain">time_sample_alignment</code>
+  <code class="meta-stage">raw</code>
+  <code class="meta-version">rule v3.0.0</code>
+  <code class="meta-version">fm-force-label-operator v2.1.0</code>
+</div>
+
+<p class="quality-lead">检查FORCE 数据的「最大连续缺口」，并按公开边界发布独立 RuleResult。</p>
+
+## 白话解释
+
+- **做了什么检测：** 找出相邻两个力样本之间最长的一次等待，用来发现最严重的局部停采或断流。
+- **为什么会告警或不通过：** 连续缺失达到 2 个正常周期会告警，达到 4 个周期会失败；判级只看最严重的一次局部缺口。
+
+## 版本历史
+
+| Rule 版本 | 首次对应包版本 | 日期 | 变更 | 提交 |
+| --- | --- | --- | --- | --- |
+| — | — | — | 尚无基线后的版本变更 | — |
+
+仅展示文档 1.0.0 基线之后的变更。
+
+## 计算契约
+
+::::{admonition} 计算契约（不可直接调用）
+:class: quality-contract
+
+```python
+quality.force.force_tsa_005(
+    force_record: NPZ arrays timestamps=[T], force=[T,C],
+) -> RuleResult
+```
+::::
+
+::::{div} quality-source-links
+[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-force-label-operator/src/fm_force_label_operator/force_label.py#L188) ·
+[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-force-label-operator/src/fm_force_label_operator/rules.py#L63) ·
+[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-force-label-operator/tests/test_force_label_operator.py#L286) ·
+[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/docs/quality-rule-calculation-spec.md)
+::::
+
+```{admonition} 注意
+:class: note
+
+- 规则阶段为 raw；总状态只取已执行规则的最高严重度。
+- 质量或数据异常由 RuleResult 明确记录且进程返回 0；只有运行配置错误返回 1。
+```
+
+## 数据输入
+
+| 名称 | 来源 | dtype | shape | 单位 | 必需 | 说明 |
+| --- | --- | --- | --- | --- | --- | --- |
+| `force_record` | raw | `NPZ arrays` | `timestamps=[T], force=[T,C]` | N/A | 是 | Force 原始标签、记录边界及处理后五指数据。 |
+
+## 配置参数
+
+本质检算子没有独立配置参数。
+
+## 计算定义
+### 指标含义
+
+根据相邻时间戳间隔估算每处连续缺失的样本周期数，value 为最严重缺口的缺失周期数乘 expected_dt；它不等于包含正常一个周期在内的原始最大相邻间隔。
+
+计算使用 `force_record`，
+结果类型为 `number`，
+单位为 s。
+
+### 计算方法
+
+```text
+skipped_per_gap = max(round(diff(force_timestamps) / expected_dt) - 1, 0)
+value = max(skipped_per_gap) * expected_dt
+```
+
+
+
+### 判定边界
+
+| 状态 | 条件 |
+| --- | --- |
+| pass | value < 2×expected_dt |
+| warn | 2×expected_dt <= value < 4×expected_dt |
+| error | value >= 4×expected_dt |
+
+- 严格遵循本页判定中的 >、>=、<、<=；等号归属以明确写出的比较符为准。
+
+## 执行关系
+
+**前置质检算子：** 无。
+
+
+**产物影响：** 本规则为 `error` 时，只记录质量异常，不阻止生成结构上有效的产物。
+如果后续处理或写入本身失败，仍可能没有产物；最终事实以 `processed_ok` 与 `artifacts`
+为准。
+
+**相关质检算子：**
+
+- [`force-dsf-003`](../force/force-dsf-003.md)
+
+## 输出
+
+| 字段 | 约定 |
+| --- | --- |
+| 实例模型 | `single` |
+| `value` | `number` |
+| `unit` | s |
+| `threshold` | `mapping` |
+| `details` | `message`, `category`, `metric`, `missing_ratio` |
+
+```json
+{
+  "rule_id": "force-tsa-005",
+  "rule_version": "3.0.0",
+  "problem_domain": "time_sample_alignment",
+  "stage": "raw",
+  "status": "warn",
+  "value": 0.06,
+  "unit": "s",
+  "threshold": {
+    "warn_gte": "2*expected_dt",
+    "error_gte": "4*expected_dt"
+  },
+  "details": {
+    "message": "WARN：Force 最大连续缺口 0.06 s >= 2×期望采样间隔",
+    "category": "alignment",
+    "metric": "max contiguous gap",
+    "missing_ratio": 0.0
+  }
+}
+```
+
+## 失败后建议
+
+1. 检查权威时间戳来源、单位、顺序、丢帧和采集时钟。
+2. 结合 details 中的字段或目标实例定位异常流。
+
+## 来源与维护
+
+- 页面 owner：`data-quality/force`
+- 所属模态算子：[Force](../../modality-operators/force.md)
+- 实现：[operators/fm-force-label-operator/src/fm_force_label_operator/force_label.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-force-label-operator/src/fm_force_label_operator/force_label.py#L188)
+- 注册：[operators/fm-force-label-operator/src/fm_force_label_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-force-label-operator/src/fm_force_label_operator/rules.py#L63)
+- 测试：[operators/fm-force-label-operator/tests/test_force_label_operator.py::test_force_rule_registry_has_unique_canonical_ids](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-force-label-operator/tests/test_force_label_operator.py#L286)
+- 计算规范：[docs/quality-rule-calculation-spec.md](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/docs/quality-rule-calculation-spec.md)
+- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator-docs/site/operator-pages/force/force-tsa-005.yaml#L1)

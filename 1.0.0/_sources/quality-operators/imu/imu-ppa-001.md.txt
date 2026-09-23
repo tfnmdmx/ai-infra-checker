@@ -1,0 +1,145 @@
+(imu-ppa-001)=
+<div class="quality-page-kicker">QUALITY OPERATOR · processing_artifact_anomaly</div>
+
+# `imu-ppa-001` — 输入读取或未预期处理异常
+
+[所属模态算子：IMU](../../modality-operators/imu.md)
+
+<div class="quality-meta">
+  <code class="meta-lifecycle is-active">active</code>
+  <code class="meta-artifact is-unavailable">error 时产物无法生成</code>
+  <code class="meta-cardinality">single</code>
+  <code class="meta-domain">processing_artifact_anomaly</code>
+  <code class="meta-stage">raw_to_processed</code>
+  <code class="meta-version">rule v1.0.0</code>
+  <code class="meta-version">fm-imu-operator v0.13.0</code>
+</div>
+
+<p class="quality-lead">检查IMU 数据的「输入读取或未预期处理异常」，并按公开边界发布独立 RuleResult。</p>
+
+## 白话解释
+
+- **做了什么检测：** 观察文件读取、字段整理、时间恢复和输出数据组装过程中有没有意外中断。
+- **为什么会告警或不通过：** 处理过程中发生了其他具体规则没有覆盖的程序异常，因此不能确认本次 IMU 数据已经可靠处理完成。
+
+## 版本历史
+
+| Rule 版本 | 首次对应包版本 | 日期 | 变更 | 提交 |
+| --- | --- | --- | --- | --- |
+| — | — | — | 尚无基线后的版本变更 | — |
+
+仅展示文档 1.0.0 基线之后的变更。
+
+## 计算契约
+
+::::{admonition} 计算契约（不可直接调用）
+:class: quality-contract
+
+```python
+quality.imu.imu_ppa_001(
+    imu_record: NPZ arrays timestamps=[T], axes=[T,3],
+) -> RuleResult
+```
+::::
+
+::::{div} quality-source-links
+[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/imu.py#L640) ·
+[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/rules.py#L70) ·
+[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-imu-operator/tests/test_imu_operator.py#L865) ·
+[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/docs/quality-rule-calculation-spec.md)
+::::
+
+```{admonition} 注意
+:class: note
+
+- 规则阶段为 raw_to_processed；总状态只取已执行规则的最高严重度。
+- 质量或数据异常由 RuleResult 明确记录且进程返回 0；只有运行配置错误返回 1。
+```
+
+## 数据输入
+
+| 名称 | 来源 | dtype | shape | 单位 | 必需 | 说明 |
+| --- | --- | --- | --- | --- | --- | --- |
+| `imu_record` | raw_to_processed | `NPZ arrays` | `timestamps=[T], axes=[T,3]` | N/A | 是 | IMU 原始记录及处理后轴数据。 |
+
+## 配置参数
+
+本质检算子没有独立配置参数。
+
+## 执行异常处理
+### 事件含义
+
+**发布 error 表示：** 未被输入契约规则覆盖的异常为 error
+
+### 具体捕获点
+
+1. 打开输入 NPZ，并依次完成字段读取、时间轴恢复和输出载荷构造。
+2. 捕获未被 IDC、DSF、NVA 或 TSA 规则明确表达的读取与处理异常。
+3. 记录失败阶段、异常类型和消息，使执行失败不会被误判为数据质量问题。
+
+### 判定边界
+
+| 状态 | 条件 |
+| --- | --- |
+| pass | 未发生该执行事件时通常不发布；事实型执行规则按成功结果发布 pass |
+| warn | not_applicable |
+| error | 未被输入契约规则覆盖的异常为 error |
+
+- 事件型规则没有数值等号边界。
+
+## 执行关系
+
+**前置质检算子：** 无。
+
+
+**产物影响：** 本规则为 `error` 时，输出契约已经无法满足，因此本次不会登记产物；
+原因由结构化 RuleResult 记录。只要这不是运行配置错误，进程仍返回 0。
+
+**相关质检算子：**
+
+- [`imu-ppa-002`](../imu/imu-ppa-002.md)
+
+## 输出
+
+| 字段 | 约定 |
+| --- | --- |
+| 实例模型 | `single` |
+| `value` | `any` 或 `null` |
+| `unit` | N/A |
+| `threshold` | `any` |
+| `details` | `message`, `category`, `metric`, `exception_type`, `reason` |
+
+```json
+{
+  "rule_id": "imu-ppa-001",
+  "rule_version": "1.0.0",
+  "problem_domain": "processing_artifact_anomaly",
+  "stage": "raw_to_processed",
+  "status": "error",
+  "value": null,
+  "unit": null,
+  "threshold": null,
+  "details": {
+    "message": "IMU 输入读取或处理失败",
+    "category": "runtime",
+    "metric": "operator processing failed",
+    "exception_type": "ValueError",
+    "reason": "Cannot load file containing pickled data when allow_pickle=False"
+  }
+}
+```
+
+## 失败后建议
+
+1. 根据 exception_type 和 reason 修复运行环境、转换或文件系统问题。
+2. 修复后重试；执行异常不应被静默跳过。
+
+## 来源与维护
+
+- 页面 owner：`data-quality/imu`
+- 所属模态算子：[IMU](../../modality-operators/imu.md)
+- 实现：[operators/fm-imu-operator/src/fm_imu_operator/imu.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/imu.py#L640)
+- 注册：[operators/fm-imu-operator/src/fm_imu_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/rules.py#L70)
+- 测试：[operators/fm-imu-operator/tests/test_imu_operator.py::test_imu_corrupt_npz_uses_processing_ppa](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-imu-operator/tests/test_imu_operator.py#L865)
+- 计算规范：[docs/quality-rule-calculation-spec.md](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/docs/quality-rule-calculation-spec.md)
+- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator-docs/site/operator-pages/imu/imu-ppa-001.yaml#L1)

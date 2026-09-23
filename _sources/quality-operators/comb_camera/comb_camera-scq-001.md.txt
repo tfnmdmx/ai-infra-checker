@@ -1,0 +1,187 @@
+(comb_camera-scq-001)=
+<div class="quality-page-kicker">QUALITY OPERATOR · signal_channel_quality</div>
+
+# `comb_camera-scq-001` — 每路画面是否带有有效时间校准信息
+
+[所属模态算子：Comb Camera](../../modality-operators/comb_camera.md)
+
+<div class="quality-meta">
+  <code class="meta-lifecycle is-active">active</code>
+  <code class="meta-artifact is-available">error 时产物可生成</code>
+  <code class="meta-cardinality">multi · camera</code>
+  <code class="meta-domain">signal_channel_quality</code>
+  <code class="meta-stage">raw</code>
+  <code class="meta-version">rule v1.0.0</code>
+  <code class="meta-version">fm-comb-camera-operator v0.4.0</code>
+</div>
+
+<p class="quality-lead">分别统计 8 路画面中未标记“已完成时间校准”或未填写校准来源的比例，判断时间元数据是否可信。</p>
+
+## 先看懂这条规则
+
+- **检查什么：** 逐张画面查看两个信息：时间是否确实校准过，以及用什么方式校准；然后按相机计算信息不完整的画面占比。
+- **什么情况下不通过：** 任一路超过 5% 的画面没有同时满足“已校准”和“来源非空”，就说明这路相机的同步时间缺少足够校准证据。
+
+### 判定标准
+
+| 状态 | 怎么判 |
+| --- | --- |
+| **`pass`** | 每个 camera 实例的 bad_ratio value <= 0.05，八路全部满足时外层通过 |
+| **`warn`** | 不会出现；本规则不使用 warn 状态。 |
+| **`error`** | 任一路 bad_ratio > 0.05 |
+
+**边界怎么算：**
+
+- 校准异常帧比例恰好等于 5% 时通过。
+
+
+## 版本历史
+
+| Rule 版本 | 首次对应包版本 | 更新时间 | 变更 | 提交 |
+| --- | --- | --- | --- | --- |
+| — | — | — | 尚无基线后的版本变更 | — |
+
+仅展示文档 1.0.0 基线之后的变更。
+
+## 计算契约
+
+::::{admonition} 计算契约（不可直接调用）
+:class: quality-contract
+
+```python
+quality.comb_camera.comb_camera_scq_001(
+    frame_calibration_metadata: protobuf fields cameras=[8], messages=[T_c],
+    *,
+    error_gt: float = 0.05,
+) -> RuleResult
+```
+::::
+
+::::{div} quality-source-links
+[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-comb-camera-operator/src/fm_comb_camera_operator/quality_checks.py#L185) ·
+[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-comb-camera-operator/src/fm_comb_camera_operator/rules.py#L55) ·
+[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-comb-camera-operator/tests/test_comb_camera_operator.py#L439) ·
+[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/docs/quality-rule-calculation-spec.md#75-%E5%BA%8F%E5%8F%B7%E6%A0%A1%E5%87%86%E5%8F%8A%E8%BE%85%E5%8A%A9%E5%AD%97%E6%AE%B5)
+::::
+
+```{admonition} 注意
+:class: note
+
+- 实例 `value=bad_ratio`、`unit=ratio`、`threshold.error_gt=0.05`；`bad_count` 是异常消息数，`total_frames` 是该路总消息数。
+- `bad_indices` 最多列出前 100 个异常源索引；`required_fields` 明确本版本检查的两个字段。
+- 本规则不参与八路配对规则的 prerequisites，因此失败不阻止结构安全的配对索引生成，但会使顶层质量状态为 bad。
+```
+
+## 数据输入
+
+| 名称 | 来源 | dtype | shape | 单位 | 必需 | 说明 |
+| --- | --- | --- | --- | --- | --- | --- |
+| `frame_calibration_metadata` | raw | `protobuf fields` | `cameras=[8], messages=[T_c]` | N/A | 是 | 每路每条消息的布尔字段 `frame_meta.timing_calibrated` 和字符串字段 `frame_meta.calibration_source`。 |
+
+## 配置参数
+
+| 名称 | 类型 | 默认值/必需 | 来源 | 说明 |
+| --- | --- | --- | --- | --- |
+| `error_gt` | `float` | `0.05` | rule_threshold | 每路校准异常帧比例严格超过该值时 error。 |
+
+## 计算定义
+计算使用 `frame_calibration_metadata`，
+结果类型为 `number`，
+单位为 ratio。
+
+### 计算方法
+
+```text
+bad[i] = (frame_meta.timing_calibrated is not true)
+         or (strip(frame_meta.calibration_source) is empty)
+bad_count = sum(bad[i] for i in 0..observed_frames-1)
+bad_ratio = bad_count / observed_frames
+```
+
+- **聚合口径：** cam0 至 cam7 各发布一个 camera 实例；任一路 bad_ratio 超限，外层规则即为 error。
+- **无法计算时：** `comb_camera-idc-001` 失败时不执行；正常进入时每路至少一条消息，因此分母不会为零。
+
+
+## 执行关系
+
+**前置质检算子：**
+
+- [`comb_camera-idc-001`](../comb_camera/comb_camera-idc-001.md)
+
+**不执行条件：**
+
+- comb_camera-idc-001 未通过时不执行。
+
+**产物影响：** 本规则为 `error` 时，只记录质量异常，不阻止生成结构上有效的产物。
+如果后续处理或写入本身失败，仍可能没有产物；最终事实以 `processed_ok` 与 `artifacts`
+为准。
+
+**相关质检算子：**
+
+- [`comb_camera-tsa-001`](../comb_camera/comb_camera-tsa-001.md)
+
+## 输出
+
+| 字段 | 约定 |
+| --- | --- |
+| 实例模型 | `multi`；实例身份为 `camera` 类型的 `(target_type, target_id)` |
+| `value` | `number` |
+| `unit` | ratio |
+| `threshold` | `mapping` |
+| `details` | `message`, `category`, `instances`, `bad_count`, `bad_indices`, `total_frames`, `required_fields` |
+
+```json
+{
+  "rule_id": "comb_camera-scq-001",
+  "rule_version": "1.0.0",
+  "problem_domain": "signal_channel_quality",
+  "stage": "raw",
+  "status": "error",
+  "value": null,
+  "unit": null,
+  "threshold": null,
+  "details": {
+    "message": "cam5 校准异常帧比例 0.0526316 > 0.05",
+    "category": "quality",
+    "instances": [
+      {
+        "target_type": "camera",
+        "target_id": "cam5",
+        "status": "error",
+        "value": 0.05263157894736842,
+        "unit": "ratio",
+        "threshold": {
+          "error_gt": 0.05
+        },
+        "details": {
+          "total_frames": 19,
+          "bad_count": 1,
+          "bad_indices": [
+            0
+          ],
+          "required_fields": [
+            "frame_meta.timing_calibrated",
+            "frame_meta.calibration_source"
+          ]
+        }
+      }
+    ]
+  }
+}
+```
+
+## 失败后建议
+
+1. 用失败实例的 `target_id` 定位相机，再按 `bad_indices` 检查原始消息中究竟是 `timing_calibrated` 为 false/缺失，还是 `calibration_source` 为空。
+2. 检查时间同步或标定流程是否在每张画面发布前完成，并确保校准来源填写真实方法或设备，不要写空白占位值。
+3. 如果刚好 5% 异常，规则会通过；仍应保留 `bad_count` 和索引用于趋势监控，不要误认为所有帧都有校准信息。
+
+## 来源与维护
+
+- 页面 owner：`data-quality/comb-camera`
+- 所属模态算子：[Comb Camera](../../modality-operators/comb_camera.md)
+- 实现：[operators/fm-comb-camera-operator/src/fm_comb_camera_operator/quality_checks.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-comb-camera-operator/src/fm_comb_camera_operator/quality_checks.py#L185)
+- 注册：[operators/fm-comb-camera-operator/src/fm_comb_camera_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-comb-camera-operator/src/fm_comb_camera_operator/rules.py#L55)
+- 测试：[operators/fm-comb-camera-operator/tests/test_comb_camera_operator.py::test_calibration_bad_ratio_is_per_camera_and_inclusive_at_five_percent](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-comb-camera-operator/tests/test_comb_camera_operator.py#L439)
+- 计算规范：[docs/quality-rule-calculation-spec.md#75-序号校准及辅助字段](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/docs/quality-rule-calculation-spec.md#75-%E5%BA%8F%E5%8F%B7%E6%A0%A1%E5%87%86%E5%8F%8A%E8%BE%85%E5%8A%A9%E5%AD%97%E6%AE%B5)
+- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator-docs/site/operator-pages/comb_camera/comb_camera-scq-001.yaml#L1)

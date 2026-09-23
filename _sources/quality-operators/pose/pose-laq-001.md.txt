@@ -1,0 +1,163 @@
+(pose-laq-001)=
+<div class="quality-page-kicker">QUALITY OPERATOR · label_action_quality</div>
+
+# `pose-laq-001` — 关节角最大绝对值
+
+[所属模态算子：Pose](../../modality-operators/pose.md)
+
+<div class="quality-meta">
+  <code class="meta-lifecycle is-active">active</code>
+  <code class="meta-artifact is-available">error 时产物可生成</code>
+  <code class="meta-cardinality">single</code>
+  <code class="meta-domain">label_action_quality</code>
+  <code class="meta-stage">processed</code>
+  <code class="meta-version">rule v2.0.0</code>
+  <code class="meta-version">fm-pose-label-operator v0.16.0</code>
+</div>
+
+<p class="quality-lead">找出处理后 20 路关节角中的最大绝对值，排查单位或转换明显错误。</p>
+
+## 先看懂这条规则
+
+- **检查什么：** 在整段数据的所有关节里找绝对值最大的角度，检查它是否大到超出通用保护上限。
+- **什么情况下不通过：** 最大值超过约 6.783 rad 时失败，通常要检查度和弧度是否混用、关节映射是否错位，或转换结果是否损坏。
+
+### 判定标准
+
+| 状态 | 怎么判 |
+| --- | --- |
+| **`pass`** | value <= 2*pi+0.5 rad（约 6.783185 rad）。 |
+| **`warn`** | 不会出现；本规则不使用 warn 状态。 |
+| **`error`** | value > 2*pi+0.5 rad（约 6.783185 rad）；后续静止和角速度规则不执行。 |
+
+**边界怎么算：**
+
+- value 恰好等于 2*pi+0.5 rad 时为 pass。
+
+
+## 版本历史
+
+| Rule 版本 | 首次对应包版本 | 更新时间 | 变更 | 提交 |
+| --- | --- | --- | --- | --- |
+| — | — | — | 尚无基线后的版本变更 | — |
+
+仅展示文档 1.0.0 基线之后的变更。
+
+## 计算契约
+
+::::{admonition} 计算契约（不可直接调用）
+:class: quality-contract
+
+```python
+quality.pose.pose_laq_001(
+    pose_record: NPZ arrays timestamps=[T], joint_angles=[T,20],
+    *,
+    error_gt: float = 6.783185307179586,
+) -> RuleResult
+```
+::::
+
+::::{div} quality-source-links
+[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-pose-label-operator/src/fm_pose_label_operator/pose_processed_quality.py#L351) ·
+[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-pose-label-operator/src/fm_pose_label_operator/rules.py#L60) ·
+[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-pose-label-operator/tests/test_pose_label_operator.py#L913) ·
+[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/docs/quality-rule-calculation-spec.md)
+::::
+
+```{admonition} 注意
+:class: note
+
+- 规则阶段为 processed；总状态只取已执行规则的最高严重度。
+- 质量或数据异常由 RuleResult 明确记录且进程返回 0；只有运行配置错误返回 1。
+```
+
+## 数据输入
+
+| 名称 | 来源 | dtype | shape | 单位 | 必需 | 说明 |
+| --- | --- | --- | --- | --- | --- | --- |
+| `pose_record` | processed | `NPZ arrays` | `timestamps=[T], joint_angles=[T,20]` | N/A | 是 | Pose 原始数据及处理后关节角。 |
+
+## 配置参数
+
+| 名称 | 类型 | 默认值/必需 | 来源 | 说明 |
+| --- | --- | --- | --- | --- |
+| `error_gt` | `float` | `6.783185307179586` | rule_threshold | 最大绝对关节角严格大于 6.783185307179586 rad 时为 error。 |
+
+## 计算定义
+计算使用 `pose_record`，
+结果类型为 `number`，
+单位为 rad。
+
+### 计算方法
+
+```text
+value = max(abs(joint_angles))
+```
+
+- **聚合口径：** 单条记录发布一个标量。
+- **无法计算时：** 前置失败不执行，并记录 skipped_rules。
+
+
+## 执行关系
+
+**前置质检算子：**
+
+- [`pose-dsf-003`](../pose/pose-dsf-003.md)
+- [`pose-nva-002`](../pose/pose-nva-002.md)
+- [`pose-tsa-003`](../pose/pose-tsa-003.md)
+
+**不执行条件：**
+
+- 前置规则未通过时不执行，原因记录于 summary.skipped_rules。
+
+**产物影响：** 本规则为 `error` 时，只记录质量异常，不阻止生成结构上有效的产物。
+如果后续处理或写入本身失败，仍可能没有产物；最终事实以 `processed_ok` 与 `artifacts`
+为准。
+
+**相关质检算子：**
+
+- [`pose-laq-002`](../pose/pose-laq-002.md)
+
+## 输出
+
+| 字段 | 约定 |
+| --- | --- |
+| 实例模型 | `single` |
+| `value` | `number` |
+| `unit` | rad |
+| `threshold` | `mapping` |
+| `details` | `message`, `category` |
+
+```json
+{
+  "rule_id": "pose-laq-001",
+  "rule_version": "2.0.0",
+  "problem_domain": "label_action_quality",
+  "stage": "processed",
+  "status": "error",
+  "value": 8.0,
+  "unit": "rad",
+  "threshold": {
+    "error_gt": 6.783185307179586
+  },
+  "details": {
+    "message": "最大绝对关节角 >2*pi+0.5 rad 时 error，停止运动计算。",
+    "category": "quality"
+  }
+}
+```
+
+## 失败后建议
+
+1. 确认输入和转换结果使用弧度，而不是把角度值直接当弧度。
+2. 检查关节顺序、手侧、adapter 与转换模型是否匹配。
+
+## 来源与维护
+
+- 页面 owner：`data-quality/pose`
+- 所属模态算子：[Pose](../../modality-operators/pose.md)
+- 实现：[operators/fm-pose-label-operator/src/fm_pose_label_operator/pose_processed_quality.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-pose-label-operator/src/fm_pose_label_operator/pose_processed_quality.py#L351)
+- 注册：[operators/fm-pose-label-operator/src/fm_pose_label_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-pose-label-operator/src/fm_pose_label_operator/rules.py#L60)
+- 测试：[operators/fm-pose-label-operator/tests/test_pose_label_operator.py::test_pose_angle_range_is_one_scalar_fact](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-pose-label-operator/tests/test_pose_label_operator.py#L913)
+- 计算规范：[docs/quality-rule-calculation-spec.md](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/docs/quality-rule-calculation-spec.md)
+- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator-docs/site/operator-pages/pose/pose-laq-001.yaml#L1)

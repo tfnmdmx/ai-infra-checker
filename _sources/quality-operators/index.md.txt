@@ -1,0 +1,838 @@
+# 质检算子
+
+当前发现 78 个已注册质检算子，其中 78 个已完成独立页面。
+
+<div data-quality-catalog="true">
+  <div class="catalog-controls">
+    <input type="search" data-catalog-query placeholder="搜索 Rule ID、名称或别名" aria-label="搜索质检算子">
+    <select data-catalog-modality aria-label="按模态筛选">
+      <option value="">全部模态</option>
+      <option value="emg">EMG</option>
+      <option value="imu">IMU</option>
+      <option value="force">Force</option>
+      <option value="pose">Pose</option>
+      <option value="vision">Vision</option>
+      <option value="comb_camera">Comb Camera</option>
+      <option value="timestamp">Timestamp</option>
+    </select>
+    <select data-catalog-domain aria-label="按问题域筛选">
+      <option value="">全部问题域</option>
+      <option value="input_device_compatibility">IDC · 输入/设备兼容性</option>
+      <option value="data_structure_format">DSF · 数据结构/格式</option>
+      <option value="time_sample_alignment">TSA · 时间/样本对齐</option>
+      <option value="duration_coverage">DCR · 时长/覆盖</option>
+      <option value="numeric_validity">NVA · 数值有效性</option>
+      <option value="signal_channel_quality">SCQ · 信号/通道质量</option>
+      <option value="label_action_quality">LAQ · 标签/动作质量</option>
+      <option value="processing_artifact_anomaly">PPA · 处理/产物异常</option>
+    </select>
+    <select data-catalog-stage aria-label="按阶段筛选">
+      <option value="">全部阶段</option>
+      <option value="alignment">alignment</option>
+      <option value="artifact">artifact</option>
+      <option value="processed">processed</option>
+      <option value="processed_input">processed_input</option>
+      <option value="raw">raw</option>
+      <option value="raw_to_processed">raw_to_processed</option>
+    </select>
+    <select data-catalog-artifact aria-label="按 error 时产物状态筛选">
+      <option value="">全部产物状态</option>
+      <option value="available">error 时可生成</option>
+      <option value="unavailable">error 时无法生成</option>
+    </select>
+  </div>
+  <div class="catalog-summary" data-catalog-summary></div>
+  <div class="pst-scrollable-table-container">
+  <table class="table operator-list-table">
+    <thead><tr><th>Rule ID</th><th>名称</th><th>模态</th><th>问题域</th><th>阶段</th><th>error 时产物</th><th>已核对</th></tr></thead>
+    <tbody>
+      <tr class="catalog-row" data-rule-id="emg-idc-001" data-search="emg-idc-001 emg 必需字段是否完整 input required field missing emg idc 001 emg 载荷及时间戳来源存在性 检查输入 npz 是否包含 emg 信号和运行所需的时间戳字段；缺少任一项时发布 error。 emg_record emg emg input_device_compatibility raw 无法生成 single " data-modality="emg" data-domain="input_device_compatibility" data-stage="raw" data-artifact="unavailable">
+        <td><a href="emg/emg-idc-001.html"><code>emg-idc-001</code></a></td>
+        <td>EMG 必需字段是否完整</td>
+        <td>EMG</td>
+        <td>IDC · 输入/设备兼容性</td>
+        <td><code>raw</code></td>
+        <td>无法生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 emg-idc-001 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="emg-dsf-001" data-search="emg-dsf-001 emg shape和dtype是否正确 field shape emg dsf 001 emg 形状和 dtype emg 数据格式是否正确 检查 emg 信号和硬件时间戳数组的维度、通道数与数据类型是否符合输入格式要求。 emg_record emg emg data_structure_format raw 无法生成 multi field" data-modality="emg" data-domain="data_structure_format" data-stage="raw" data-artifact="unavailable">
+        <td><a href="emg/emg-dsf-001.html"><code>emg-dsf-001</code></a></td>
+        <td>EMG shape和dtype是否正确</td>
+        <td>EMG</td>
+        <td>DSF · 数据结构/格式</td>
+        <td><code>raw</code></td>
+        <td>无法生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 emg-dsf-001 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="emg-tsa-001" data-search="emg-tsa-001 emg 时间戳是否严格递增 timestamps invalid emg tsa 001 timestamps 有限、严格递增及样本事实 emg 时间戳是否有效 检查 emg 时间戳能否与信号样本一一对应，且每个值有效、时间顺序严格递增。 emg_record emg emg time_sample_alignment raw 无法生成 single " data-modality="emg" data-domain="time_sample_alignment" data-stage="raw" data-artifact="unavailable">
+        <td><a href="emg/emg-tsa-001.html"><code>emg-tsa-001</code></a></td>
+        <td>EMG 时间戳是否严格递增</td>
+        <td>EMG</td>
+        <td>TSA · 时间/样本对齐</td>
+        <td><code>raw</code></td>
+        <td>无法生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 emg-tsa-001 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="emg-tsa-002" data-search="emg-tsa-002 最大时间间隔 max contiguous gap emg tsa 002 emg_hw_us 最大真实相邻间隔 / s 找出相邻 emg 质检时间戳之间的最大间隔，识别局部停采。 emg_record emg emg time_sample_alignment raw 可生成 single " data-modality="emg" data-domain="time_sample_alignment" data-stage="raw" data-artifact="available">
+        <td><a href="emg/emg-tsa-002.html"><code>emg-tsa-002</code></a></td>
+        <td>最大时间间隔</td>
+        <td>EMG</td>
+        <td>TSA · 时间/样本对齐</td>
+        <td><code>raw</code></td>
+        <td>可生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 emg-tsa-002 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="emg-tsa-003" data-search="emg-tsa-003 采样率偏差比例 signed sample rate deviation ratio emg tsa 003 检查 emg 数据的有符号采样率偏差比例，并按绝对幅度边界发布独立 ruleresult。 emg_record emg emg time_sample_alignment raw 可生成 single " data-modality="emg" data-domain="time_sample_alignment" data-stage="raw" data-artifact="available">
+        <td><a href="emg/emg-tsa-003.html"><code>emg-tsa-003</code></a></td>
+        <td>采样率偏差比例</td>
+        <td>EMG</td>
+        <td>TSA · 时间/样本对齐</td>
+        <td><code>raw</code></td>
+        <td>可生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 emg-tsa-003 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="emg-dcr-001" data-search="emg-dcr-001 有效时长 min duration emg dcr 001 有效时长 / s 计算 emg 首末样本之间的时间跨度，并与任务要求的最小时长比较。 emg_record emg emg duration_coverage raw 可生成 single " data-modality="emg" data-domain="duration_coverage" data-stage="raw" data-artifact="available">
+        <td><a href="emg/emg-dcr-001.html"><code>emg-dcr-001</code></a></td>
+        <td>有效时长</td>
+        <td>EMG</td>
+        <td>DCR · 时长/覆盖</td>
+        <td><code>raw</code></td>
+        <td>可生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 emg-dcr-001 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="emg-nva-001" data-search="emg-nva-001 emg 是否含有 nan 或 inf value nonfinite emg nva 001 数值有限性 检查读取到的 emg 信号及滤波结果中是否出现 nan 或正负无穷大。 emg_record emg emg numeric_validity raw_to_processed 无法生成 multi field" data-modality="emg" data-domain="numeric_validity" data-stage="raw_to_processed" data-artifact="unavailable">
+        <td><a href="emg/emg-nva-001.html"><code>emg-nva-001</code></a></td>
+        <td>EMG 是否含有 NaN 或 Inf</td>
+        <td>EMG</td>
+        <td>NVA · 数值有效性</td>
+        <td><code>raw_to_processed</code></td>
+        <td>无法生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 emg-nva-001 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="emg-scq-001" data-search="emg-scq-001 死通道数 死通道数及通道实例 channel dead emg scq 001 统计处理后 emg 中标准差低于 1.0 uv 的通道数量，并在 details.channels 中记录具体通道编号。 emg_record emg emg signal_channel_quality processed 可生成 single " data-modality="emg" data-domain="signal_channel_quality" data-stage="processed" data-artifact="available">
+        <td><a href="emg/emg-scq-001.html"><code>emg-scq-001</code></a></td>
+        <td>死通道数</td>
+        <td>EMG</td>
+        <td>SCQ · 信号/通道质量</td>
+        <td><code>processed</code></td>
+        <td>可生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 emg-scq-001 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="emg-scq-002" data-search="emg-scq-002 原始信号饱和异常 raw saturation ratio emg scq 002 原始饱和最大比例 原始饱和通道数 emg-scq-003 统一检查 emg 原始饱和的最大样本比例与异常通道数，按两者最高严重度发布一条规则。 emg_record emg emg signal_channel_quality raw 可生成 single " data-modality="emg" data-domain="signal_channel_quality" data-stage="raw" data-artifact="available">
+        <td><a href="emg/emg-scq-002.html"><code>emg-scq-002</code></a></td>
+        <td>原始信号饱和异常</td>
+        <td>EMG</td>
+        <td>SCQ · 信号/通道质量</td>
+        <td><code>raw</code></td>
+        <td>可生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 emg-scq-002 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="emg-scq-004" data-search="emg-scq-004 工频比例偏高通道数 powerline ratio high emg scq 004 统计 50 hz 工频功率占比超过 15% 的 emg 通道数。 emg_record emg emg signal_channel_quality processed 可生成 single " data-modality="emg" data-domain="signal_channel_quality" data-stage="processed" data-artifact="available">
+        <td><a href="emg/emg-scq-004.html"><code>emg-scq-004</code></a></td>
+        <td>工频比例偏高通道数</td>
+        <td>EMG</td>
+        <td>SCQ · 信号/通道质量</td>
+        <td><code>processed</code></td>
+        <td>可生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 emg-scq-004 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="emg-scq-005" data-search="emg-scq-005 高低频带功率比 high low band power ratio low emg scq 005 高低频带功率比 / db 比较 40–500 hz 主信号频带与 500–850 hz 高频频带的平均功率。 emg_record emg emg signal_channel_quality processed 可生成 single " data-modality="emg" data-domain="signal_channel_quality" data-stage="processed" data-artifact="available">
+        <td><a href="emg/emg-scq-005.html"><code>emg-scq-005</code></a></td>
+        <td>高低频带功率比</td>
+        <td>EMG</td>
+        <td>SCQ · 信号/通道质量</td>
+        <td><code>processed</code></td>
+        <td>可生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 emg-scq-005 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="emg-scq-006" data-search="emg-scq-006 全局信号标准差 signal weak emg scq 006 计算全部 emg 样本和通道合在一起的总体标准差，识别整段弱信号。 emg_record emg emg signal_channel_quality processed 可生成 single " data-modality="emg" data-domain="signal_channel_quality" data-stage="processed" data-artifact="available">
+        <td><a href="emg/emg-scq-006.html"><code>emg-scq-006</code></a></td>
+        <td>全局信号标准差</td>
+        <td>EMG</td>
+        <td>SCQ · 信号/通道质量</td>
+        <td><code>processed</code></td>
+        <td>可生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 emg-scq-006 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="emg-scq-007" data-search="emg-scq-007 50 hz 残留 powerline residual 50hz high emg scq 007 50 hz 残留 / db 计算陷波后 50 hz 功率相对 40–200 hz 平均功率高出的 db 数。 emg_record emg emg signal_channel_quality processed 可生成 single " data-modality="emg" data-domain="signal_channel_quality" data-stage="processed" data-artifact="available">
+        <td><a href="emg/emg-scq-007.html"><code>emg-scq-007</code></a></td>
+        <td>50 Hz 残留</td>
+        <td>EMG</td>
+        <td>SCQ · 信号/通道质量</td>
+        <td><code>processed</code></td>
+        <td>可生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 emg-scq-007 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="emg-scq-008" data-search="emg-scq-008 处理后持续高幅异常 processed high-amplitude ratio emg 持续高幅占比 持续高幅最大通道比例 持续高幅通道数 emg-scq-009 统一检查 emg 处理后持续高幅的最大样本比例与异常通道数，按两者最高严重度发布一条规则。 emg emg emg signal_channel_quality processed 可生成 single " data-modality="emg" data-domain="signal_channel_quality" data-stage="processed" data-artifact="available">
+        <td><a href="emg/emg-scq-008.html"><code>emg-scq-008</code></a></td>
+        <td>处理后持续高幅异常</td>
+        <td>EMG</td>
+        <td>SCQ · 信号/通道质量</td>
+        <td><code>processed</code></td>
+        <td>可生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 emg-scq-008 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="emg-ppa-001" data-search="emg-ppa-001 输入读取或处理异常 operator processing failed emg ppa 001 记录 emg 读取、时间轴构造、滤波或质检过程中未被具体规则覆盖的异常。 emg_record emg emg processing_artifact_anomaly raw_to_processed 无法生成 single " data-modality="emg" data-domain="processing_artifact_anomaly" data-stage="raw_to_processed" data-artifact="unavailable">
+        <td><a href="emg/emg-ppa-001.html"><code>emg-ppa-001</code></a></td>
+        <td>输入读取或处理异常</td>
+        <td>EMG</td>
+        <td>PPA · 处理/产物异常</td>
+        <td><code>raw_to_processed</code></td>
+        <td>无法生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 emg-ppa-001 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="emg-ppa-002" data-search="emg-ppa-002 emg 产物写入异常 emg artifact write failure processed npz 写入失败 记录 emg processed npz 创建或写入失败，区分执行异常与输入数据质量问题。 processed_payload emg emg processing_artifact_anomaly artifact 无法生成 single " data-modality="emg" data-domain="processing_artifact_anomaly" data-stage="artifact" data-artifact="unavailable">
+        <td><a href="emg/emg-ppa-002.html"><code>emg-ppa-002</code></a></td>
+        <td>EMG 产物写入异常</td>
+        <td>EMG</td>
+        <td>PPA · 处理/产物异常</td>
+        <td><code>artifact</code></td>
+        <td>无法生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 emg-ppa-002 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="imu-idc-001" data-search="imu-idc-001 imu 必需字段是否完整 field missing imu idc 001 必需字段完整性 检查输入是否具备完整的 imu 三轴载荷、硬件时间戳和可用的样本时间戳来源。 imu_record imu imu input_device_compatibility raw 无法生成 single " data-modality="imu" data-domain="input_device_compatibility" data-stage="raw" data-artifact="unavailable">
+        <td><a href="imu/imu-idc-001.html"><code>imu-idc-001</code></a></td>
+        <td>IMU 必需字段是否完整</td>
+        <td>IMU</td>
+        <td>IDC · 输入/设备兼容性</td>
+        <td><code>raw</code></td>
+        <td>无法生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 imu-idc-001 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="imu-dsf-001" data-search="imu-dsf-001 imu shape 和 dtype 是否正确 field shape imu dsf 001 三轴字段形状 imu 数据格式是否正确 检查 imu 三轴载荷及时间戳数组的维度、列数与数据类型是否符合输入格式要求。 imu_record imu imu data_structure_format raw 无法生成 multi field" data-modality="imu" data-domain="data_structure_format" data-stage="raw" data-artifact="unavailable">
+        <td><a href="imu/imu-dsf-001.html"><code>imu-dsf-001</code></a></td>
+        <td>IMU shape 和 dtype 是否正确</td>
+        <td>IMU</td>
+        <td>DSF · 数据结构/格式</td>
+        <td><code>raw</code></td>
+        <td>无法生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 imu-dsf-001 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="imu-tsa-001" data-search="imu-tsa-001 imu 时间戳是否有效 timestamp shape imu tsa 001 timestamps invalid imu 时间戳是否严格递增 检查 imu 时间戳能否与三轴样本一一对应，且每个值有限、时间顺序严格递增。 imu_record imu imu time_sample_alignment raw 无法生成 single " data-modality="imu" data-domain="time_sample_alignment" data-stage="raw" data-artifact="unavailable">
+        <td><a href="imu/imu-tsa-001.html"><code>imu-tsa-001</code></a></td>
+        <td>IMU 时间戳是否有效</td>
+        <td>IMU</td>
+        <td>TSA · 时间/样本对齐</td>
+        <td><code>raw</code></td>
+        <td>无法生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 imu-tsa-001 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="imu-tsa-009" data-search="imu-tsa-009 采样率偏差比例 signed sample rate deviation ratio imu tsa 009 检查 imu 数据的有符号采样率偏差比例，并按绝对幅度边界发布独立 ruleresult。 imu_record imu imu time_sample_alignment raw 可生成 single " data-modality="imu" data-domain="time_sample_alignment" data-stage="raw" data-artifact="available">
+        <td><a href="imu/imu-tsa-009.html"><code>imu-tsa-009</code></a></td>
+        <td>采样率偏差比例</td>
+        <td>IMU</td>
+        <td>TSA · 时间/样本对齐</td>
+        <td><code>raw</code></td>
+        <td>可生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 imu-tsa-009 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="imu-tsa-010" data-search="imu-tsa-010 最大时间间隔 max contiguous gap imu tsa 010 最大真实相邻间隔 / s（timestamp_source=emg_imu_hw_us） 找出相邻 imu 质检时间戳之间的最大间隔，识别局部停采。 imu_record imu imu time_sample_alignment raw 可生成 single " data-modality="imu" data-domain="time_sample_alignment" data-stage="raw" data-artifact="available">
+        <td><a href="imu/imu-tsa-010.html"><code>imu-tsa-010</code></a></td>
+        <td>最大时间间隔</td>
+        <td>IMU</td>
+        <td>TSA · 时间/样本对齐</td>
+        <td><code>raw</code></td>
+        <td>可生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 imu-tsa-010 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="imu-dcr-001" data-search="imu-dcr-001 有效时长 min duration imu dcr 001 有效时长 / s 计算 imu 最终时间轴首末样本之间的时间跨度，并与任务最小时长比较。 imu_record imu imu duration_coverage processed 可生成 single " data-modality="imu" data-domain="duration_coverage" data-stage="processed" data-artifact="available">
+        <td><a href="imu/imu-dcr-001.html"><code>imu-dcr-001</code></a></td>
+        <td>有效时长</td>
+        <td>IMU</td>
+        <td>DCR · 时长/覆盖</td>
+        <td><code>processed</code></td>
+        <td>可生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 imu-dcr-001 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="imu-nva-001" data-search="imu-nva-001 imu 三轴值是否含 nan 或 inf value nonfinite imu nva 001 数值有限性 检查 imu 加速度、角速度和磁力计数组是否能安全转换为有限的 float32 处理值。 imu_record imu imu numeric_validity raw 无法生成 multi field" data-modality="imu" data-domain="numeric_validity" data-stage="raw" data-artifact="unavailable">
+        <td><a href="imu/imu-nva-001.html"><code>imu-nva-001</code></a></td>
+        <td>IMU 三轴值是否含 NaN 或 Inf</td>
+        <td>IMU</td>
+        <td>NVA · 数值有效性</td>
+        <td><code>raw</code></td>
+        <td>无法生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 imu-nva-001 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="imu-ppa-001" data-search="imu-ppa-001 输入读取或未预期处理异常 operator processing failed imu ppa 001 记录 imu 读取、时间轴恢复或输出组装时未被具体规则覆盖的异常。 imu_record imu imu processing_artifact_anomaly raw_to_processed 无法生成 single " data-modality="imu" data-domain="processing_artifact_anomaly" data-stage="raw_to_processed" data-artifact="unavailable">
+        <td><a href="imu/imu-ppa-001.html"><code>imu-ppa-001</code></a></td>
+        <td>输入读取或未预期处理异常</td>
+        <td>IMU</td>
+        <td>PPA · 处理/产物异常</td>
+        <td><code>raw_to_processed</code></td>
+        <td>无法生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 imu-ppa-001 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="imu-ppa-002" data-search="imu-ppa-002 imu 产物写入异常 artifact write failed imu ppa 002 记录 imu processed npz 创建、序列化或写入失败。 imu_record imu imu processing_artifact_anomaly artifact 无法生成 single " data-modality="imu" data-domain="processing_artifact_anomaly" data-stage="artifact" data-artifact="unavailable">
+        <td><a href="imu/imu-ppa-002.html"><code>imu-ppa-002</code></a></td>
+        <td>IMU 产物写入异常</td>
+        <td>IMU</td>
+        <td>PPA · 处理/产物异常</td>
+        <td><code>artifact</code></td>
+        <td>无法生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 imu-ppa-002 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="force-idc-001" data-search="force-idc-001 force 必需字段是否完整 input required field missing force idc 001 检查 force 输入是否可读取，并包含 force 标签及其对应时间戳字段。 force_record force force input_device_compatibility raw 无法生成 single " data-modality="force" data-domain="input_device_compatibility" data-stage="raw" data-artifact="unavailable">
+        <td><a href="force/force-idc-001.html"><code>force-idc-001</code></a></td>
+        <td>Force 必需字段是否完整</td>
+        <td>Force</td>
+        <td>IDC · 输入/设备兼容性</td>
+        <td><code>raw</code></td>
+        <td>无法生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 force-idc-001 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="force-dsf-003" data-search="force-dsf-003 force shape和dtype是否正确 force structure invalid force dsf 003 统一检查 force 标签和时间戳数组的 shape 与 dtype。 force_record force force data_structure_format processed 无法生成 multi field" data-modality="force" data-domain="data_structure_format" data-stage="processed" data-artifact="unavailable">
+        <td><a href="force/force-dsf-003.html"><code>force-dsf-003</code></a></td>
+        <td>Force shape和dtype是否正确</td>
+        <td>Force</td>
+        <td>DSF · 数据结构/格式</td>
+        <td><code>processed</code></td>
+        <td>无法生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 force-dsf-003 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="force-tsa-003" data-search="force-tsa-003 force 时间戳是否严格递增 timestamps invalid force tsa 003 检查 force 时间戳是否与标签等长、全部有限且严格递增；静息指标直接使用该时间轴的前 3 秒。 force_record force force time_sample_alignment processed 无法生成 single " data-modality="force" data-domain="time_sample_alignment" data-stage="processed" data-artifact="unavailable">
+        <td><a href="force/force-tsa-003.html"><code>force-tsa-003</code></a></td>
+        <td>Force 时间戳是否严格递增</td>
+        <td>Force</td>
+        <td>TSA · 时间/样本对齐</td>
+        <td><code>processed</code></td>
+        <td>无法生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 force-tsa-003 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="force-tsa-005" data-search="force-tsa-005 最大连续缺口 max contiguous gap force tsa 005 最大连续缺口 / s 按期望采样周期估算 force 一次最长连续丢样的时长。 force_record force force time_sample_alignment raw 可生成 single " data-modality="force" data-domain="time_sample_alignment" data-stage="raw" data-artifact="available">
+        <td><a href="force/force-tsa-005.html"><code>force-tsa-005</code></a></td>
+        <td>最大连续缺口</td>
+        <td>Force</td>
+        <td>TSA · 时间/样本对齐</td>
+        <td><code>raw</code></td>
+        <td>可生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 force-tsa-005 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="force-tsa-007" data-search="force-tsa-007 采样率偏差比例 signed sample rate deviation ratio force tsa 007 检查 force 数据的有符号采样率偏差比例，并按绝对幅度边界发布独立 ruleresult。 force_record force force time_sample_alignment raw 可生成 single " data-modality="force" data-domain="time_sample_alignment" data-stage="raw" data-artifact="available">
+        <td><a href="force/force-tsa-007.html"><code>force-tsa-007</code></a></td>
+        <td>采样率偏差比例</td>
+        <td>Force</td>
+        <td>TSA · 时间/样本对齐</td>
+        <td><code>raw</code></td>
+        <td>可生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 force-tsa-007 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="force-dcr-003" data-search="force-dcr-003 有效时长 min duration force dcr 003 有效时长 / s 计算权威 force 时间轴首末样本之间的时间跨度，并与任务最小时长比较。 force_record force force duration_coverage raw 可生成 single " data-modality="force" data-domain="duration_coverage" data-stage="raw" data-artifact="available">
+        <td><a href="force/force-dcr-003.html"><code>force-dcr-003</code></a></td>
+        <td>有效时长</td>
+        <td>Force</td>
+        <td>DCR · 时长/覆盖</td>
+        <td><code>raw</code></td>
+        <td>可生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 force-dcr-003 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="force-nva-002" data-search="force-nva-002 force 是否含有 nan 或 inf label nonfinite force nva 002 检查读取到的 force 标签是否出现 nan 或正负无穷大。 force_record force force numeric_validity processed 无法生成 multi field" data-modality="force" data-domain="numeric_validity" data-stage="processed" data-artifact="unavailable">
+        <td><a href="force/force-nva-002.html"><code>force-nva-002</code></a></td>
+        <td>Force 是否含有 NaN 或 Inf</td>
+        <td>Force</td>
+        <td>NVA · 数值有效性</td>
+        <td><code>processed</code></td>
+        <td>无法生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 force-nva-002 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="force-scq-001" data-search="force-scq-001 force 通道是否恒定 rest no signal constant force channel force scq 001 检查 force 通道在整段记录中是否近乎恒定，并发布逐通道 ruleresult。 force_record force force signal_channel_quality raw 可生成 multi sensor_finger" data-modality="force" data-domain="signal_channel_quality" data-stage="raw" data-artifact="available">
+        <td><a href="force/force-scq-001.html"><code>force-scq-001</code></a></td>
+        <td>Force 通道是否恒定</td>
+        <td>Force</td>
+        <td>SCQ · 信号/通道质量</td>
+        <td><code>raw</code></td>
+        <td>可生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 force-scq-001 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="force-laq-002" data-search="force-laq-002 前 3 秒静息受力异常 first three seconds resting force absolute mean 静息力均值 前 3 秒静息力 p95 前 3 秒静息力标准差 force-laq-003 force-laq-004 检查记录开始 3 秒内，每根手指是否保持放松且受力稳定。 force timestamps force force label_action_quality raw 可生成 multi sensor_finger" data-modality="force" data-domain="label_action_quality" data-stage="raw" data-artifact="available">
+        <td><a href="force/force-laq-002.html"><code>force-laq-002</code></a></td>
+        <td>前 3 秒静息受力异常</td>
+        <td>Force</td>
+        <td>LAQ · 标签/动作质量</td>
+        <td><code>raw</code></td>
+        <td>可生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 force-laq-002 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="force-laq-005" data-search="force-laq-005 全程五指受力模式 full-record five-finger force pattern 五指全程受力条件 检查每个传感器/手的五指在整段有效记录中是否命中不通过条件。 force timestamps force force label_action_quality raw 可生成 multi finger_group" data-modality="force" data-domain="label_action_quality" data-stage="raw" data-artifact="available">
+        <td><a href="force/force-laq-005.html"><code>force-laq-005</code></a></td>
+        <td>全程五指受力模式</td>
+        <td>Force</td>
+        <td>LAQ · 标签/动作质量</td>
+        <td><code>raw</code></td>
+        <td>可生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 force-laq-005 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="force-ppa-002" data-search="force-ppa-002 force 处理/转换异常 output conversion failed force ppa 002 记录 force 静息质检或标签转换过程中未被数据契约算子覆盖的执行异常。 force_record force force processing_artifact_anomaly raw_to_processed 无法生成 single " data-modality="force" data-domain="processing_artifact_anomaly" data-stage="raw_to_processed" data-artifact="unavailable">
+        <td><a href="force/force-ppa-002.html"><code>force-ppa-002</code></a></td>
+        <td>Force 处理/转换异常</td>
+        <td>Force</td>
+        <td>PPA · 处理/产物异常</td>
+        <td><code>raw_to_processed</code></td>
+        <td>无法生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 force-ppa-002 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="force-ppa-003" data-search="force-ppa-003 force 产物写入异常 artifact write failed force ppa 003 记录 force 暂存文件写入或原子发布失败。 force_record force force processing_artifact_anomaly artifact 无法生成 single " data-modality="force" data-domain="processing_artifact_anomaly" data-stage="artifact" data-artifact="unavailable">
+        <td><a href="force/force-ppa-003.html"><code>force-ppa-003</code></a></td>
+        <td>Force 产物写入异常</td>
+        <td>Force</td>
+        <td>PPA · 处理/产物异常</td>
+        <td><code>artifact</code></td>
+        <td>无法生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 force-ppa-003 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="pose-idc-001" data-search="pose-idc-001 pose 输入是否有效 input read failed pose idc 001 pose 输入是否可读取 检查原始 pose 文件、手侧配置和对应的姿态与时间字段能否用于转换。 pose_record pose pose input_device_compatibility raw 无法生成 single " data-modality="pose" data-domain="input_device_compatibility" data-stage="raw" data-artifact="unavailable">
+        <td><a href="pose/pose-idc-001.html"><code>pose-idc-001</code></a></td>
+        <td>Pose 输入是否有效</td>
+        <td>Pose</td>
+        <td>IDC · 输入/设备兼容性</td>
+        <td><code>raw</code></td>
+        <td>无法生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 pose-idc-001 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="pose-dsf-003" data-search="pose-dsf-003 pose 字段结构是否正确 schema joint angles shape pose dsf 003 joint_angles 形状 检查处理后 pose 文件中 timestamps 和 joint_angles 两个字段的类型与形状。 pose_record pose pose data_structure_format processed 无法生成 multi field" data-modality="pose" data-domain="data_structure_format" data-stage="processed" data-artifact="unavailable">
+        <td><a href="pose/pose-dsf-003.html"><code>pose-dsf-003</code></a></td>
+        <td>Pose 字段结构是否正确</td>
+        <td>Pose</td>
+        <td>DSF · 数据结构/格式</td>
+        <td><code>processed</code></td>
+        <td>无法生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 pose-dsf-003 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="pose-tsa-003" data-search="pose-tsa-003 pose 时间戳是否有效 schema timestamps order pose tsa 003 timestamps 有限且递增 检查处理后 pose 时间戳的数量、有限性、顺序及其与关节角帧数的一致性。 pose_record pose pose time_sample_alignment processed 无法生成 single " data-modality="pose" data-domain="time_sample_alignment" data-stage="processed" data-artifact="unavailable">
+        <td><a href="pose/pose-tsa-003.html"><code>pose-tsa-003</code></a></td>
+        <td>Pose 时间戳是否有效</td>
+        <td>Pose</td>
+        <td>TSA · 时间/样本对齐</td>
+        <td><code>processed</code></td>
+        <td>无法生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 pose-tsa-003 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="pose-tsa-004" data-search="pose-tsa-004 最大连续缺口 max contiguous gap pose tsa 004 过滤前最大连续缺口 / s 过滤前最大连续缺口 根据原始 pose 时间戳估算一次最长的连续丢样时长。 pose_record pose pose time_sample_alignment raw 可生成 single " data-modality="pose" data-domain="time_sample_alignment" data-stage="raw" data-artifact="available">
+        <td><a href="pose/pose-tsa-004.html"><code>pose-tsa-004</code></a></td>
+        <td>最大连续缺口</td>
+        <td>Pose</td>
+        <td>TSA · 时间/样本对齐</td>
+        <td><code>raw</code></td>
+        <td>可生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 pose-tsa-004 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="pose-tsa-006" data-search="pose-tsa-006 采样率偏差比例 signed sample rate deviation ratio pose tsa 006 采样率偏差比例 比较原始 pose 的实测采样率与本次采集配置的期望采样率。 pose_record pose pose time_sample_alignment raw 可生成 single " data-modality="pose" data-domain="time_sample_alignment" data-stage="raw" data-artifact="available">
+        <td><a href="pose/pose-tsa-006.html"><code>pose-tsa-006</code></a></td>
+        <td>采样率偏差比例</td>
+        <td>Pose</td>
+        <td>TSA · 时间/样本对齐</td>
+        <td><code>raw</code></td>
+        <td>可生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 pose-tsa-006 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="pose-dcr-002" data-search="pose-dcr-002 有效数据时长 min duration pose dcr 002 有效时长 / s 有效时长 计算可用 pose 样本从第一个时间点到最后一个时间点覆盖了多少秒。 pose_record pose pose duration_coverage raw 可生成 single " data-modality="pose" data-domain="duration_coverage" data-stage="raw" data-artifact="available">
+        <td><a href="pose/pose-dcr-002.html"><code>pose-dcr-002</code></a></td>
+        <td>有效数据时长</td>
+        <td>Pose</td>
+        <td>DCR · 时长/覆盖</td>
+        <td><code>raw</code></td>
+        <td>可生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 pose-dcr-002 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="pose-nva-002" data-search="pose-nva-002 关节角是否包含非有限值 values joint angles nonfinite pose nva 002 joint_angles 有限性 检查处理后 20 路关节角中是否含 nan 或正负 inf。 pose_record pose pose numeric_validity processed 无法生成 multi field" data-modality="pose" data-domain="numeric_validity" data-stage="processed" data-artifact="unavailable">
+        <td><a href="pose/pose-nva-002.html"><code>pose-nva-002</code></a></td>
+        <td>关节角是否包含非有限值</td>
+        <td>Pose</td>
+        <td>NVA · 数值有效性</td>
+        <td><code>processed</code></td>
+        <td>无法生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 pose-nva-002 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="pose-laq-001" data-search="pose-laq-001 关节角最大绝对值 units joint angles pose laq 001 最大绝对关节角 / rad 最大绝对关节角 找出处理后 20 路关节角中的最大绝对值，排查单位或转换明显错误。 pose_record pose pose label_action_quality processed 可生成 single " data-modality="pose" data-domain="label_action_quality" data-stage="processed" data-artifact="available">
+        <td><a href="pose/pose-laq-001.html"><code>pose-laq-001</code></a></td>
+        <td>关节角最大绝对值</td>
+        <td>Pose</td>
+        <td>LAQ · 标签/动作质量</td>
+        <td><code>processed</code></td>
+        <td>可生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 pose-laq-001 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="pose-laq-002" data-search="pose-laq-002 原始无效帧比例 raw invalid ratio pose laq 002 原始无效帧比例 计算转换前被丢弃的原始 pose 帧占全部原始帧的比例。 pose_record pose pose label_action_quality raw 可生成 single " data-modality="pose" data-domain="label_action_quality" data-stage="raw" data-artifact="available">
+        <td><a href="pose/pose-laq-002.html"><code>pose-laq-002</code></a></td>
+        <td>原始无效帧比例</td>
+        <td>Pose</td>
+        <td>LAQ · 标签/动作质量</td>
+        <td><code>raw</code></td>
+        <td>可生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 pose-laq-002 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="pose-laq-005" data-search="pose-laq-005 静止间隔比例 motion static pose laq 005 静止比例及最长静止时长 统计有效相邻评估点中最大关节角变化小于 0.001 rad 的间隔比例；达到 100% 时 error。 pose_record pose pose label_action_quality processed 可生成 single " data-modality="pose" data-domain="label_action_quality" data-stage="processed" data-artifact="available">
+        <td><a href="pose/pose-laq-005.html"><code>pose-laq-005</code></a></td>
+        <td>静止间隔比例</td>
+        <td>Pose</td>
+        <td>LAQ · 标签/动作质量</td>
+        <td><code>processed</code></td>
+        <td>可生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 pose-laq-005 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="pose-laq-006" data-search="pose-laq-006 高角速度间隔比例 high angular velocity pose laq 006 高角速度帧比例 统计最大关节角速度超过 50 rad/s 的相邻评估间隔占比。 pose_record pose pose label_action_quality processed 可生成 single " data-modality="pose" data-domain="label_action_quality" data-stage="processed" data-artifact="available">
+        <td><a href="pose/pose-laq-006.html"><code>pose-laq-006</code></a></td>
+        <td>高角速度间隔比例</td>
+        <td>Pose</td>
+        <td>LAQ · 标签/动作质量</td>
+        <td><code>processed</code></td>
+        <td>可生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 pose-laq-006 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="pose-ppa-001" data-search="pose-ppa-001 pose 处理异常 output conversion failed pose ppa 001 pose 转换异常 记录 pose 转换或处理后质检程序自身发生的未预期异常。 pose_record pose pose processing_artifact_anomaly raw_to_processed 无法生成 single " data-modality="pose" data-domain="processing_artifact_anomaly" data-stage="raw_to_processed" data-artifact="unavailable">
+        <td><a href="pose/pose-ppa-001.html"><code>pose-ppa-001</code></a></td>
+        <td>Pose 处理异常</td>
+        <td>Pose</td>
+        <td>PPA · 处理/产物异常</td>
+        <td><code>raw_to_processed</code></td>
+        <td>无法生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 pose-ppa-001 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="pose-ppa-002" data-search="pose-ppa-002 pose 产物读写异常 output read failed pose ppa 002 产物读取异常 记录 pose 暂存文件写入、复读或原子发布失败。 pose_record pose pose processing_artifact_anomaly artifact 无法生成 single " data-modality="pose" data-domain="processing_artifact_anomaly" data-stage="artifact" data-artifact="unavailable">
+        <td><a href="pose/pose-ppa-002.html"><code>pose-ppa-002</code></a></td>
+        <td>Pose 产物读写异常</td>
+        <td>Pose</td>
+        <td>PPA · 处理/产物异常</td>
+        <td><code>artifact</code></td>
+        <td>无法生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 pose-ppa-002 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="vision-idc-001" data-search="vision-idc-001 视频流是否可用 video input discovery 视频 topic 存在性 vision 输入是否可读取 在 mcap 中选择唯一可用的视频流，成功时返回压缩消息数。 input_path vision vision input_device_compatibility raw 无法生成 single " data-modality="vision" data-domain="input_device_compatibility" data-stage="raw" data-artifact="unavailable">
+        <td><a href="vision/vision-idc-001.html"><code>vision-idc-001</code></a></td>
+        <td>视频流是否可用</td>
+        <td>Vision</td>
+        <td>IDC · 输入/设备兼容性</td>
+        <td><code>raw</code></td>
+        <td>无法生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 vision-idc-001 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="vision-dsf-001" data-search="vision-dsf-001 视频编码与画面结构是否正确 video structure vision dsf 001 protobuf/编码、消息索引、解码尺寸和双目并排几何 核对压缩消息索引、h.264/h.265 编码和左右并排双目画面的尺寸。 video_stream vision vision data_structure_format raw 无法生成 single " data-modality="vision" data-domain="data_structure_format" data-stage="raw" data-artifact="unavailable">
+        <td><a href="vision/vision-dsf-001.html"><code>vision-dsf-001</code></a></td>
+        <td>视频编码与画面结构是否正确</td>
+        <td>Vision</td>
+        <td>DSF · 数据结构/格式</td>
+        <td><code>raw</code></td>
+        <td>无法生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 vision-dsf-001 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="vision-dsf-002" data-search="vision-dsf-002 解码帧数是否与消息数一致 decoded frame correspondence vision dsf 002 完整解码帧数与 mcap 消息索引数 核对完整解码帧数与 mcap 压缩消息数，保证帧索引逐帧对应。 video_stream vision vision data_structure_format raw 无法生成 single " data-modality="vision" data-domain="data_structure_format" data-stage="raw" data-artifact="unavailable">
+        <td><a href="vision/vision-dsf-002.html"><code>vision-dsf-002</code></a></td>
+        <td>解码帧数是否与消息数一致</td>
+        <td>Vision</td>
+        <td>DSF · 数据结构/格式</td>
+        <td><code>raw</code></td>
+        <td>无法生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 vision-dsf-002 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="vision-tsa-001" data-search="vision-tsa-001 视频时间戳是否递增 timestamp order vision tsa 001 源采集时间戳严格递增 检查至少有两条视频消息，且源采集时间戳不重复、不倒退。 video_stream vision vision time_sample_alignment raw 无法生成 single " data-modality="vision" data-domain="time_sample_alignment" data-stage="raw" data-artifact="unavailable">
+        <td><a href="vision/vision-tsa-001.html"><code>vision-tsa-001</code></a></td>
+        <td>视频时间戳是否递增</td>
+        <td>Vision</td>
+        <td>TSA · 时间/样本对齐</td>
+        <td><code>raw</code></td>
+        <td>无法生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 vision-tsa-001 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="vision-tsa-002" data-search="vision-tsa-002 视频帧率偏差比例 signed sample rate deviation ratio vision tsa 002 采样率偏差比例 比较源采集时间戳推得的实测帧率与配置帧率，按偏差的绝对值判级。 video_stream vision vision time_sample_alignment raw 可生成 single " data-modality="vision" data-domain="time_sample_alignment" data-stage="raw" data-artifact="available">
+        <td><a href="vision/vision-tsa-002.html"><code>vision-tsa-002</code></a></td>
+        <td>视频帧率偏差比例</td>
+        <td>Vision</td>
+        <td>TSA · 时间/样本对齐</td>
+        <td><code>raw</code></td>
+        <td>可生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 vision-tsa-002 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="vision-tsa-004" data-search="vision-tsa-004 最大连续缺帧时长 max contiguous gap vision tsa 004 最大连续缺口 / s 最大连续缺口 将相邻源时间戳间隔折算为缺失帧周期，报告最长一次连续缺口。 video_stream vision vision time_sample_alignment raw 可生成 single " data-modality="vision" data-domain="time_sample_alignment" data-stage="raw" data-artifact="available">
+        <td><a href="vision/vision-tsa-004.html"><code>vision-tsa-004</code></a></td>
+        <td>最大连续缺帧时长</td>
+        <td>Vision</td>
+        <td>TSA · 时间/样本对齐</td>
+        <td><code>raw</code></td>
+        <td>可生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 vision-tsa-004 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="vision-tsa-005" data-search="vision-tsa-005 累计缺帧比例 cumulative missing ratio vision tsa 005 累计缺失比例 按首尾源时间戳与配置帧率估算整段净缺帧比例，仅单独判告警。 video_stream vision vision time_sample_alignment raw 可生成 single " data-modality="vision" data-domain="time_sample_alignment" data-stage="raw" data-artifact="available">
+        <td><a href="vision/vision-tsa-005.html"><code>vision-tsa-005</code></a></td>
+        <td>累计缺帧比例</td>
+        <td>Vision</td>
+        <td>TSA · 时间/样本对齐</td>
+        <td><code>raw</code></td>
+        <td>可生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 vision-tsa-005 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="vision-dcr-001" data-search="vision-dcr-001 视频有效时长 video minimum duration 视频最小时长 用首尾源采集时间戳计算视频覆盖时长，默认要求至少 30 秒。 capture_timestamps vision vision duration_coverage raw 可生成 single " data-modality="vision" data-domain="duration_coverage" data-stage="raw" data-artifact="available">
+        <td><a href="vision/vision-dcr-001.html"><code>vision-dcr-001</code></a></td>
+        <td>视频有效时长</td>
+        <td>Vision</td>
+        <td>DCR · 时长/覆盖</td>
+        <td><code>raw</code></td>
+        <td>可生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 vision-dcr-001 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="vision-scq-001" data-search="vision-scq-001 双目标定 stereo calibration vision scq 001 双目标定 max(abs(p1_fx/k1_fx-1), abs(p2_fx/k2_fx-1)) 检查左右眼校正前后水平焦距的最大相对偏差，以及标定字段的有效性。 video_stream vision vision signal_channel_quality raw 可生成 single " data-modality="vision" data-domain="signal_channel_quality" data-stage="raw" data-artifact="available">
+        <td><a href="vision/vision-scq-001.html"><code>vision-scq-001</code></a></td>
+        <td>双目标定</td>
+        <td>Vision</td>
+        <td>SCQ · 信号/通道质量</td>
+        <td><code>raw</code></td>
+        <td>可生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 vision-scq-001 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="vision-scq-002" data-search="vision-scq-002 画面冻结最长时长 video freeze vision scq 002 视频冻结最长区间 / s 视频冻结最长区间 识别抽样画面长期几乎不变的片段，报告达到冻结门限的最长区间。 video_stream vision vision signal_channel_quality raw 可生成 single " data-modality="vision" data-domain="signal_channel_quality" data-stage="raw" data-artifact="available">
+        <td><a href="vision/vision-scq-002.html"><code>vision-scq-002</code></a></td>
+        <td>画面冻结最长时长</td>
+        <td>Vision</td>
+        <td>SCQ · 信号/通道质量</td>
+        <td><code>raw</code></td>
+        <td>可生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 vision-scq-002 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="vision-laq-001" data-search="vision-laq-001 相机静止最长时长 camera stationary vision laq 001 头戴相机全局静止最长区间 / s 头戴相机全局静止最长区间 估计左眼抽样画面的相机运动，抑制明显前景活动后报告最长静止区间。 video_stream vision vision label_action_quality raw 可生成 single " data-modality="vision" data-domain="label_action_quality" data-stage="raw" data-artifact="available">
+        <td><a href="vision/vision-laq-001.html"><code>vision-laq-001</code></a></td>
+        <td>相机静止最长时长</td>
+        <td>Vision</td>
+        <td>LAQ · 标签/动作质量</td>
+        <td><code>raw</code></td>
+        <td>可生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 vision-laq-001 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="vision-laq-002" data-search="vision-laq-002 画面无手最长时长 hand absence vision laq 002 画面无手最长区间 / s 画面无手最长区间 检测抽样画面中是否有手，合并无手比例至少 90% 的窗口并报告最长区间。 video_stream vision vision label_action_quality raw 可生成 single " data-modality="vision" data-domain="label_action_quality" data-stage="raw" data-artifact="available">
+        <td><a href="vision/vision-laq-002.html"><code>vision-laq-002</code></a></td>
+        <td>画面无手最长时长</td>
+        <td>Vision</td>
+        <td>LAQ · 标签/动作质量</td>
+        <td><code>raw</code></td>
+        <td>可生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 vision-laq-002 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="vision-ppa-001" data-search="vision-ppa-001 视频处理或质检执行异常 operator processing failed vision ppa 001 mcap 读取、提取或视频质检运行异常 按失败检查阶段汇总 mcap 读取、码流探测、解码和视频质检的运行异常。 video_stream vision vision processing_artifact_anomaly raw_to_processed 可生成 multi check" data-modality="vision" data-domain="processing_artifact_anomaly" data-stage="raw_to_processed" data-artifact="available">
+        <td><a href="vision/vision-ppa-001.html"><code>vision-ppa-001</code></a></td>
+        <td>视频处理或质检执行异常</td>
+        <td>Vision</td>
+        <td>PPA · 处理/产物异常</td>
+        <td><code>raw_to_processed</code></td>
+        <td>可生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 vision-ppa-001 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="vision-ppa-002" data-search="vision-ppa-002 帧索引写入异常 artifact write failed vision ppa 002 帧索引 npz 写入 记录帧索引目录创建、npz 写入或原子发布失败；失败时不登记产物。 video_stream vision vision processing_artifact_anomaly artifact 无法生成 single " data-modality="vision" data-domain="processing_artifact_anomaly" data-stage="artifact" data-artifact="unavailable">
+        <td><a href="vision/vision-ppa-002.html"><code>vision-ppa-002</code></a></td>
+        <td>帧索引写入异常</td>
+        <td>Vision</td>
+        <td>PPA · 处理/产物异常</td>
+        <td><code>artifact</code></td>
+        <td>无法生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 vision-ppa-002 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="comb_camera-idc-001" data-search="comb_camera-idc-001 相机文件能否完整读取且八路齐全 eight-camera input 相机 topic 完整性 检查 mcap 是否完整可读、8 个固定相机流是否全部有数据，以及流名和帧内相机编号是否一致。 input_path comb_camera comb camera input_device_compatibility raw 无法生成 single " data-modality="comb_camera" data-domain="input_device_compatibility" data-stage="raw" data-artifact="unavailable">
+        <td><a href="comb_camera/comb_camera-idc-001.html"><code>comb_camera-idc-001</code></a></td>
+        <td>相机文件能否完整读取且八路齐全</td>
+        <td>Comb Camera</td>
+        <td>IDC · 输入/设备兼容性</td>
+        <td><code>raw</code></td>
+        <td>无法生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 comb_camera-idc-001 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="comb_camera-dsf-001" data-search="comb_camera-dsf-001 每路视频能否逐帧完整解码 eight-view decode 压缩帧解码映射 逐路完整解码 h.264/h.265，确认每条压缩消息只产生一张有效图片，且真实宽高与帧内声明一致。 camera_streams comb_camera comb camera data_structure_format raw 无法生成 multi camera" data-modality="comb_camera" data-domain="data_structure_format" data-stage="raw" data-artifact="unavailable">
+        <td><a href="comb_camera/comb_camera-dsf-001.html"><code>comb_camera-dsf-001</code></a></td>
+        <td>每路视频能否逐帧完整解码</td>
+        <td>Comb Camera</td>
+        <td>DSF · 数据结构/格式</td>
+        <td><code>raw</code></td>
+        <td>无法生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 comb_camera-dsf-001 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="comb_camera-tsa-001" data-search="comb_camera-tsa-001 每路相机是否丢帧或时间倒退 camera frame loss ratio sync_ts_ns 时间线 分别检查 8 路同步时间戳是否有效且严格递增，并结合时间间隔与帧序号估算每路疑似丢帧比例。 camera_timelines comb_camera comb camera time_sample_alignment raw 无法生成 multi camera" data-modality="comb_camera" data-domain="time_sample_alignment" data-stage="raw" data-artifact="unavailable">
+        <td><a href="comb_camera/comb_camera-tsa-001.html"><code>comb_camera-tsa-001</code></a></td>
+        <td>每路相机是否丢帧或时间倒退</td>
+        <td>Comb Camera</td>
+        <td>TSA · 时间/样本对齐</td>
+        <td><code>raw</code></td>
+        <td>无法生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 comb_camera-tsa-001 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="comb_camera-tsa-002" data-search="comb_camera-tsa-002 八路画面是否全部同步配对成功 eight-view synchronization cam0 驱动配对 以每条 cam0 画面为基准，从其余 7 路选择未使用的最近画面，计算时间跨度合格的完整八目组比例。 camera_timelines comb_camera comb camera time_sample_alignment raw 可生成 single " data-modality="comb_camera" data-domain="time_sample_alignment" data-stage="raw" data-artifact="available">
+        <td><a href="comb_camera/comb_camera-tsa-002.html"><code>comb_camera-tsa-002</code></a></td>
+        <td>八路画面是否全部同步配对成功</td>
+        <td>Comb Camera</td>
+        <td>TSA · 时间/样本对齐</td>
+        <td><code>raw</code></td>
+        <td>可生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 comb_camera-tsa-002 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="comb_camera-tsa-003" data-search="comb_camera-tsa-003 标定文件是否在采集前 48 小时内生成 calibration freshness 标定时效 比较 `/session/file.datatime` 与八目合并标定 `header.generated_at_utc`，确认标定生成时间距离采集参考时间不超过 48 小时。 input_path comb_camera comb camera time_sample_alignment raw 可生成 single " data-modality="comb_camera" data-domain="time_sample_alignment" data-stage="raw" data-artifact="available">
+        <td><a href="comb_camera/comb_camera-tsa-003.html"><code>comb_camera-tsa-003</code></a></td>
+        <td>标定文件是否在采集前 48 小时内生成</td>
+        <td>Comb Camera</td>
+        <td>TSA · 时间/样本对齐</td>
+        <td><code>raw</code></td>
+        <td>可生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 comb_camera-tsa-003 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="comb_camera-scq-001" data-search="comb_camera-scq-001 每路画面是否带有有效时间校准信息 camera timing calibration calibration metadata quality 分别统计 8 路画面中未标记“已完成时间校准”或未填写校准来源的比例，判断时间元数据是否可信。 frame_calibration_metadata comb_camera comb camera signal_channel_quality raw 可生成 multi camera" data-modality="comb_camera" data-domain="signal_channel_quality" data-stage="raw" data-artifact="available">
+        <td><a href="comb_camera/comb_camera-scq-001.html"><code>comb_camera-scq-001</code></a></td>
+        <td>每路画面是否带有有效时间校准信息</td>
+        <td>Comb Camera</td>
+        <td>SCQ · 信号/通道质量</td>
+        <td><code>raw</code></td>
+        <td>可生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 comb_camera-scq-001 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="comb_camera-ppa-001" data-search="comb_camera-ppa-001 相机检查程序是否完整运行 comb camera processing failed video runtime failure 记录 mcap 二次扫描、ffmpeg/ffprobe 环境检查或视频解码任务自身崩溃等运行问题，避免把“没有执行完”误报为数据通过。 processing_run comb_camera comb camera processing_artifact_anomaly raw_to_processed 可生成 multi check" data-modality="comb_camera" data-domain="processing_artifact_anomaly" data-stage="raw_to_processed" data-artifact="available">
+        <td><a href="comb_camera/comb_camera-ppa-001.html"><code>comb_camera-ppa-001</code></a></td>
+        <td>相机检查程序是否完整运行</td>
+        <td>Comb Camera</td>
+        <td>PPA · 处理/产物异常</td>
+        <td><code>raw_to_processed</code></td>
+        <td>可生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 comb_camera-ppa-001 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="comb_camera-ppa-002" data-search="comb_camera-ppa-002 配对索引文件能否正确保存 comb camera artifact write failed sync index write failure 把已接受的八目配对结果写入临时 npz，重新读取并校验字段、形状和时间轴后，再原子发布为正式索引文件。 accepted_sync_groups comb_camera comb camera processing_artifact_anomaly artifact 无法生成 single " data-modality="comb_camera" data-domain="processing_artifact_anomaly" data-stage="artifact" data-artifact="unavailable">
+        <td><a href="comb_camera/comb_camera-ppa-002.html"><code>comb_camera-ppa-002</code></a></td>
+        <td>配对索引文件能否正确保存</td>
+        <td>Comb Camera</td>
+        <td>PPA · 处理/产物异常</td>
+        <td><code>artifact</code></td>
+        <td>无法生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 comb_camera-ppa-002 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="timestamp-idc-001" data-search="timestamp-idc-001 各模态 npz 是否可读取 input read failed timestamp idc 001 逐模态读取输入 npz，仅在读取失败时发布 ruleresult。 streams timestamp timestamp input_device_compatibility processed_input 无法生成 multi modality" data-modality="timestamp" data-domain="input_device_compatibility" data-stage="processed_input" data-artifact="unavailable">
+        <td><a href="timestamp/timestamp-idc-001.html"><code>timestamp-idc-001</code></a></td>
+        <td>各模态 NPZ 是否可读取</td>
+        <td>Timestamp</td>
+        <td>IDC · 输入/设备兼容性</td>
+        <td><code>processed_input</code></td>
+        <td>无法生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 timestamp-idc-001 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="timestamp-dsf-001" data-search="timestamp-dsf-001 各模态时间轴是否正常 time axis invalid timestamp dsf 001 检查各模态时间轴是否存在、数值有限且严格递增。 streams timestamp timestamp data_structure_format processed_input 无法生成 multi modality" data-modality="timestamp" data-domain="data_structure_format" data-stage="processed_input" data-artifact="unavailable">
+        <td><a href="timestamp/timestamp-dsf-001.html"><code>timestamp-dsf-001</code></a></td>
+        <td>各模态时间轴是否正常</td>
+        <td>Timestamp</td>
+        <td>DSF · 数据结构/格式</td>
+        <td><code>processed_input</code></td>
+        <td>无法生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 timestamp-dsf-001 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="timestamp-dsf-002" data-search="timestamp-dsf-002 各模态时间戳 shape 和 dtype 是否正常 timestamps shape dtype invalid timestamp dsf 002 检查各模态 timestamps 是否为至少含两个样本的一维浮点数组。 streams timestamp timestamp data_structure_format processed_input 无法生成 multi modality" data-modality="timestamp" data-domain="data_structure_format" data-stage="processed_input" data-artifact="unavailable">
+        <td><a href="timestamp/timestamp-dsf-002.html"><code>timestamp-dsf-002</code></a></td>
+        <td>各模态时间戳 shape 和 dtype 是否正常</td>
+        <td>Timestamp</td>
+        <td>DSF · 数据结构/格式</td>
+        <td><code>processed_input</code></td>
+        <td>无法生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 timestamp-dsf-002 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="timestamp-dsf-003" data-search="timestamp-dsf-003 各模态数据字段与时间轴是否匹配 data field alignment invalid timestamp dsf 003 检查各模态数据字段结构及其样本数是否与时间轴匹配。 streams timestamp timestamp data_structure_format processed_input 无法生成 multi modality" data-modality="timestamp" data-domain="data_structure_format" data-stage="processed_input" data-artifact="unavailable">
+        <td><a href="timestamp/timestamp-dsf-003.html"><code>timestamp-dsf-003</code></a></td>
+        <td>各模态数据字段与时间轴是否匹配</td>
+        <td>Timestamp</td>
+        <td>DSF · 数据结构/格式</td>
+        <td><code>processed_input</code></td>
+        <td>无法生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 timestamp-dsf-003 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="timestamp-tsa-004" data-search="timestamp-tsa-004 公共时间段过短 common duration too short timestamp tsa 004 检查各模态公共时间段是否达到固定的 30 秒下界。 streams timestamp timestamp time_sample_alignment alignment 可生成 single " data-modality="timestamp" data-domain="time_sample_alignment" data-stage="alignment" data-artifact="available">
+        <td><a href="timestamp/timestamp-tsa-004.html"><code>timestamp-tsa-004</code></a></td>
+        <td>公共时间段过短</td>
+        <td>Timestamp</td>
+        <td>TSA · 时间/样本对齐</td>
+        <td><code>alignment</code></td>
+        <td>可生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 timestamp-tsa-004 已核对"></td>
+      </tr>
+      <tr class="catalog-row" data-rule-id="timestamp-ppa-001" data-search="timestamp-ppa-001 timestamp 产物写入异常 artifact write failed timestamp ppa 001 记录 timestamp 单流直通或多流裁剪产物写入、发布过程中发生的异常。 streams timestamp timestamp processing_artifact_anomaly artifact 无法生成 single " data-modality="timestamp" data-domain="processing_artifact_anomaly" data-stage="artifact" data-artifact="unavailable">
+        <td><a href="timestamp/timestamp-ppa-001.html"><code>timestamp-ppa-001</code></a></td>
+        <td>Timestamp 产物写入异常</td>
+        <td>Timestamp</td>
+        <td>PPA · 处理/产物异常</td>
+        <td><code>artifact</code></td>
+        <td>无法生成</td>
+        <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 timestamp-ppa-001 已核对"></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+```{toctree}
+:hidden:
+:maxdepth: 1
+
+emg/emg-idc-001
+emg/emg-dsf-001
+emg/emg-tsa-001
+emg/emg-tsa-002
+emg/emg-tsa-003
+emg/emg-dcr-001
+emg/emg-nva-001
+emg/emg-scq-001
+emg/emg-scq-002
+emg/emg-scq-004
+emg/emg-scq-005
+emg/emg-scq-006
+emg/emg-scq-007
+emg/emg-scq-008
+emg/emg-ppa-001
+emg/emg-ppa-002
+imu/imu-idc-001
+imu/imu-dsf-001
+imu/imu-tsa-001
+imu/imu-tsa-009
+imu/imu-tsa-010
+imu/imu-dcr-001
+imu/imu-nva-001
+imu/imu-ppa-001
+imu/imu-ppa-002
+force/force-idc-001
+force/force-dsf-003
+force/force-tsa-003
+force/force-tsa-005
+force/force-tsa-007
+force/force-dcr-003
+force/force-nva-002
+force/force-scq-001
+force/force-laq-002
+force/force-laq-005
+force/force-ppa-002
+force/force-ppa-003
+pose/pose-idc-001
+pose/pose-dsf-003
+pose/pose-tsa-003
+pose/pose-tsa-004
+pose/pose-tsa-006
+pose/pose-dcr-002
+pose/pose-nva-002
+pose/pose-laq-001
+pose/pose-laq-002
+pose/pose-laq-005
+pose/pose-laq-006
+pose/pose-ppa-001
+pose/pose-ppa-002
+vision/vision-idc-001
+vision/vision-dsf-001
+vision/vision-dsf-002
+vision/vision-tsa-001
+vision/vision-tsa-002
+vision/vision-tsa-004
+vision/vision-tsa-005
+vision/vision-dcr-001
+vision/vision-scq-001
+vision/vision-scq-002
+vision/vision-laq-001
+vision/vision-laq-002
+vision/vision-ppa-001
+vision/vision-ppa-002
+comb_camera/comb_camera-idc-001
+comb_camera/comb_camera-dsf-001
+comb_camera/comb_camera-tsa-001
+comb_camera/comb_camera-tsa-002
+comb_camera/comb_camera-tsa-003
+comb_camera/comb_camera-scq-001
+comb_camera/comb_camera-ppa-001
+comb_camera/comb_camera-ppa-002
+timestamp/timestamp-idc-001
+timestamp/timestamp-dsf-001
+timestamp/timestamp-dsf-002
+timestamp/timestamp-dsf-003
+timestamp/timestamp-tsa-004
+timestamp/timestamp-ppa-001
+```

@@ -1,0 +1,163 @@
+(vision-dcr-001)=
+<div class="quality-page-kicker">QUALITY OPERATOR · duration_coverage</div>
+
+# `vision-dcr-001` — 视频有效时长
+
+[所属模态算子：Vision](../../modality-operators/vision.md)
+
+<div class="quality-meta">
+  <code class="meta-lifecycle is-active">active</code>
+  <code class="meta-artifact is-available">error 时产物可生成</code>
+  <code class="meta-cardinality">single</code>
+  <code class="meta-domain">duration_coverage</code>
+  <code class="meta-stage">raw</code>
+  <code class="meta-version">rule v3.0.0</code>
+  <code class="meta-version">fm-vision-operator v0.9.0</code>
+</div>
+
+<p class="quality-lead">用首尾源采集时间戳计算视频覆盖时长，默认要求至少 30 秒。</p>
+
+## 先看懂这条规则
+
+- **检查什么：** 用每帧真实拍摄时间计算视频从第一帧到最后一帧实际覆盖了多久。
+- **什么情况下不通过：** 视频时长短于任务要求，通常说明拍摄提前停止、片段不完整或首尾帧缺失。
+
+### 判定标准
+
+| 状态 | 怎么判 |
+| --- | --- |
+| **`pass`** | duration_s >= min_duration_s |
+| **`warn`** | 不会出现；本规则不使用 warn 状态。 |
+| **`error`** | duration_s < min_duration_s |
+
+**边界怎么算：**
+
+- 时长恰好等于 min_duration_s 时为 pass，并继续视频解码和质检。
+
+
+## 版本历史
+
+| Rule 版本 | 首次对应包版本 | 更新时间 | 变更 | 提交 |
+| --- | --- | --- | --- | --- |
+| — | — | — | 尚无基线后的版本变更 | — |
+
+仅展示文档 1.0.0 基线之后的变更。
+
+## 计算契约
+
+::::{admonition} 计算契约（不可直接调用）
+:class: quality-contract
+
+```python
+quality.vision.vision_dcr_001(
+    capture_timestamps: int64[T],
+    *,
+    min_duration_s: float = 30.0,
+) -> RuleResult
+```
+::::
+
+::::{div} quality-source-links
+[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/vision.py#L84) ·
+[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/rules.py#L65) ·
+[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-vision-operator/tests/test_vision_operator.py#L483) · [test 2](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-vision-operator/tests/test_vision_operator.py#L527) ·
+[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/docs/quality-rule-calculation-spec.md#22-%E7%BB%93%E6%9E%84%E6%95%B0%E5%80%BC%E6%89%A7%E8%A1%8C%E5%92%8C%E6%97%B6%E9%95%BF%E8%A7%84%E5%88%99)
+::::
+
+```{admonition} 注意
+:class: note
+
+- 时长不足是质量异常，但不妨碍生成结构有效的帧索引产物。
+```
+
+## 数据输入
+
+| 名称 | 来源 | dtype | shape | 单位 | 必需 | 说明 |
+| --- | --- | --- | --- | --- | --- | --- |
+| `capture_timestamps` | raw MCAP message index | `int64` | `[T]` | ns | 是 | 预扫描获取的压缩视频消息源采集时间戳，已由前置规则确认至少两帧且严格递增。 |
+
+## 配置参数
+
+| 名称 | 类型 | 默认值/必需 | 来源 | 说明 |
+| --- | --- | --- | --- | --- |
+| `min_duration_s` | `float` | `30.0` | CLI or task profile | 视频有效覆盖时长的闭区间下界，必须有限且非负。 |
+
+## 计算定义
+计算使用 `capture_timestamps`，
+结果类型为 `number`，
+单位为 s。
+
+### 计算方法
+
+```text
+duration_s = (capture_timestamps[-1] - capture_timestamps[0]) / 1e9
+```
+
+- **聚合口径：** 单条规则发布一个标量值；总状态取已执行规则的最高严重度。
+- **无法计算时：** 视频输入或源采集时间戳前置失败时不发布本规则；检查在解码前执行，不依赖画面结构或完整解码。
+
+
+## 执行关系
+
+**前置质检算子：**
+
+- [`vision-tsa-001`](../vision/vision-tsa-001.md)
+
+**不执行条件：**
+
+- vision-tsa-001 因帧数少于两帧或时间戳非严格递增而 error。
+
+**产物影响：** 本规则为 `error` 时，只记录质量异常，不阻止生成结构上有效的产物。
+如果后续处理或写入本身失败，仍可能没有产物；最终事实以 `processed_ok` 与 `artifacts`
+为准。
+
+**相关质检算子：**
+
+- [`vision-idc-001`](../vision/vision-idc-001.md)
+- [`vision-dsf-001`](../vision/vision-dsf-001.md)
+- [`vision-ppa-002`](../vision/vision-ppa-002.md)
+
+## 输出
+
+| 字段 | 约定 |
+| --- | --- |
+| 实例模型 | `single` |
+| `value` | `number` |
+| `unit` | s |
+| `threshold` | `mapping` |
+| `details` | `message`, `category` |
+
+```json
+{
+  "rule_id": "vision-dcr-001",
+  "rule_version": "3.0.0",
+  "problem_domain": "duration_coverage",
+  "stage": "raw",
+  "status": "error",
+  "value": 12.5,
+  "unit": "s",
+  "threshold": {
+    "error_lt": 30.0
+  },
+  "details": {
+    "message": "ERROR：视频有效时长 12.5 s < 30 s",
+    "category": "quality"
+  }
+}
+```
+
+## 失败后建议
+
+1. 确认采集任务是否过早结束，以及 MCAP 中选中的 topic 是否完整。
+2. 只在任务规范允许时通过 profile 调整 min_duration_s，不要为掩盖质量异常临时降低阈值。
+
+## 来源与维护
+
+- 页面 owner：`data-quality/vision`
+- 所属模态算子：[Vision](../../modality-operators/vision.md)
+- 实现：[operators/fm-vision-operator/src/fm_vision_operator/vision.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/vision.py#L84)
+- 注册：[operators/fm-vision-operator/src/fm_vision_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/rules.py#L65)
+- 测试：[operators/fm-vision-operator/tests/test_vision_operator.py::test_short_duration_keeps_video_checks_and_artifact](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-vision-operator/tests/test_vision_operator.py#L483)
+- 测试：[operators/fm-vision-operator/tests/test_vision_operator.py::test_exact_30_second_video_continues_and_writes_artifact](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-vision-operator/tests/test_vision_operator.py#L527)
+- 计算规范：[docs/quality-rule-calculation-spec.md#22-结构数值执行和时长规则](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/docs/quality-rule-calculation-spec.md#22-%E7%BB%93%E6%9E%84%E6%95%B0%E5%80%BC%E6%89%A7%E8%A1%8C%E5%92%8C%E6%97%B6%E9%95%BF%E8%A7%84%E5%88%99)
+- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator-docs/site/operator-pages/vision/vision-dcr-001.yaml#L1)

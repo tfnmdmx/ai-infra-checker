@@ -1,0 +1,157 @@
+(emg-scq-006)=
+<div class="quality-page-kicker">QUALITY OPERATOR · signal_channel_quality</div>
+
+# `emg-scq-006` — 全局信号标准差
+
+[所属模态算子：EMG](../../modality-operators/emg.md)
+
+<div class="quality-meta">
+  <code class="meta-lifecycle is-active">active</code>
+  <code class="meta-artifact is-available">error 时产物可生成</code>
+  <code class="meta-cardinality">single</code>
+  <code class="meta-domain">signal_channel_quality</code>
+  <code class="meta-stage">processed</code>
+  <code class="meta-version">rule v1.0.0</code>
+  <code class="meta-version">fm-emg-operator v0.16.0</code>
+</div>
+
+<p class="quality-lead">检查EMG 数据的「全局信号标准差」，并按公开边界发布独立 RuleResult。</p>
+
+## 白话解释
+
+- **做了什么检测：** 把所有通道放在一起看整体起伏是否太小，用来发现整段肌电都很弱的情况。
+- **为什么会告警或不通过：** 整体幅度低于门槛会告警，可能是佩戴或接触普遍不佳，也可能整段没有有效动作；本规则不单独判失败。
+
+## 版本历史
+
+| Rule 版本 | 首次对应包版本 | 日期 | 变更 | 提交 |
+| --- | --- | --- | --- | --- |
+| — | — | — | 尚无基线后的版本变更 | — |
+
+仅展示文档 1.0.0 基线之后的变更。
+
+## 计算契约
+
+::::{admonition} 计算契约（不可直接调用）
+:class: quality-contract
+
+```python
+quality.emg.emg_scq_006(
+    emg_record: NPZ arrays timestamps=[T], emg=[T,16],
+    *,
+    warn_lt: float = 8.0,
+) -> RuleResult
+```
+::::
+
+::::{div} quality-source-links
+[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/emg.py#L377) ·
+[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/rules.py#L72) ·
+[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-emg-operator/tests/test_emg_operator.py#L253) ·
+[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/docs/quality-rule-calculation-spec.md)
+::::
+
+```{admonition} 注意
+:class: note
+
+- 规则阶段为 processed；总状态只取已执行规则的最高严重度。
+- 质量或数据异常由 RuleResult 明确记录且进程返回 0；只有运行配置错误返回 1。
+```
+
+## 数据输入
+
+| 名称 | 来源 | dtype | shape | 单位 | 必需 | 说明 |
+| --- | --- | --- | --- | --- | --- | --- |
+| `emg_record` | processed | `NPZ arrays` | `timestamps=[T], emg=[T,16]` | N/A | 是 | EMG 原始记录及处理后信号。 |
+
+## 配置参数
+
+| 名称 | 类型 | 默认值/必需 | 来源 | 说明 |
+| --- | --- | --- | --- | --- |
+| `warn_lt` | `float` | `8.0` | rule_threshold | warn_lt 判定边界；比较符含义见 decision。 |
+
+## 计算定义
+### 指标含义
+
+表示处理后全部样本和全部通道合在一起的总体标准差，用于识别整段信号整体幅度过低，而不是定位某一个死通道。
+
+计算使用 `emg_record`，
+结果类型为 `number`，
+单位为 uV。
+
+### 计算方法
+
+```text
+value = std(emg) over all processed samples and channels
+```
+
+
+
+### 判定边界
+
+| 状态 | 条件 |
+| --- | --- |
+| pass | 未命中 warn 或 error 条件 |
+| warn | 满足 warn 条件且未满足 error 条件；完整边界：<8 warn |
+| error | not_applicable |
+
+- 严格遵循本页判定中的 >、>=、<、<=；等号归属以明确写出的比较符为准。
+
+## 执行关系
+
+**前置质检算子：** 无。
+
+
+**产物影响：** 本规则为 `error` 时，只记录质量异常，不阻止生成结构上有效的产物。
+如果后续处理或写入本身失败，仍可能没有产物；最终事实以 `processed_ok` 与 `artifacts`
+为准。
+
+**相关质检算子：**
+
+- [`emg-scq-001`](../emg/emg-scq-001.md)
+- [`emg-scq-002`](../emg/emg-scq-002.md)
+
+## 输出
+
+| 字段 | 约定 |
+| --- | --- |
+| 实例模型 | `single` |
+| `value` | `number` |
+| `unit` | uV |
+| `threshold` | `mapping` |
+| `details` | `message`, `category`, `metric` |
+
+```json
+{
+  "rule_id": "emg-scq-006",
+  "rule_version": "1.0.0",
+  "problem_domain": "signal_channel_quality",
+  "stage": "processed",
+  "status": "warn",
+  "value": 6.0,
+  "unit": "uV",
+  "threshold": {
+    "warn_lt": 8.0
+  },
+  "details": {
+    "message": "WARN：EMG 全局信号标准差 6 uV < 8 uV",
+    "category": "quality",
+    "metric": "signal weak"
+  }
+}
+```
+
+## 失败后建议
+
+1. 按 details 中的通道或视频证据检查传感器、佩戴和采集环境。
+2. 保留原始数据与本规则数值用于复核。
+
+## 来源与维护
+
+- 页面 owner：`data-quality/emg`
+- 所属模态算子：[EMG](../../modality-operators/emg.md)
+- 实现：[operators/fm-emg-operator/src/fm_emg_operator/emg.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/emg.py#L377)
+- 注册：[operators/fm-emg-operator/src/fm_emg_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/rules.py#L72)
+- 测试：[operators/fm-emg-operator/tests/test_emg_operator.py::test_emg_rule_registry_has_unique_canonical_ids](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-emg-operator/tests/test_emg_operator.py#L253)
+- 计算规范：[docs/quality-rule-calculation-spec.md](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/docs/quality-rule-calculation-spec.md)
+- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator-docs/site/operator-pages/emg/emg-scq-006.yaml#L1)

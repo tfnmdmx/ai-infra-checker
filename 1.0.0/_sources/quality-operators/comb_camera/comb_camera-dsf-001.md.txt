@@ -1,0 +1,186 @@
+(comb_camera-dsf-001)=
+<div class="quality-page-kicker">QUALITY OPERATOR · data_structure_format</div>
+
+# `comb_camera-dsf-001` — 每路视频能否逐帧完整解码
+
+[所属模态算子：Comb Camera](../../modality-operators/comb_camera.md)
+
+<div class="quality-meta">
+  <code class="meta-lifecycle is-active">active</code>
+  <code class="meta-artifact is-unavailable">error 时产物无法生成</code>
+  <code class="meta-cardinality">multi · camera</code>
+  <code class="meta-domain">data_structure_format</code>
+  <code class="meta-stage">raw</code>
+  <code class="meta-version">rule v1.0.0</code>
+  <code class="meta-version">fm-comb-camera-operator v0.3.0</code>
+</div>
+
+<p class="quality-lead">逐路完整解码 H.264/H.265，确认每条压缩消息只产生一张有效图片，且真实宽高与帧内声明一致。</p>
+
+## 白话解释
+
+- **做了什么检测：** 把 cam0 到 cam7 的视频全部解开，逐条确认“一个压缩消息对应一张正常图片”，并核对图片宽高。
+- **为什么会告警或不通过：** 某条消息没有视频数据、编码格式不支持、视频损坏、一次解出零张或多张图片，或声明尺寸与实际尺寸不同，都会标出对应相机和消息位置。
+
+## 版本历史
+
+| Rule 版本 | 首次对应包版本 | 日期 | 变更 | 提交 |
+| --- | --- | --- | --- | --- |
+| — | — | — | 尚无基线后的版本变更 | — |
+
+仅展示文档 1.0.0 基线之后的变更。
+
+## 计算契约
+
+::::{admonition} 计算契约（不可直接调用）
+:class: quality-contract
+
+```python
+quality.comb_camera.comb_camera_dsf_001(
+    camera_streams: MCAP/protobuf H.264 or H.265 cameras=[8], messages=[T_c],
+    *,
+    decode_timeout_s: float = 600.0,
+) -> RuleResult
+```
+::::
+
+::::{div} quality-source-links
+[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-comb-camera-operator/src/fm_comb_camera_operator/video_decode.py#L191) ·
+[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-comb-camera-operator/src/fm_comb_camera_operator/rules.py#L51) ·
+[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-comb-camera-operator/tests/test_comb_camera_operator.py#L514) · [test 2](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-comb-camera-operator/tests/test_comb_camera_operator.py#L270) ·
+[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/docs/quality-rule-calculation-spec.md#72-%E7%BC%96%E7%A0%81%E5%86%85%E5%AE%B9%E4%B8%8E%E5%B0%BA%E5%AF%B8)
+::::
+
+```{admonition} 注意
+:class: note
+
+- ffmpeg/ffprobe 缺失属于 comb_camera-ppa-001，而不是数据解码失败。
+- 本规则按 `target_type=camera` 发布 cam0 至 cam7 八个实例；实例 `value` 是异常源消息数，`unit=frames`，`threshold.error_gt=0`。
+- `total_messages` 是该路源消息数，`decoded_frames` 是定位成功的解码帧数，`decoded_sizes` 汇总实际尺寸，`bad_indices` 最多列出前 100 个异常源索引。
+- 任一路失败都会跳过八路配对规则，因此本次不会生成配对索引。
+```
+
+## 数据输入
+
+| 名称 | 来源 | dtype | shape | 单位 | 必需 | 说明 |
+| --- | --- | --- | --- | --- | --- | --- |
+| `camera_streams` | raw | `MCAP/protobuf H.264 or H.265` | `cameras=[8], messages=[T_c]` | N/A | 是 | 八路压缩视频消息；每条记录包含编码、载荷字节、源消息索引，以及可选的 frame_meta.width/height。 |
+
+## 配置参数
+
+| 名称 | 类型 | 默认值/必需 | 来源 | 说明 |
+| --- | --- | --- | --- | --- |
+| `decode_timeout_s` | `float` | `600.0` | CLI | 每个 ffprobe 或 ffmpeg 子进程的有限正超时秒数。 |
+
+## 校验逻辑
+### 校验含义
+
+**不通过表示：** 对应相机存在任一载荷、编码、解码、映射或尺寸异常
+
+### 具体检查项
+
+1. 按相机和连续编码区间把 H.264/H.265 载荷写成临时 Annex-B 分段；空载荷、非 bytes 载荷或其他编码立即标记对应源消息。
+2. 对每个分段运行 ffprobe 获取每个解码帧的 `pkt_pos`、width、height，再运行 ffmpeg `-xerror` 完整解码并 flush；诊断、超时或非零退出均不能忽略。
+3. 用 `pkt_pos` 将解码帧唯一映射回 `[message_offset, message_offset + payload_bytes)`；每条源消息必须恰好对应一帧，无法定位、一条消息零帧或多帧都记为异常。
+4. 解码宽高必须大于 0；frame_meta.width/height 声明为正数时，两者必须与实际解码宽高完全相等。
+
+
+### 判定边界
+
+| 状态 | 条件 |
+| --- | --- |
+| pass | 8 个 camera 实例的异常消息数 value 都等于 0 |
+| warn | not_applicable |
+| error | 对应相机存在任一载荷、编码、解码、映射或尺寸异常 |
+
+- bad frame 数量必须等于 0；任意一帧异常即使该相机实例为 error。
+
+## 执行关系
+
+**前置质检算子：**
+
+- [`comb_camera-idc-001`](../comb_camera/comb_camera-idc-001.md)
+
+**不执行条件：**
+
+- 输入规则失败，或 ffmpeg/ffprobe 运行依赖不可用时不执行。
+
+**产物影响：** 本规则为 `error` 时，输出契约已经无法满足，因此本次不会登记产物；
+原因由结构化 RuleResult 记录。只要这不是运行配置错误，进程仍返回 0。
+
+**相关质检算子：**
+
+- [`comb_camera-tsa-002`](../comb_camera/comb_camera-tsa-002.md)
+- [`comb_camera-ppa-001`](../comb_camera/comb_camera-ppa-001.md)
+
+## 输出
+
+| 字段 | 约定 |
+| --- | --- |
+| 实例模型 | `multi`；实例身份为 `camera` 类型的 `(target_type, target_id)` |
+| `value` | `integer` |
+| `unit` | frames |
+| `threshold` | `mapping` |
+| `details` | `message`, `category`, `instances`, `bad_indices`, `total_messages`, `decoded_frames`, `decoded_sizes`, `errors` |
+
+```json
+{
+  "rule_id": "comb_camera-dsf-001",
+  "rule_version": "1.0.0",
+  "problem_domain": "data_structure_format",
+  "stage": "raw",
+  "status": "error",
+  "value": null,
+  "unit": null,
+  "threshold": null,
+  "details": {
+    "message": "cam3 存在不能完整解码或尺寸不符的消息",
+    "category": "schema",
+    "instances": [
+      {
+        "target_type": "camera",
+        "target_id": "cam3",
+        "status": "error",
+        "value": 1,
+        "unit": "frames",
+        "threshold": {
+          "error_gt": 0
+        },
+        "details": {
+          "total_messages": 120,
+          "decoded_frames": 119,
+          "bad_indices": [
+            47
+          ],
+          "decoded_sizes": [
+            [
+              1920,
+              1080
+            ]
+          ],
+          "errors": [
+            "message 47 did not map to exactly one decoded frame"
+          ]
+        }
+      }
+    ]
+  }
+}
+```
+
+## 失败后建议
+
+1. 先用 `target_id` 找到失败相机，再用 `bad_indices` 回到该路源消息；`errors` 会区分空载荷、编码、解码、映射或尺寸问题。
+2. 解码错误时保留原始 MCAP 和对应 Annex-B 证据，核对编码声明是否在流中途变化、NAL 数据是否完整。
+3. 仅尺寸不一致时核对 frame_meta.width/height 的填写端，不要通过忽略尺寸声明把数据判为通过。
+
+## 来源与维护
+
+- 页面 owner：`data-quality/comb-camera`
+- 所属模态算子：[Comb Camera](../../modality-operators/comb_camera.md)
+- 实现：[operators/fm-comb-camera-operator/src/fm_comb_camera_operator/video_decode.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-comb-camera-operator/src/fm_comb_camera_operator/video_decode.py#L191)
+- 注册：[operators/fm-comb-camera-operator/src/fm_comb_camera_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-comb-camera-operator/src/fm_comb_camera_operator/rules.py#L51)
+- 测试：[operators/fm-comb-camera-operator/tests/test_comb_camera_operator.py::test_strict_decoder_checks_mapping_count_and_dimensions](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-comb-camera-operator/tests/test_comb_camera_operator.py#L514)
+- 测试：[operators/fm-comb-camera-operator/tests/test_comb_camera_operator.py::test_complete_eight_camera_missing_fields_are_data_errors_not_ppa](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-comb-camera-operator/tests/test_comb_camera_operator.py#L270)
+- 计算规范：[docs/quality-rule-calculation-spec.md#72-编码内容与尺寸](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/docs/quality-rule-calculation-spec.md#72-%E7%BC%96%E7%A0%81%E5%86%85%E5%AE%B9%E4%B8%8E%E5%B0%BA%E5%AF%B8)
+- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator-docs/site/operator-pages/comb_camera/comb_camera-dsf-001.yaml#L1)

@@ -1,0 +1,154 @@
+(emg-dcr-001)=
+<div class="quality-page-kicker">QUALITY OPERATOR · duration_coverage</div>
+
+# `emg-dcr-001` — 有效时长
+
+[所属模态算子：EMG](../../modality-operators/emg.md)
+
+<div class="quality-meta">
+  <code class="meta-lifecycle is-active">active</code>
+  <code class="meta-artifact is-available">error 时产物可生成</code>
+  <code class="meta-cardinality">single</code>
+  <code class="meta-domain">duration_coverage</code>
+  <code class="meta-stage">raw</code>
+  <code class="meta-version">rule v3.0.0</code>
+  <code class="meta-version">fm-emg-operator v0.16.0</code>
+</div>
+
+<p class="quality-lead">检查EMG 数据的「有效时长」，并按公开边界发布独立 RuleResult。</p>
+
+## 白话解释
+
+- **做了什么检测：** 计算这段肌电记录从第一个样本到最后一个样本一共覆盖了多久。
+- **为什么会告警或不通过：** 记录覆盖时间短于任务要求，通常说明采集提前结束、开头或结尾数据缺失，因而没有足够长的可用数据。
+
+## 版本历史
+
+| Rule 版本 | 首次对应包版本 | 日期 | 变更 | 提交 |
+| --- | --- | --- | --- | --- |
+| — | — | — | 尚无基线后的版本变更 | — |
+
+仅展示文档 1.0.0 基线之后的变更。
+
+## 计算契约
+
+::::{admonition} 计算契约（不可直接调用）
+:class: quality-contract
+
+```python
+quality.emg.emg_dcr_001(
+    emg_record: NPZ arrays timestamps=[T], emg=[T,16],
+    *,
+    min_duration_s: float = 30.0,
+) -> RuleResult
+```
+::::
+
+::::{div} quality-source-links
+[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/emg.py#L836) ·
+[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/rules.py#L76) ·
+[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-emg-operator/tests/test_emg_operator.py#L1055) ·
+[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/docs/quality-rule-calculation-spec.md)
+::::
+
+```{admonition} 注意
+:class: note
+
+- 时长在滤波前计算；当前滤波不重采样、不裁剪样本且保留时间轴，因此输入与输出覆盖时长相同。
+- 规则阶段为 raw；总状态只取已执行规则的最高严重度。
+- 质量或数据异常由 RuleResult 明确记录且进程返回 0；只有运行配置错误返回 1。
+```
+
+## 数据输入
+
+| 名称 | 来源 | dtype | shape | 单位 | 必需 | 说明 |
+| --- | --- | --- | --- | --- | --- | --- |
+| `emg_record` | raw | `NPZ arrays` | `timestamps=[T], emg=[T,16]` | N/A | 是 | 输入 NPZ 中的 EMG 记录及其所选时间轴；在滤波前计算时长。 |
+
+## 配置参数
+
+| 名称 | 类型 | 默认值/必需 | 来源 | 说明 |
+| --- | --- | --- | --- | --- |
+| `min_duration_s` | `float` | `30.0` | task_profile_or_CLI | 有效时长的闭区间下界；小于该值为 error。 |
+
+## 计算定义
+### 指标含义
+
+表示输入 EMG 时间轴从首个样本到末个样本覆盖的时长，用于判断记录是否达到任务要求；它不是有肌肉活动的累计时长。
+
+计算使用 `emg_record`，
+结果类型为 `number`，
+单位为 s。
+
+### 计算方法
+
+```text
+value = timestamps[-1] - timestamps[0]
+```
+
+
+
+### 判定边界
+
+| 状态 | 条件 |
+| --- | --- |
+| pass | 未命中 warn 或 error 条件 |
+| warn | not_applicable |
+| error | 满足 error 条件；完整边界：小于 min_duration_s 时 error，否则 pass |
+
+- 严格遵循本页判定中的 >、>=、<、<=；等号归属以明确写出的比较符为准。
+
+## 执行关系
+
+**前置质检算子：** 无。
+
+
+**产物影响：** 本规则为 `error` 时，只记录质量异常，不阻止生成结构上有效的产物。
+如果后续处理或写入本身失败，仍可能没有产物；最终事实以 `processed_ok` 与 `artifacts`
+为准。
+
+
+## 输出
+
+| 字段 | 约定 |
+| --- | --- |
+| 实例模型 | `single` |
+| `value` | `number` |
+| `unit` | s |
+| `threshold` | `mapping` |
+| `details` | `message`, `category`, `metric` |
+
+```json
+{
+  "rule_id": "emg-dcr-001",
+  "rule_version": "3.0.0",
+  "problem_domain": "duration_coverage",
+  "stage": "raw",
+  "status": "error",
+  "value": 12.0,
+  "unit": "s",
+  "threshold": {
+    "error_lt": 30.0
+  },
+  "details": {
+    "message": "ERROR：EMG 有效时长 12 s < 30 s",
+    "category": "quality",
+    "metric": "min duration"
+  }
+}
+```
+
+## 失败后建议
+
+1. 确认采集覆盖了任务要求的最小时长。
+2. 排查提前结束、截断或错误的记录边界。
+
+## 来源与维护
+
+- 页面 owner：`data-quality/emg`
+- 所属模态算子：[EMG](../../modality-operators/emg.md)
+- 实现：[operators/fm-emg-operator/src/fm_emg_operator/emg.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/emg.py#L836)
+- 注册：[operators/fm-emg-operator/src/fm_emg_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/rules.py#L76)
+- 测试：[operators/fm-emg-operator/tests/test_emg_operator.py::test_emg_duration_equal_to_30_seconds_passes](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/operators/fm-emg-operator/tests/test_emg_operator.py#L1055)
+- 计算规范：[docs/quality-rule-calculation-spec.md](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator/docs/quality-rule-calculation-spec.md)
+- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/7717220c1306ab7147af9fb5f6d261c862800233/QC-operator-docs/site/operator-pages/emg/emg-dcr-001.yaml#L1)

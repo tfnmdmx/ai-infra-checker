@@ -1,0 +1,194 @@
+(emg-scq-002)=
+<div class="quality-page-kicker">QUALITY OPERATOR · signal_channel_quality</div>
+
+# `emg-scq-002` — 原始信号饱和异常
+
+[所属模态算子：EMG](../../modality-operators/emg.md)
+
+<div class="quality-meta">
+  <code class="meta-lifecycle is-active">active</code>
+  <code class="meta-artifact is-available">error 时产物可生成</code>
+  <code class="meta-cardinality">single</code>
+  <code class="meta-domain">signal_channel_quality</code>
+  <code class="meta-stage">raw</code>
+  <code class="meta-version">rule v3.0.0</code>
+  <code class="meta-version">fm-emg-operator v0.17.0</code>
+</div>
+
+<p class="quality-lead">统一检查 EMG 原始饱和的最大样本比例与异常通道数，按两者最高严重度发布一条规则。</p>
+
+## 先看懂这条规则
+
+- **检查什么：** 逐通道标记绝对幅值超过 199000 且连续至少 20 帧的样本，记录最严重通道的占比和受影响的通道数。
+- **什么情况下不通过：** 出现异常片段就告警；最大比例超过 1% 或异常通道超过 3 个时失败，两个条件任一满足即可。
+
+### 判定标准
+
+| 状态 | 怎么判 |
+| --- | --- |
+| **`pass`** | value == 0 且 channel_count == 0 |
+| **`warn`** | 存在异常片段，且 value <=0.01、channel_count <=3 |
+| **`error`** | value >0.01 或 channel_count >3 |
+
+**边界怎么算：**
+
+- 幅值恰好 199000 不命中；连续 19 帧不计入，连续 20 帧开始计入。
+- 比例恰好 1% 且通道数不超过 3 时为 warn。
+- 通道数恰好 3 且比例不超过 1% 时为 warn；4 个低比例异常通道仍为 error。
+- threshold.error_any 的两个条件为 OR 关系；即使 value <=1%，通道数条件也可能使状态为 error。
+
+
+## 版本历史
+
+| Rule 版本 | 首次对应包版本 | 更新时间 | 变更 | 提交 |
+| --- | --- | --- | --- | --- |
+| — | — | — | 尚无基线后的版本变更 | — |
+
+仅展示文档 1.0.0 基线之后的变更。
+
+## 计算契约
+
+::::{admonition} 计算契约（不可直接调用）
+:class: quality-contract
+
+```python
+quality.emg.emg_scq_002(
+    emg_record: NPZ arrays timestamps=[T], emg=[T,16],
+    *,
+    amplitude_threshold: float = 199000.0,
+    min_run_frames: int = 20,
+    ratio_gt: float = 0.01,
+    channel_count_gt: int = 3,
+) -> RuleResult
+```
+::::
+
+::::{div} quality-source-links
+[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/emg.py#L317) ·
+[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/rules.py#L66) ·
+[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-emg-operator/tests/test_emg_operator.py#L316) ·
+[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/docs/quality-rule-calculation-spec.md)
+::::
+
+```{admonition} 注意
+:class: note
+
+- 保留 emg-scq-002，移除独立 emg-scq-003；历史 JSON 不改写，按 rule_version 区分旧版纯比例判定与新版联合判定。
+- value 与 unit 仍为最大异常比例及 ratio；通道数从 details.channel_count 获取。
+- sample_count 沿用被标记的通道样本总数，不是输入帧数。
+- 质量 error 仍允许发布结构有效的 EMG 产物。
+```
+
+## 数据输入
+
+| 名称 | 来源 | dtype | shape | 单位 | 必需 | 说明 |
+| --- | --- | --- | --- | --- | --- | --- |
+| `emg_record` | raw | `NPZ arrays` | `timestamps=[T], emg=[T,16]` | N/A | 是 | 输入校验通过后的原始 emg 数组，在滤波前计算；不读取 emg_raw。 |
+
+## 配置参数
+
+| 名称 | 类型 | 默认值/必需 | 来源 | 说明 |
+| --- | --- | --- | --- | --- |
+| `amplitude_threshold` | `float` | `199000.0` | implementation_constant | 绝对幅值严格大于此值才标记；原始信号使用输入幅值单位，处理后信号单位为 uV。 |
+| `min_run_frames` | `int` | `20` | implementation_constant | 连续至少 20 帧才计入异常比例与通道数。 |
+| `ratio_gt` | `float` | `0.01` | rule_threshold | 最大异常比例严格大于 1% 即 error。 |
+| `channel_count_gt` | `int` | `3` | rule_threshold | 异常通道数严格大于 3 即 error，与比例门限为 OR 关系。 |
+
+## 计算定义
+计算使用 `emg_record`，
+结果类型为 `number`，
+单位为 ratio。
+
+### 计算方法
+
+```text
+hit[c,t] = abs(emg[t,c]) > 199000
+ratio[c] = marked_runs_at_least_20_frames(hit[c]) / T
+value = max(ratio[c])
+channel_count = count(ratio[c] > 0)
+```
+
+- **聚合口径：** 一个 RuleResult；value 为最大比例，details.channel_count 为异常通道数，状态取比例与通道数判定的最高严重度。
+- **无法计算时：** 输入不满足结构或数值前置条件时不执行；preprocess=False 只跳过滤波，仍执行本规则。
+
+
+## 执行关系
+
+**前置质检算子：** 无。
+
+
+**产物影响：** 本规则为 `error` 时，只记录质量异常，不阻止生成结构上有效的产物。
+如果后续处理或写入本身失败，仍可能没有产物；最终事实以 `processed_ok` 与 `artifacts`
+为准。
+
+**相关质检算子：**
+
+- [`emg-scq-001`](../emg/emg-scq-001.md)
+- [`emg-scq-008`](../emg/emg-scq-008.md)
+
+## 输出
+
+| 字段 | 约定 |
+| --- | --- |
+| 实例模型 | `single` |
+| `value` | `number` |
+| `unit` | ratio |
+| `threshold` | `mapping` |
+| `details` | `message`, `category`, `channels`, `channel_ratios`, `channel_count`, `max_ratio`, `ratio_status`, `channel_count_status`, `sample_count`, `min_run_frames`, `amp_threshold_raw`, `saturation_ratio_threshold`, `channel_count_threshold` |
+
+```json
+{
+  "rule_id": "emg-scq-002",
+  "rule_version": "3.0.0",
+  "problem_domain": "signal_channel_quality",
+  "stage": "raw",
+  "status": "warn",
+  "value": 0.005,
+  "unit": "ratio",
+  "threshold": {
+    "warn_gt": 0.0,
+    "error_any": {
+      "ratio_gt": 0.01,
+      "channel_count_gt": 3
+    }
+  },
+  "details": {
+    "amp_threshold_raw": 199000.0,
+    "min_run_frames": 20,
+    "saturation_ratio_threshold": 0.01,
+    "channel_count_threshold": 3,
+    "channels": [
+      0,
+      1,
+      2
+    ],
+    "channel_ratios": {
+      "0": 0.005,
+      "1": 0.005,
+      "2": 0.005
+    },
+    "channel_count": 3,
+    "max_ratio": 0.005,
+    "ratio_status": "warn",
+    "channel_count_status": "warn",
+    "sample_count": 60,
+    "message": "WARN：EMG 原始信号饱和异常；最大比例 0.005 ratio > 0 ratio，异常通道数 3 count",
+    "category": "quality"
+  }
+}
+```
+
+## 失败后建议
+
+1. 对照 details.channels 和 channel_ratios 定位异常通道，检查增益、电极接触与采集干扰。
+2. 结合 ratio_status 与 channel_count_status 区分单通道持续异常和多通道少量异常。
+
+## 来源与维护
+
+- 页面 owner：`data-quality/emg`
+- 所属模态算子：[EMG](../../modality-operators/emg.md)
+- 实现：[operators/fm-emg-operator/src/fm_emg_operator/emg.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/emg.py#L317)
+- 注册：[operators/fm-emg-operator/src/fm_emg_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-emg-operator/src/fm_emg_operator/rules.py#L66)
+- 测试：[operators/fm-emg-operator/tests/test_emg_operator.py::test_combined_amplitude_rule_preserves_both_error_conditions](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-emg-operator/tests/test_emg_operator.py#L316)
+- 计算规范：[docs/quality-rule-calculation-spec.md](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/docs/quality-rule-calculation-spec.md)
+- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator-docs/site/operator-pages/emg/emg-scq-002.yaml#L1)

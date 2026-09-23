@@ -1,0 +1,220 @@
+(force-laq-005)=
+<div class="quality-page-kicker">QUALITY OPERATOR · label_action_quality</div>
+
+# `force-laq-005` — 全程五指受力模式
+
+[所属模态算子：Force](../../modality-operators/force.md)
+
+<div class="quality-meta">
+  <code class="meta-lifecycle is-active">active</code>
+  <code class="meta-artifact is-available">error 时产物可生成</code>
+  <code class="meta-cardinality">multi · finger_group</code>
+  <code class="meta-domain">label_action_quality</code>
+  <code class="meta-stage">raw</code>
+  <code class="meta-version">rule v1.0.0</code>
+  <code class="meta-version">fm-force-label-operator v3.6.0</code>
+</div>
+
+<p class="quality-lead">检查每个传感器/手的五指在整段有效记录中是否命中不通过条件。</p>
+
+## 先看懂这条规则
+
+- **检查什么：** 使用全程绝对 Fz 检查五指最大受力和单指最低受力。
+- **什么情况下不通过：** 五指全程最大力不超过 1 N，或至少一指全程不低于 0.5 N 时为 error。
+
+### 判定标准
+
+| 状态 | 怎么判 |
+| --- | --- |
+| **`pass`** | max_all_fingers_n > 1.0 N 且 max_of_finger_minima_n < 0.5 N。 |
+| **`warn`** | 本规则不使用 warn。 |
+| **`error`** | max_all_fingers_n <= 1.0 N，或 max_of_finger_minima_n >= 0.5 N。 |
+
+**边界怎么算：**
+
+- 1.0 N 是包含上界，恰好等于 1.0 N 时触发第一不通过分支。
+- 0.5 N 是包含下界，恰好等于 0.5 N 时触发第二不通过分支。
+
+
+## 版本历史
+
+| Rule 版本 | 首次对应包版本 | 更新时间 | 变更 | 提交 |
+| --- | --- | --- | --- | --- |
+| `1.0.0` | `3.3.0` | 2026-09-22 13:31:58 | 新增全程五指受力模式指标。[Force Operator 指标修改汇报](https://originflowai.feishu.cn/wiki/MeJwwCTGHiLA0uksgRpciDLfnPe) | [`3c07e4b`](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/3c07e4b9802b5635480d8a35d936a6ed0896fc69) |
+
+仅展示文档 1.0.0 基线之后的变更。
+
+## 计算契约
+
+::::{admonition} 计算契约（不可直接调用）
+:class: quality-contract
+
+```python
+quality.force.force_laq_005(
+    force: numeric[T, 5],
+    timestamps: float64[T],
+    *,
+    high_threshold_n: float = 1.0,
+    low_threshold_n: float = 0.5,
+) -> RuleResult
+```
+::::
+
+::::{div} quality-source-links
+[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-force-label-operator/src/fm_force_label_operator/force_rest_quality.py#L566) ·
+[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-force-label-operator/src/fm_force_label_operator/rules.py#L73) ·
+[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-force-label-operator/tests/test_force_label_operator.py#L773) · [test 2](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-force-label-operator/tests/test_force_label_operator.py#L806) · [test 3](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-force-label-operator/tests/test_force_label_operator.py#L842) ·
+[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/docs/quality-rule-calculation-spec.md#44-%E9%9D%99%E6%81%AF%E7%AA%97%E5%8F%A3%E4%B8%8E%E9%80%9A%E9%81%93%E4%BA%8B%E5%AE%9E)
+::::
+
+```{admonition} 注意
+:class: note
+
+- Fz 以绝对值（N）参与比较，避免坐标方向导致阈值语义反转。
+- 每个传感器/手独立判断；左右手不会合并成一个五指组。
+```
+
+## 数据输入
+
+| 名称 | 来源 | dtype | shape | 单位 | 必需 | 说明 |
+| --- | --- | --- | --- | --- | --- | --- |
+| `force` | raw | `numeric` | `[T, 5]` | N | 是 | 一个传感器/手的五指 Fz，内部按绝对值计算。 |
+| `timestamps` | raw | `float64` | `[T]` | s | 是 | 与每个五指通道等长且通过时间戳校验的时间轴。 |
+
+## 配置参数
+
+| 名称 | 类型 | 默认值/必需 | 来源 | 说明 |
+| --- | --- | --- | --- | --- |
+| `high_threshold_n` | `float` | `1.0` | rule_threshold | 五指最大绝对力的严格上界。 |
+| `low_threshold_n` | `float` | `0.5` | rule_threshold | 至少一根手指全程绝对力的包含下界。 |
+
+## 计算定义
+计算使用 `force`、`timestamps`，
+结果类型为 `boolean`，
+单位为 N/A。
+
+### 计算方法
+
+```text
+max_all = max_i(max_t(abs(force[t,i]))); max_min = max_i(min_t(abs(force[t,i]))); error = (max_all <= 1.0) or (max_min >= 0.5)
+```
+
+- **聚合口径：** 每个传感器/手的五指组独立发布一个实例，整体状态取实例中的最高严重度。
+- **无法计算时：** 缺少五指、存在非有限值或对应时间轴无效时不执行，并记录 skipped_rules。
+
+
+## 执行关系
+
+**前置质检算子：**
+
+- [`force-dsf-003`](../force/force-dsf-003.md)
+- [`force-nva-002`](../force/force-nva-002.md)
+- [`force-tsa-003`](../force/force-tsa-003.md)
+
+**不执行条件：**
+
+- 任一五指组不完整或其 Force 时间轴缺失、无效。
+
+**产物影响：** 本规则为 `error` 时，只记录质量异常，不阻止生成结构上有效的产物。
+如果后续处理或写入本身失败，仍可能没有产物；最终事实以 `processed_ok` 与 `artifacts`
+为准。
+
+**相关质检算子：**
+
+- [`force-laq-002`](../force/force-laq-002.md)
+- [`force-scq-001`](../force/force-scq-001.md)
+
+## 输出
+
+| 字段 | 约定 |
+| --- | --- |
+| 实例模型 | `multi`；实例身份为 `finger_group` 类型的 `(target_type, target_id)` |
+| `value` | `boolean` |
+| `unit` | N/A |
+| `threshold` | `mapping` |
+| `details` | `sensor`, `group`, `force_representation`, `max_all_fingers_n`, `max_of_finger_minima_n`, `all_fingers_never_gt_1n`, `at_least_one_finger_never_lt_0_5n`, `finger_extrema`, `instances` |
+
+```json
+{
+  "rule_id": "force-laq-005",
+  "rule_version": "1.0.0",
+  "problem_domain": "label_action_quality",
+  "stage": "raw",
+  "status": "error",
+  "value": null,
+  "unit": null,
+  "threshold": null,
+  "details": {
+    "instances": [
+      {
+        "target_type": "finger_group",
+        "target_id": "cmcu05b.left",
+        "status": "error",
+        "value": false,
+        "unit": null,
+        "threshold": {
+          "pass_any": {
+            "all_fingers_max_lte_n": 1.0,
+            "any_finger_min_gte_n": 0.5
+          }
+        },
+        "details": {
+          "sensor": "cmcu05b",
+          "group": "cmcu05b.left",
+          "force_representation": "absolute_fz_n",
+          "max_all_fingers_n": 0.8,
+          "max_of_finger_minima_n": 0.2,
+          "all_fingers_never_gt_1n": false,
+          "at_least_one_finger_never_lt_0_5n": false,
+          "finger_extrema": {
+            "left_ch0": {
+              "max_abs_n": 0.8,
+              "min_abs_n": 0.2,
+              "n_samples": 81
+            },
+            "left_ch1": {
+              "max_abs_n": 0.7,
+              "min_abs_n": 0.2,
+              "n_samples": 81
+            },
+            "left_ch2": {
+              "max_abs_n": 0.6,
+              "min_abs_n": 0.2,
+              "n_samples": 81
+            },
+            "left_ch3": {
+              "max_abs_n": 0.5,
+              "min_abs_n": 0.2,
+              "n_samples": 81
+            },
+            "left_ch4": {
+              "max_abs_n": 0.4,
+              "min_abs_n": 0.2,
+              "n_samples": 81
+            }
+          }
+        }
+      }
+    ],
+    "message": "ERROR：cmcu05b.left 不满足全程五指受力条件",
+    "category": "quality"
+  }
+}
+```
+
+## 失败后建议
+
+1. 检查五指传感器是否完整、时间轴是否连续且与标签等长。
+2. 结合 details.finger_extrema 判断是最大力过高还是所有手指都曾降到 0.5 N 以下。
+
+## 来源与维护
+
+- 页面 owner：`data-quality/force`
+- 所属模态算子：[Force](../../modality-operators/force.md)
+- 实现：[operators/fm-force-label-operator/src/fm_force_label_operator/force_rest_quality.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-force-label-operator/src/fm_force_label_operator/force_rest_quality.py#L566)
+- 注册：[operators/fm-force-label-operator/src/fm_force_label_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-force-label-operator/src/fm_force_label_operator/rules.py#L73)
+- 测试：[operators/fm-force-label-operator/tests/test_force_label_operator.py::test_force_full_finger_pattern_rejects_at_strict_boundaries](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-force-label-operator/tests/test_force_label_operator.py#L773)
+- 测试：[operators/fm-force-label-operator/tests/test_force_label_operator.py::test_force_full_finger_pattern_passes_when_both_rejection_branches_fail](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-force-label-operator/tests/test_force_label_operator.py#L806)
+- 测试：[operators/fm-force-label-operator/tests/test_force_label_operator.py::test_force_full_finger_pattern_skips_incomplete_group](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-force-label-operator/tests/test_force_label_operator.py#L842)
+- 计算规范：[docs/quality-rule-calculation-spec.md#44-静息窗口与通道事实](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/docs/quality-rule-calculation-spec.md#44-%E9%9D%99%E6%81%AF%E7%AA%97%E5%8F%A3%E4%B8%8E%E9%80%9A%E9%81%93%E4%BA%8B%E5%AE%9E)
+- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator-docs/site/operator-pages/force/force-laq-005.yaml#L1)

@@ -1,0 +1,69 @@
+<div class="quality-hero-kicker">FM DATA QUALITY · OPERATOR REFERENCE</div>
+
+# FM 质检算子文档
+
+本网站以“模态算子 / 质检算子”两级结构组织 AI Infra Toolbox 的数据处理与质量规则。
+
+<div class="quality-overview" aria-label="文档覆盖概览">
+  <div><strong>7</strong><span>模态算子</span></div>
+  <div><strong>78</strong><span>已注册 Rule ID</span></div>
+  <div><strong>78</strong><span>质检算子页面</span></div>
+</div>
+
+::::{grid} 1 2 2 2
+:gutter: 3
+
+:::{grid-item-card} 模态算子
+:link: modality-operators/index
+:link-type: doc
+
+查看 EMG、IMU、Force、Pose、Vision、Comb Camera 和 Timestamp 的输入、CLI、产物及其质检规则。
+:::
+
+:::{grid-item-card} 质检算子
+:link: quality-operators/index
+:link-type: doc
+
+按 Rule ID、模态、问题域和阶段查找原子质检规则。
+:::
+
+:::{grid-item-card} 如何运行
+:link: getting-started
+:link-type: doc
+
+选择模态算子、准备输入并执行单条记录。
+:::
+
+:::{grid-item-card} 结果契约
+:link: result-contract
+:link-type: doc
+
+理解 `fm-operator-result/v4`、规则事实和 Pipeline 边界。
+:::
+
+:::{grid-item-card} 版本与变更记录
+:link: version-history
+:link-type: doc
+
+查看当前包版本、质检规则版本更新及历史文档快照入口。
+:::
+
+::::
+
+```{admonition} 当前为纵向 MVP
+:class: note
+
+代码已自动发现全部 7 个模态算子和 78 个 Rule ID，并为
+78 个已注册规则提供独立质检算子页面；新增 Rule ID 缺少页面时会使文档检查失败。
+```
+
+```{toctree}
+:hidden:
+:maxdepth: 3
+
+modality-operators/index
+quality-operators/index
+getting-started
+result-contract
+version-history
+```

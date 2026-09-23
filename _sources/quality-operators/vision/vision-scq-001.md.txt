@@ -1,0 +1,164 @@
+(vision-scq-001)=
+<div class="quality-page-kicker">QUALITY OPERATOR · signal_channel_quality</div>
+
+# `vision-scq-001` — 双目标定
+
+[所属模态算子：Vision](../../modality-operators/vision.md)
+
+<div class="quality-meta">
+  <code class="meta-lifecycle is-active">active</code>
+  <code class="meta-artifact is-available">error 时产物可生成</code>
+  <code class="meta-cardinality">single</code>
+  <code class="meta-domain">signal_channel_quality</code>
+  <code class="meta-stage">raw</code>
+  <code class="meta-version">rule v1.1.0</code>
+  <code class="meta-version">fm-vision-operator v0.9.0</code>
+</div>
+
+<p class="quality-lead">检查左右眼校正前后水平焦距的最大相对偏差，以及标定字段的有效性。</p>
+
+## 先看懂这条规则
+
+- **检查什么：** 比较双目相机左右眼原始内参 K 与校正后投影矩阵 P 的水平焦距比例，取最大相对偏差。
+- **什么情况下不通过：** 偏差达到 8% 会告警，超过 20% 会失败；标定缺失或焦距字段非法也会失败，需要复核标定和校正配置。
+
+### 判定标准
+
+| 状态 | 怎么判 |
+| --- | --- |
+| **`pass`** | 标定字段有效，且最大相对偏差 <0.08 |
+| **`warn`** | 标定字段有效，且 0.08 <= value <= 0.20 |
+| **`error`** | value >0.20，或标定 attachment / 必需字段缺失、焦距不是有限正数 |
+
+**边界怎么算：**
+
+- 恰好 8% 或 20% 均为 warn。
+
+### 具体检查项
+
+1. 从标定 attachment 读取有限正数 `K1[0][0]`、`K2[0][0]`、`P1[0][0]` 和 `P2[0][0]`。
+2. 分别计算 `abs(P1_fx/K1_fx-1)` 与 `abs(P2_fx/K2_fx-1)`，取两者最大值作为双目焦距比例偏差。
+3. 偏差 `<0.08` 为 pass、`0.08..0.20` 为 warn、`>0.20` 为 error；attachment 或字段非法直接 error。
+
+## 版本历史
+
+| Rule 版本 | 首次对应包版本 | 更新时间 | 变更 | 提交 |
+| --- | --- | --- | --- | --- |
+| — | — | — | 尚无基线后的版本变更 | — |
+
+仅展示文档 1.0.0 基线之后的变更。
+
+## 计算契约
+
+::::{admonition} 计算契约（不可直接调用）
+:class: quality-contract
+
+```python
+quality.vision.vision_scq_001(
+    video_stream: MCAP/protobuf messages=[T], decoded_frames=[T,H,W,C],
+    *,
+    warn_gte: float = 0.08,
+    error_gt: float = 0.2,
+) -> RuleResult
+```
+::::
+
+::::{div} quality-source-links
+[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/vision.py#L473) ·
+[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/rules.py#L68) ·
+[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-vision-operator/tests/test_vision_operator.py#L302) ·
+[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/docs/quality-rule-calculation-spec.md)
+::::
+
+```{admonition} 注意
+:class: note
+
+- 规则阶段为 raw；总状态只取已执行规则的最高严重度。
+- 质量或数据异常由 RuleResult 明确记录且进程返回 0；只有运行配置错误返回 1。
+- 这里只校验水平焦距比例和必需标定字段；没有检验完整重投影误差、基线或畸变，pass 不代表整套双目几何已验证。
+```
+
+## 数据输入
+
+| 名称 | 来源 | dtype | shape | 单位 | 必需 | 说明 |
+| --- | --- | --- | --- | --- | --- | --- |
+| `video_stream` | raw | `MCAP/protobuf` | `messages=[T], decoded_frames=[T,H,W,C]` | N/A | 是 | 选定视频 topic、消息索引、标定和解码帧。 |
+
+## 配置参数
+
+| 名称 | 类型 | 默认值/必需 | 来源 | 说明 |
+| --- | --- | --- | --- | --- |
+| `warn_gte` | `float` | `0.08` | rule_threshold | 标定字段有效时，value 大于或等于 0.08（8%）时至少为 warn。 |
+| `error_gt` | `float` | `0.2` | rule_threshold | 标定字段有效时，value 严格大于 0.20（20%）时为 error。 |
+
+## 校验逻辑
+
+## 执行关系
+
+**前置质检算子：** 无。
+
+
+**产物影响：** 本规则为 `error` 时，只记录质量异常，不阻止生成结构上有效的产物。
+如果后续处理或写入本身失败，仍可能没有产物；最终事实以 `processed_ok` 与 `artifacts`
+为准。
+
+**相关质检算子：**
+
+- [`vision-scq-002`](../vision/vision-scq-002.md)
+
+## 输出
+
+| 字段 | 约定 |
+| --- | --- |
+| 实例模型 | `single` |
+| `value` | `number` 或 `null` |
+| `unit` | ratio |
+| `threshold` | `mapping` |
+| `details` | `message`, `category`, `attachment`, `k1_fx`, `k2_fx`, `p1_fx`, `p2_fx`, `p1_fx_over_k1_fx`, `p2_fx_over_k2_fx`, `p1_relative_deviation`, `p2_relative_deviation`, `max_abs_p_over_k_deviation`, `warning_deviation`, `error_deviation` |
+
+```json
+{
+  "rule_id": "vision-scq-001",
+  "rule_version": "1.1.0",
+  "problem_domain": "signal_channel_quality",
+  "stage": "raw",
+  "status": "warn",
+  "value": 0.10000000000000009,
+  "unit": "ratio",
+  "threshold": {
+    "warn_gte": 0.08,
+    "error_gt": 0.2
+  },
+  "details": {
+    "attachment": "/camera/head/image_calibration.json",
+    "p1_fx_over_k1_fx": 1.1,
+    "p2_fx_over_k2_fx": 1.05,
+    "p1_relative_deviation": 0.10000000000000009,
+    "p2_relative_deviation": 0.050000000000000044,
+    "max_abs_p_over_k_deviation": 0.10000000000000009,
+    "warning_deviation": 0.08,
+    "error_deviation": 0.2,
+    "k1_fx": 1000.0,
+    "k2_fx": 1000.0,
+    "p1_fx": 1100.0,
+    "p2_fx": 1050.0,
+    "message": "WARN：双目标定最大相对偏差 0.1 ratio >= 0.08 ratio",
+    "category": "quality"
+  }
+}
+```
+
+## 失败后建议
+
+1. 对比 details.p1_relative_deviation 与 p2_relative_deviation，核对标定是否匹配本次相机和分辨率。
+2. 检查标定 attachment 及 K1/K2/P1/P2 水平焦距字段；复核校正配置后重跑。
+
+## 来源与维护
+
+- 页面 owner：`data-quality/vision`
+- 所属模态算子：[Vision](../../modality-operators/vision.md)
+- 实现：[operators/fm-vision-operator/src/fm_vision_operator/vision.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/vision.py#L473)
+- 注册：[operators/fm-vision-operator/src/fm_vision_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-vision-operator/src/fm_vision_operator/rules.py#L68)
+- 测试：[operators/fm-vision-operator/tests/test_vision_operator.py::test_rule_registry_is_unique_and_rejects_foreign_rule](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-vision-operator/tests/test_vision_operator.py#L302)
+- 计算规范：[docs/quality-rule-calculation-spec.md](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/docs/quality-rule-calculation-spec.md)
+- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator-docs/site/operator-pages/vision/vision-scq-001.yaml#L1)

@@ -1,0 +1,26 @@
+# 模态算子
+
+模态算子是安装、部署和 Pipeline 调用边界；每个模态算子包含多条原子质检算子。
+
+| 模态算子 | 范围 | 包版本 | 质检算子数 | 输入边界 |
+| --- | --- | ---: | ---: | --- |
+| [EMG](emg.md) | `unimodal` | `0.17.0` | 16 | 一个原始 EMG NPZ |
+| [IMU](imu.md) | `unimodal` | `0.14.0` | 9 | 一个原始 IMU NPZ |
+| [Force](force.md) | `unimodal` | `3.6.0` | 12 | 一个原始 Force NPZ |
+| [Pose](pose.md) | `unimodal` | `0.16.0` | 13 | 一个原始 Pose NPZ |
+| [Vision](vision.md) | `unimodal` | `0.9.0` | 14 | 一个包含目标视频流的 MCAP |
+| [Comb Camera](comb_camera.md) | `unimodal` | `0.4.0` | 8 | 一个包含固定八路相机 topic 的 MCAP |
+| [Timestamp](timestamp.md) | `multimodal` | `0.15.0` | 6 | 一个或多个已处理模态 NPZ |
+
+```{toctree}
+:hidden:
+:maxdepth: 2
+
+emg
+imu
+force
+pose
+vision
+comb_camera
+timestamp
+```

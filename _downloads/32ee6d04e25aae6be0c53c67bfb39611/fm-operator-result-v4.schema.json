@@ -1,0 +1,155 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://originflow.ai/schemas/fm-operator-result-v4.schema.json",
+  "title": "FM operator result v4",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "operator_version",
+    "domain",
+    "status",
+    "processed_ok",
+    "rule_results",
+    "summary",
+    "alignment",
+    "artifacts"
+  ],
+  "properties": {
+    "schema_version": {"const": "fm-operator-result/v4"},
+    "operator_version": {"type": "string"},
+    "domain": {"enum": ["emg", "imu", "force", "pose", "vision", "comb_camera", "timestamp"]},
+    "status": {"enum": ["good", "warning", "bad"]},
+    "processed_ok": {"type": "boolean"},
+    "rule_results": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/ruleResult"}
+    },
+    "summary": {
+      "type": "object",
+      "properties": {
+        "skipped_rules": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/skippedRule"}
+        }
+      },
+      "additionalProperties": true
+    },
+    "alignment": {"type": "object"},
+    "artifacts": {
+      "type": "object",
+      "additionalProperties": {"$ref": "#/$defs/artifact"}
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "artifact": {
+      "type": "object",
+      "required": ["path", "kind", "fields"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "kind": {"type": "string", "minLength": 1},
+        "fields": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": false
+    },
+    "skippedRule": {
+      "type": "object",
+      "required": ["rule_id", "reason"],
+      "properties": {
+        "rule_id": {"$ref": "#/$defs/ruleId"},
+        "reason": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "ruleId": {
+      "type": "string",
+      "pattern": "^(emg|imu|force|pose|vision|comb_camera|timestamp)-(idc|dsf|tsa|dcr|nva|scq|laq|ppa)-[0-9]{3}$"
+    },
+    "ruleResult": {
+      "type": "object",
+      "required": [
+        "rule_id",
+        "rule_version",
+        "problem_domain",
+        "stage",
+        "status",
+        "value",
+        "unit",
+        "threshold",
+        "details"
+      ],
+      "properties": {
+        "rule_id": {
+          "type": "string",
+          "pattern": "^(emg|imu|force|pose|vision|comb_camera|timestamp)-(idc|dsf|tsa|dcr|nva|scq|laq|ppa)-[0-9]{3}$"
+        },
+        "rule_version": {"type": "string", "minLength": 1},
+        "problem_domain": {
+          "enum": [
+            "input_device_compatibility",
+            "data_structure_format",
+            "time_sample_alignment",
+            "duration_coverage",
+            "numeric_validity",
+            "signal_channel_quality",
+            "label_action_quality",
+            "processing_artifact_anomaly"
+          ]
+        },
+        "stage": {"type": "string", "minLength": 1},
+        "status": {"enum": ["pass", "warn", "error"]},
+        "value": {},
+        "unit": {"type": ["string", "null"]},
+        "threshold": {},
+        "details": {"$ref": "#/$defs/details"}
+      },
+      "additionalProperties": false
+    },
+    "details": {
+      "type": "object",
+      "properties": {
+        "message": {"type": "string", "minLength": 1},
+        "category": {
+          "enum": [
+            "input",
+            "schema",
+            "alignment",
+            "quality",
+            "conversion",
+            "artifact",
+            "runtime"
+          ]
+        },
+        "instances": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/instance"}
+        }
+      },
+      "additionalProperties": true
+    },
+    "instance": {
+      "type": "object",
+      "required": [
+        "target_type",
+        "target_id",
+        "status",
+        "value",
+        "unit",
+        "threshold",
+        "details"
+      ],
+      "properties": {
+        "target_type": {"type": "string", "minLength": 1},
+        "target_id": {"type": "string", "minLength": 1},
+        "status": {"enum": ["pass", "warn", "error"]},
+        "value": {},
+        "unit": {"type": ["string", "null"]},
+        "threshold": {},
+        "details": {"type": "object"}
+      },
+      "additionalProperties": false
+    }
+  }
+}

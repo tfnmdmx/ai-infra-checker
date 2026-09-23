@@ -1,0 +1,93 @@
+(comb_camera-modality-operator)=
+<div class="quality-page-kicker">MODALITY OPERATOR · unimodal</div>
+
+# Comb Camera 模态算子
+
+<p class="quality-lead">检查八路相机文件是否完整、视频能否解码、是否丢帧，以及所有画面能否按时间正确配对。</p>
+
+<div class="quality-meta">
+  <code class="meta-kind">fm-comb-camera-operator</code>
+  <code class="meta-version">v0.4.0</code>
+  <code class="meta-stage">unimodal</code>
+  <code class="meta-domain">8 quality operators</code>
+</div>
+
+
+| 属性 | 值 |
+| --- | --- |
+| 包名 | `fm-comb-camera-operator` |
+| 包版本 | `0.4.0` |
+| 输入边界 | 一个包含固定八路相机 topic 的 MCAP |
+| 默认产物 | `<work-dir>/comb_camera/processed.npz` |
+| 质检算子数 | 8 |
+
+## 包版本历史
+
+| 包版本 | 更新时间 | 变更 | 提交 |
+| --- | --- | --- | --- |
+| `0.4.0` | 2026-09-21 19:53:06 | 新增八目合并标定文件时效检查，校验采集参考时间与标定生成时间的间隔不超过 48 小时。[八目标定文件时效 Checker 开发汇报](https://originflowai.feishu.cn/wiki/R18ow7j6LirieQkuQp1cZmlAnJf) | [`493802c`](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/493802c115ce3b826e8622b7855027170b702d1a) |
+
+仅展示文档 1.0.0 基线之后的变更。
+
+## 使用入口
+
+```bash
+fm-comb-camera-operator --help
+```
+
+::::{div} quality-source-links
+[查看完整使用手册](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/docs/operator-user-guide.md#6-comb-camera-operator) · [查看 GitHub 包源码](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/tree/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-comb-camera-operator)
+::::
+
+## 质检算子
+
+### IDC · 输入/设备兼容性
+
+::::{div} modality-rule-table
+| Rule ID | 名称 | error 时产物 | 实例 | 阶段 | 版本 |
+| --- | --- | --- | --- | --- | --- |
+| <span id="catalog-comb_camera-idc-001"></span>`comb_camera-idc-001` | [相机文件能否完整读取且八路齐全](../quality-operators/comb_camera/comb_camera-idc-001.md) | 无法生成 | `single` | `raw` | `1.0.0` |
+::::
+
+### DSF · 数据结构/格式
+
+::::{div} modality-rule-table
+| Rule ID | 名称 | error 时产物 | 实例 | 阶段 | 版本 |
+| --- | --- | --- | --- | --- | --- |
+| <span id="catalog-comb_camera-dsf-001"></span>`comb_camera-dsf-001` | [每路视频能否逐帧完整解码](../quality-operators/comb_camera/comb_camera-dsf-001.md) | 无法生成 | `multi` · `camera` | `raw` | `1.0.0` |
+::::
+
+### TSA · 时间/样本对齐
+
+::::{div} modality-rule-table
+| Rule ID | 名称 | error 时产物 | 实例 | 阶段 | 版本 |
+| --- | --- | --- | --- | --- | --- |
+| <span id="catalog-comb_camera-tsa-001"></span>`comb_camera-tsa-001` | [每路相机是否丢帧或时间倒退](../quality-operators/comb_camera/comb_camera-tsa-001.md) | 无法生成 | `multi` · `camera` | `raw` | `2.0.0` |
+| <span id="catalog-comb_camera-tsa-002"></span>`comb_camera-tsa-002` | [八路画面是否全部同步配对成功](../quality-operators/comb_camera/comb_camera-tsa-002.md) | 可生成 | `single` | `raw` | `2.0.0` |
+| <span id="catalog-comb_camera-tsa-003"></span>`comb_camera-tsa-003` | [标定文件是否在采集前 48 小时内生成](../quality-operators/comb_camera/comb_camera-tsa-003.md) | 可生成 | `single` | `raw` | `1.0.0` |
+::::
+
+### SCQ · 信号/通道质量
+
+::::{div} modality-rule-table
+| Rule ID | 名称 | error 时产物 | 实例 | 阶段 | 版本 |
+| --- | --- | --- | --- | --- | --- |
+| <span id="catalog-comb_camera-scq-001"></span>`comb_camera-scq-001` | [每路画面是否带有有效时间校准信息](../quality-operators/comb_camera/comb_camera-scq-001.md) | 可生成 | `multi` · `camera` | `raw` | `1.0.0` |
+::::
+
+### PPA · 处理/产物异常
+
+::::{div} modality-rule-table
+| Rule ID | 名称 | error 时产物 | 实例 | 阶段 | 版本 |
+| --- | --- | --- | --- | --- | --- |
+| <span id="catalog-comb_camera-ppa-001"></span>`comb_camera-ppa-001` | [相机检查程序是否完整运行](../quality-operators/comb_camera/comb_camera-ppa-001.md) | 可生成 | `multi` · `check` | `raw_to_processed` | `1.0.0` |
+| <span id="catalog-comb_camera-ppa-002"></span>`comb_camera-ppa-002` | [配对索引文件能否正确保存](../quality-operators/comb_camera/comb_camera-ppa-002.md) | 无法生成 | `single` | `artifact` | `1.0.0` |
+::::
+
+
+```{admonition} 文档覆盖说明
+:class: note
+
+“待补充”表示 Rule ID 已在代码中注册，但尚未完成独立质检算子页面；它不表示规则未实现或
+执行时会被跳过。
+```
