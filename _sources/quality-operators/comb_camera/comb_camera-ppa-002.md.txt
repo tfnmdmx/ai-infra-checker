@@ -62,10 +62,10 @@ quality.comb_camera.comb_camera_ppa_002(
 ::::
 
 ::::{div} quality-source-links
-[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-comb-camera-operator/src/fm_comb_camera_operator/comb_camera.py#L418) ·
-[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-comb-camera-operator/src/fm_comb_camera_operator/rules.py#L57) ·
-[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-comb-camera-operator/tests/test_comb_camera_operator.py#L629) ·
-[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/docs/quality-rule-calculation-spec.md#74-%E5%85%AB%E7%9B%AE%E6%9C%80%E8%BF%91%E6%97%B6%E9%97%B4%E9%85%8D%E5%AF%B9)
+[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-comb-camera-operator/src/fm_comb_camera_operator/comb_camera.py#L418) ·
+[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-comb-camera-operator/src/fm_comb_camera_operator/rules.py#L57) ·
+[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-comb-camera-operator/tests/test_comb_camera_operator.py#L629) ·
+[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/docs/quality-rule-calculation-spec.md#74-%E5%85%AB%E7%9B%AE%E6%9C%80%E8%BF%91%E6%97%B6%E9%97%B4%E9%85%8D%E5%AF%B9)
 ::::
 
 ```{admonition} 注意
@@ -144,8 +144,8 @@ quality.comb_camera.comb_camera_ppa_002(
 
 - 页面 owner：`data-quality/comb-camera`
 - 所属模态算子：[Comb Camera](../../modality-operators/comb_camera.md)
-- 实现：[operators/fm-comb-camera-operator/src/fm_comb_camera_operator/comb_camera.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-comb-camera-operator/src/fm_comb_camera_operator/comb_camera.py#L418)
-- 注册：[operators/fm-comb-camera-operator/src/fm_comb_camera_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-comb-camera-operator/src/fm_comb_camera_operator/rules.py#L57)
-- 测试：[operators/fm-comb-camera-operator/tests/test_comb_camera_operator.py::test_artifact_write_failure_is_structured_error](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-comb-camera-operator/tests/test_comb_camera_operator.py#L629)
-- 计算规范：[docs/quality-rule-calculation-spec.md#74-八目最近时间配对](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/docs/quality-rule-calculation-spec.md#74-%E5%85%AB%E7%9B%AE%E6%9C%80%E8%BF%91%E6%97%B6%E9%97%B4%E9%85%8D%E5%AF%B9)
-- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator-docs/site/operator-pages/comb_camera/comb_camera-ppa-002.yaml#L1)
+- 实现：[operators/fm-comb-camera-operator/src/fm_comb_camera_operator/comb_camera.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-comb-camera-operator/src/fm_comb_camera_operator/comb_camera.py#L418)
+- 注册：[operators/fm-comb-camera-operator/src/fm_comb_camera_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-comb-camera-operator/src/fm_comb_camera_operator/rules.py#L57)
+- 测试：[operators/fm-comb-camera-operator/tests/test_comb_camera_operator.py::test_artifact_write_failure_is_structured_error](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-comb-camera-operator/tests/test_comb_camera_operator.py#L629)
+- 计算规范：[docs/quality-rule-calculation-spec.md#74-八目最近时间配对](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/docs/quality-rule-calculation-spec.md#74-%E5%85%AB%E7%9B%AE%E6%9C%80%E8%BF%91%E6%97%B6%E9%97%B4%E9%85%8D%E5%AF%B9)
+- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator-docs/site/operator-pages/comb_camera/comb_camera-ppa-002.yaml#L1)

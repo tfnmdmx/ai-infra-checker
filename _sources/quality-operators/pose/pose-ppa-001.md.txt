@@ -60,10 +60,10 @@ quality.pose.pose_ppa_001(
 ::::
 
 ::::{div} quality-source-links
-[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-pose-label-operator/src/fm_pose_label_operator/pose_label.py#L200) ·
-[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-pose-label-operator/src/fm_pose_label_operator/rules.py#L65) ·
-[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-pose-label-operator/tests/test_pose_label_operator.py#L924) ·
-[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/docs/quality-rule-calculation-spec.md)
+[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-pose-label-operator/src/fm_pose_label_operator/pose_label.py#L200) ·
+[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-pose-label-operator/src/fm_pose_label_operator/rules.py#L65) ·
+[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-pose-label-operator/tests/test_pose_label_operator.py#L924) ·
+[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/docs/quality-rule-calculation-spec.md)
 ::::
 
 ```{admonition} 注意
@@ -133,8 +133,8 @@ quality.pose.pose_ppa_001(
 
 - 页面 owner：`data-quality/pose`
 - 所属模态算子：[Pose](../../modality-operators/pose.md)
-- 实现：[operators/fm-pose-label-operator/src/fm_pose_label_operator/pose_label.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-pose-label-operator/src/fm_pose_label_operator/pose_label.py#L200)
-- 注册：[operators/fm-pose-label-operator/src/fm_pose_label_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-pose-label-operator/src/fm_pose_label_operator/rules.py#L65)
-- 测试：[operators/fm-pose-label-operator/tests/test_pose_label_operator.py::test_pose_execution_failures_do_not_publish_artifact](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-pose-label-operator/tests/test_pose_label_operator.py#L924)
-- 计算规范：[docs/quality-rule-calculation-spec.md](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/docs/quality-rule-calculation-spec.md)
-- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator-docs/site/operator-pages/pose/pose-ppa-001.yaml#L1)
+- 实现：[operators/fm-pose-label-operator/src/fm_pose_label_operator/pose_label.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-pose-label-operator/src/fm_pose_label_operator/pose_label.py#L200)
+- 注册：[operators/fm-pose-label-operator/src/fm_pose_label_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-pose-label-operator/src/fm_pose_label_operator/rules.py#L65)
+- 测试：[operators/fm-pose-label-operator/tests/test_pose_label_operator.py::test_pose_execution_failures_do_not_publish_artifact](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-pose-label-operator/tests/test_pose_label_operator.py#L924)
+- 计算规范：[docs/quality-rule-calculation-spec.md](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/docs/quality-rule-calculation-spec.md)
+- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator-docs/site/operator-pages/pose/pose-ppa-001.yaml#L1)

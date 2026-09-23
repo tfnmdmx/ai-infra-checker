@@ -61,10 +61,10 @@ quality.force.force_nva_002(
 ::::
 
 ::::{div} quality-source-links
-[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-force-label-operator/src/fm_force_label_operator/force_label.py#L203) ·
-[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-force-label-operator/src/fm_force_label_operator/rules.py#L59) ·
-[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-force-label-operator/tests/test_force_label_operator.py#L1254) ·
-[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/docs/quality-rule-calculation-spec.md)
+[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-force-label-operator/src/fm_force_label_operator/force_label.py#L203) ·
+[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-force-label-operator/src/fm_force_label_operator/rules.py#L59) ·
+[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-force-label-operator/tests/test_force_label_operator.py#L1254) ·
+[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/docs/quality-rule-calculation-spec.md)
 ::::
 
 ```{admonition} 注意
@@ -148,8 +148,8 @@ quality.force.force_nva_002(
 
 - 页面 owner：`data-quality/force`
 - 所属模态算子：[Force](../../modality-operators/force.md)
-- 实现：[operators/fm-force-label-operator/src/fm_force_label_operator/force_label.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-force-label-operator/src/fm_force_label_operator/force_label.py#L203)
-- 注册：[operators/fm-force-label-operator/src/fm_force_label_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-force-label-operator/src/fm_force_label_operator/rules.py#L59)
-- 测试：[operators/fm-force-label-operator/tests/test_force_label_operator.py::test_force_input_contract_failures_use_specific_rules](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-force-label-operator/tests/test_force_label_operator.py#L1254)
-- 计算规范：[docs/quality-rule-calculation-spec.md](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/docs/quality-rule-calculation-spec.md)
-- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator-docs/site/operator-pages/force/force-nva-002.yaml#L1)
+- 实现：[operators/fm-force-label-operator/src/fm_force_label_operator/force_label.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-force-label-operator/src/fm_force_label_operator/force_label.py#L203)
+- 注册：[operators/fm-force-label-operator/src/fm_force_label_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-force-label-operator/src/fm_force_label_operator/rules.py#L59)
+- 测试：[operators/fm-force-label-operator/tests/test_force_label_operator.py::test_force_input_contract_failures_use_specific_rules](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-force-label-operator/tests/test_force_label_operator.py#L1254)
+- 计算规范：[docs/quality-rule-calculation-spec.md](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/docs/quality-rule-calculation-spec.md)
+- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator-docs/site/operator-pages/force/force-nva-002.yaml#L1)

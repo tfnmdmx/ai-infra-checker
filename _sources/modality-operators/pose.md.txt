@@ -36,7 +36,7 @@ fm-pose-label-operator --help
 ```
 
 ::::{div} quality-source-links
-[查看完整使用手册](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/docs/operator-user-guide.md#4-pose-label-operator) · [查看 GitHub 包源码](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/tree/9a855731b2cc7bb3ef2f7bd67f47450962400511/QC-operator/operators/fm-pose-label-operator)
+[查看完整使用手册](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/docs/operator-user-guide.md#4-pose-label-operator) · [查看 GitHub 包源码](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/tree/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-pose-label-operator)
 ::::
 
 ## 质检算子
