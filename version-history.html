@@ -438,7 +438,7 @@
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="modality-operators/imu.html"><span class="std std-doc">IMU</span></a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">fm-imu-operator</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">0.14.0</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">0.15.0</span></code></p></td>
 <td class="text-right"><p>9</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="modality-operators/force.html"><span class="std std-doc">Force</span></a></p></td>
@@ -482,61 +482,67 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>2026-09-22 21:26:08</p></td>
+<tr class="row-even"><td><p>2026-09-24 21:51:33</p></td>
+<td><p><a class="reference internal" href="modality-operators/imu.html"><span class="std std-doc">IMU</span></a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">0.15.0</span></code></p></td>
+<td><p>将磁力计数据改为可选；仅包含加速度计和陀螺仪的六轴输入也可完成质检并生成产物。<a class="reference external" href="https://originflowai.feishu.cn/wiki/UB5fwWtIWiMVgbkUtylcYgDpnyo">Force / IMU Operator 回归测试报告</a></p></td>
+<td><p><a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/5b5cc0e52aa99b9ee4498379248dbcbf6aa65cbb"><code class="docutils literal notranslate"><span class="pre">5b5cc0e</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>2026-09-22 21:26:08</p></td>
 <td><p><a class="reference internal" href="modality-operators/force.html"><span class="std std-doc">Force</span></a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">3.6.0</span></code></p></td>
 <td><p>删除 Gen3 的 force-laq-002 warn 级别，p95/std 不再触发 warn。</p></td>
 <td><p><a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/21fb32aa792280ec63c0ccaae8e2417202acc81b"><code class="docutils literal notranslate"><span class="pre">21fb32a</span></code></a></p></td>
 </tr>
-<tr class="row-odd"><td><p>2026-09-22 21:26:08</p></td>
+<tr class="row-even"><td><p>2026-09-22 21:26:08</p></td>
 <td><p><a class="reference internal" href="modality-operators/force.html"><span class="std std-doc">Force</span></a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">3.5.0</span></code></p></td>
 <td><p>force-laq-002 的 Gen3 静息均值 error 门槛从 0.50 N 提高到 1.00 N，p95/std 不单独升级为 error。</p></td>
 <td><p><a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/21fb32aa792280ec63c0ccaae8e2417202acc81b"><code class="docutils literal notranslate"><span class="pre">21fb32a</span></code></a></p></td>
 </tr>
-<tr class="row-even"><td><p>2026-09-22 20:41:07</p></td>
+<tr class="row-odd"><td><p>2026-09-22 20:41:07</p></td>
 <td><p><a class="reference internal" href="modality-operators/force.html"><span class="std std-doc">Force</span></a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">3.4.0</span></code></p></td>
 <td><p>force-tsa-005 最大连续缺口达到 4 个期望周期时仅判为 warn，不再设置 error。</p></td>
 <td><p><a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/90a751126816063fd33c53ccd3353c25772a4e28"><code class="docutils literal notranslate"><span class="pre">90a7511</span></code></a></p></td>
 </tr>
-<tr class="row-odd"><td><p>2026-09-22 13:31:58</p></td>
+<tr class="row-even"><td><p>2026-09-22 13:31:58</p></td>
 <td><p><a class="reference internal" href="modality-operators/force.html"><span class="std std-doc">Force</span></a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">3.3.0</span></code></p></td>
 <td><p>新增 force-laq-005，全程五指受力模式检查。<a class="reference external" href="https://originflowai.feishu.cn/wiki/MeJwwCTGHiLA0uksgRpciDLfnPe">Force Operator 指标修改汇报</a></p></td>
 <td><p><a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/3c07e4b9802b5635480d8a35d936a6ed0896fc69"><code class="docutils literal notranslate"><span class="pre">3c07e4b</span></code></a></p></td>
 </tr>
-<tr class="row-even"><td><p>2026-09-21 19:53:06</p></td>
+<tr class="row-odd"><td><p>2026-09-21 19:53:06</p></td>
 <td><p><a class="reference internal" href="modality-operators/comb_camera.html"><span class="std std-doc">Comb Camera</span></a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">0.4.0</span></code></p></td>
 <td><p>新增八目合并标定文件时效检查，校验采集参考时间与标定生成时间的间隔不超过 48 小时。<a class="reference external" href="https://originflowai.feishu.cn/wiki/R18ow7j6LirieQkuQp1cZmlAnJf">八目标定文件时效 Checker 开发汇报</a></p></td>
 <td><p><a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/493802c115ce3b826e8622b7855027170b702d1a"><code class="docutils literal notranslate"><span class="pre">493802c</span></code></a></p></td>
 </tr>
-<tr class="row-odd"><td><p>2026-09-16 17:14:09</p></td>
+<tr class="row-even"><td><p>2026-09-16 17:14:09</p></td>
 <td><p><a class="reference internal" href="modality-operators/force.html"><span class="std std-doc">Force</span></a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">3.2.0</span></code></p></td>
 <td><p>force-tsa-005 仅在最大连续缺口达到四个周期且累计净缺失比例超过 1% 时判为 error。</p></td>
 <td><p><a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/b8654d808b777d1f6a0182de078e5431e6009d05"><code class="docutils literal notranslate"><span class="pre">b8654d8</span></code></a></p></td>
 </tr>
-<tr class="row-even"><td><p>2026-09-16 16:29:24</p></td>
+<tr class="row-odd"><td><p>2026-09-16 16:29:24</p></td>
 <td><p><a class="reference internal" href="modality-operators/force.html"><span class="std std-doc">Force</span></a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">3.1.0</span></code></p></td>
 <td><p>将 force-laq-002 的静息受力统计窗口从前 5 秒改为前 3 秒，均值、p95、std 阈值不变。</p></td>
 <td><p><a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/95f51400b3a2c8a4e2fbd800f65d2283e9a7ef35"><code class="docutils literal notranslate"><span class="pre">95f5140</span></code></a></p></td>
 </tr>
-<tr class="row-odd"><td><p>2026-09-16 11:36:12</p></td>
+<tr class="row-even"><td><p>2026-09-16 11:36:12</p></td>
 <td><p><a class="reference internal" href="modality-operators/force.html"><span class="std std-doc">Force</span></a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">3.0.0</span></code></p></td>
 <td><p>移除 Force adapter，由字段名选择 CMCU05/CMCU05B 或 Gen3；所有输入执行静息检查，CMCU 9 列输入直接取前 5 列，并删除 force-idc-005。</p></td>
 <td><p><a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/b3e1f07698c7307af6f19f88eb9997cdc73fbc4e"><code class="docutils literal notranslate"><span class="pre">b3e1f07</span></code></a></p></td>
 </tr>
-<tr class="row-even"><td><p>2026-09-15 21:39:58</p></td>
+<tr class="row-odd"><td><p>2026-09-15 21:39:58</p></td>
 <td><p><a class="reference internal" href="modality-operators/emg.html"><span class="std std-doc">EMG</span></a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">0.17.0</span></code></p></td>
 <td><p>将 EMG 采样率偏差告警阈值从 0.1% 调整为 0.2%，失败阈值保持 0.5%。 <a class="reference external" href="https://originflowai.feishu.cn/wiki/KBdCwyQjsiFlEyky4ysc4Z0mnqg">阈值统计依据</a>。</p></td>
 <td><p><a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/46829517fc715a059b316486f7d2f454e46c95e8"><code class="docutils literal notranslate"><span class="pre">4682951</span></code></a></p></td>
 </tr>
-<tr class="row-odd"><td><p>2026-09-15 21:39:58</p></td>
+<tr class="row-even"><td><p>2026-09-15 21:39:58</p></td>
 <td><p><a class="reference internal" href="modality-operators/imu.html"><span class="std std-doc">IMU</span></a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">0.14.0</span></code></p></td>
 <td><p>将 IMU 采样率偏差告警阈值从 1% 调整为 2%，失败阈值保持 5%。 <a class="reference external" href="https://originflowai.feishu.cn/wiki/KBdCwyQjsiFlEyky4ysc4Z0mnqg">阈值统计依据</a>。</p></td>
@@ -560,77 +566,84 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>2026-09-22 21:26:08</p></td>
+<tr class="row-even"><td><p>2026-09-24 21:51:33</p></td>
+<td><p><a class="reference internal" href="quality-operators/imu/imu-idc-001.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">imu-idc-001</span></code></span></a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">2.0.0</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">0.15.0</span></code></p></td>
+<td><p>将磁力计字段改为可选；缺少磁力计不再触发本规则，缺少加速度计或陀螺仪仍为 error。<a class="reference external" href="https://originflowai.feishu.cn/wiki/UB5fwWtIWiMVgbkUtylcYgDpnyo">Force / IMU Operator 回归测试报告</a></p></td>
+<td><p><a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/5b5cc0e52aa99b9ee4498379248dbcbf6aa65cbb"><code class="docutils literal notranslate"><span class="pre">5b5cc0e</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>2026-09-22 21:26:08</p></td>
 <td><p><a class="reference internal" href="quality-operators/force/force-laq-002.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">force-laq-002</span></code></span></a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">8.0.0</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">3.6.0</span></code></p></td>
 <td><p>删除 Gen3 的均值、p95、std warn 级别，仅保留均值超过 1.00 N 的 error。</p></td>
 <td><p><a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/21fb32aa792280ec63c0ccaae8e2417202acc81b"><code class="docutils literal notranslate"><span class="pre">21fb32a</span></code></a></p></td>
 </tr>
-<tr class="row-odd"><td><p>2026-09-22 20:41:07</p></td>
+<tr class="row-even"><td><p>2026-09-22 20:41:07</p></td>
 <td><p><a class="reference internal" href="quality-operators/force/force-tsa-005.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">force-tsa-005</span></code></span></a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">5.0.0</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">3.4.0</span></code></p></td>
 <td><p>最大连续缺口达到 4 个期望周期时仍仅判为 warn，移除 error 门槛。</p></td>
 <td><p><a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/90a751126816063fd33c53ccd3353c25772a4e28"><code class="docutils literal notranslate"><span class="pre">90a7511</span></code></a></p></td>
 </tr>
-<tr class="row-even"><td><p>2026-09-22 13:31:58</p></td>
+<tr class="row-odd"><td><p>2026-09-22 13:31:58</p></td>
 <td><p><a class="reference internal" href="quality-operators/force/force-laq-005.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">force-laq-005</span></code></span></a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">1.0.0</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">3.3.0</span></code></p></td>
 <td><p>新增全程五指受力模式指标。<a class="reference external" href="https://originflowai.feishu.cn/wiki/MeJwwCTGHiLA0uksgRpciDLfnPe">Force Operator 指标修改汇报</a></p></td>
 <td><p><a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/3c07e4b9802b5635480d8a35d936a6ed0896fc69"><code class="docutils literal notranslate"><span class="pre">3c07e4b</span></code></a></p></td>
 </tr>
-<tr class="row-odd"><td><p>2026-09-21 12:00:00</p></td>
+<tr class="row-even"><td><p>2026-09-21 12:00:00</p></td>
 <td><p><a class="reference internal" href="quality-operators/comb_camera/comb_camera-tsa-003.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">comb_camera-tsa-003</span></code></span></a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">1.0.0</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">0.4.0</span></code></p></td>
 <td><p>新增八目合并标定文件时效检查，使用 session/file.datatime 与 header.generated_at_utc 比较。<a class="reference external" href="https://originflowai.feishu.cn/wiki/R18ow7j6LirieQkuQp1cZmlAnJf">八目标定文件时效 Checker 开发汇报</a></p></td>
 <td><p><a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/493802c115ce3b826e8622b7855027170b702d1a"><code class="docutils literal notranslate"><span class="pre">493802c</span></code></a></p></td>
 </tr>
-<tr class="row-even"><td><p>2026-09-16 17:14:09</p></td>
+<tr class="row-odd"><td><p>2026-09-16 17:14:09</p></td>
 <td><p><a class="reference internal" href="quality-operators/force/force-tsa-005.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">force-tsa-005</span></code></span></a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">4.0.0</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">3.2.0</span></code></p></td>
 <td><p>error 改为同时要求连续缺失达到四个周期且累计净缺失比例超过 1%。</p></td>
 <td><p><a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/b8654d808b777d1f6a0182de078e5431e6009d05"><code class="docutils literal notranslate"><span class="pre">b8654d8</span></code></a></p></td>
 </tr>
-<tr class="row-odd"><td><p>2026-09-16 11:36:12</p></td>
+<tr class="row-even"><td><p>2026-09-16 11:36:12</p></td>
 <td><p><a class="reference internal" href="quality-operators/force/force-laq-002.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">force-laq-002</span></code></span></a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">5.0.0</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">3.0.0</span></code></p></td>
 <td><p>移除 adapter 后，对按字段名选择的 CMCU 和 Gen3 通道执行静息检查。</p></td>
 <td><p><a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/b3e1f07698c7307af6f19f88eb9997cdc73fbc4e"><code class="docutils literal notranslate"><span class="pre">b3e1f07</span></code></a></p></td>
 </tr>
-<tr class="row-even"><td><p>2026-09-16 11:36:12</p></td>
+<tr class="row-odd"><td><p>2026-09-16 11:36:12</p></td>
 <td><p><a class="reference internal" href="quality-operators/force/force-scq-001.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">force-scq-001</span></code></span></a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">3.0.0</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">3.0.0</span></code></p></td>
 <td><p>移除 adapter 后，对按字段名选择的 CMCU 和 Gen3 通道执行恒定信号检查。</p></td>
 <td><p><a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/b3e1f07698c7307af6f19f88eb9997cdc73fbc4e"><code class="docutils literal notranslate"><span class="pre">b3e1f07</span></code></a></p></td>
 </tr>
-<tr class="row-odd"><td><p>2026-09-16 11:36:12</p></td>
+<tr class="row-even"><td><p>2026-09-16 11:36:12</p></td>
 <td><p><a class="reference internal" href="quality-operators/force/force-dsf-003.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">force-dsf-003</span></code></span></a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">3.0.0</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">3.0.0</span></code></p></td>
 <td><p>历史 9 列五指矩阵直接保留前 5 列，不再校验后 4 列是否全零。</p></td>
 <td><p><a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/b3e1f07698c7307af6f19f88eb9997cdc73fbc4e"><code class="docutils literal notranslate"><span class="pre">b3e1f07</span></code></a></p></td>
 </tr>
-<tr class="row-even"><td><p>2026-09-16 11:36:12</p></td>
+<tr class="row-odd"><td><p>2026-09-16 11:36:12</p></td>
 <td><p><a class="reference internal" href="quality-operators/force/force-idc-001.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">force-idc-001</span></code></span></a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">3.0.0</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">3.0.0</span></code></p></td>
 <td><p>按字段名支持 CMCU05/CMCU05B 和 Gen3；删除仅限默认 CMCU05B 的入口限制。</p></td>
 <td><p><a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/b3e1f07698c7307af6f19f88eb9997cdc73fbc4e"><code class="docutils literal notranslate"><span class="pre">b3e1f07</span></code></a></p></td>
 </tr>
-<tr class="row-odd"><td><p>2026-09-15 21:39:58</p></td>
+<tr class="row-even"><td><p>2026-09-15 21:39:58</p></td>
 <td><p><a class="reference internal" href="quality-operators/imu/imu-tsa-009.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">imu-tsa-009</span></code></span></a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">4.3.0</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">0.14.0</span></code></p></td>
 <td><p>将 IMU 采样率偏差告警阈值从 1% 调整为 2%，失败阈值保持 5%。 <a class="reference external" href="https://originflowai.feishu.cn/wiki/KBdCwyQjsiFlEyky4ysc4Z0mnqg">阈值统计依据</a>。具体阈值对模型的影响需要使用模型评估，短期无法确定，本文档仅根据实际数据统计确定阈值。根据 Codex 建议，只有 EMG、IMU 的 warn 阈值放宽，其余阈值不变或收缩。本次仅对 EMG、IMU 的 warn 阈值进行放宽，预计 0916 集成到 pipeline。</p></td>
 <td><p><a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/46829517fc715a059b316486f7d2f454e46c95e8"><code class="docutils literal notranslate"><span class="pre">4682951</span></code></a></p></td>
 </tr>
-<tr class="row-even"><td><p>2026-09-15 21:39:58</p></td>
+<tr class="row-odd"><td><p>2026-09-15 21:39:58</p></td>
 <td><p><a class="reference internal" href="quality-operators/emg/emg-tsa-003.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">emg-tsa-003</span></code></span></a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">4.1.0</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">0.17.0</span></code></p></td>

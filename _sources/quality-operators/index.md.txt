@@ -190,7 +190,7 @@
         <td>无法生成</td>
         <td class="catalog-reviewed-cell"><input type="checkbox" data-catalog-reviewed aria-label="标记 emg-ppa-002 已核对"></td>
       </tr>
-      <tr class="catalog-row" data-rule-id="imu-idc-001" data-search="imu-idc-001 imu 必需字段是否完整 field missing imu idc 001 必需字段完整性 检查输入是否具备完整的 imu 三轴载荷、硬件时间戳和可用的样本时间戳来源。 imu_record imu imu input_device_compatibility raw 无法生成 single " data-modality="imu" data-domain="input_device_compatibility" data-stage="raw" data-artifact="unavailable">
+      <tr class="catalog-row" data-rule-id="imu-idc-001" data-search="imu-idc-001 imu 必需字段是否完整 field missing imu idc 001 必需字段完整性 检查输入是否具备必需的加速度与角速度三轴载荷，以及可用的样本和质检时间戳来源。 imu_record imu imu input_device_compatibility raw 无法生成 single " data-modality="imu" data-domain="input_device_compatibility" data-stage="raw" data-artifact="unavailable">
         <td><a href="imu/imu-idc-001.html"><code>imu-idc-001</code></a></td>
         <td>IMU 必需字段是否完整</td>
         <td>IMU</td>

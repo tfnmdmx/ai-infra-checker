@@ -12,7 +12,7 @@
   <code class="meta-domain">time_sample_alignment</code>
   <code class="meta-stage">raw</code>
   <code class="meta-version">rule v3.0.0</code>
-  <code class="meta-version">fm-imu-operator v0.14.0</code>
+  <code class="meta-version">fm-imu-operator v0.15.0</code>
 </div>
 
 <p class="quality-lead">找出相邻 IMU 质检时间戳之间的最大间隔，识别局部停采。</p>
@@ -58,10 +58,10 @@ quality.imu.imu_tsa_010(
 ::::
 
 ::::{div} quality-source-links
-[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/imu.py#L640) ·
-[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/rules.py#L65) ·
-[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-imu-operator/tests/test_imu_operator.py#L209) ·
-[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/docs/quality-rule-calculation-spec.md)
+[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/imu.py#L646) ·
+[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/rules.py#L65) ·
+[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/operators/fm-imu-operator/tests/test_imu_operator.py#L209) ·
+[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/docs/quality-rule-calculation-spec.md)
 ::::
 
 ```{admonition} 注意
@@ -148,8 +148,8 @@ value = max(diff(hw_seconds))
 
 - 页面 owner：`data-quality/imu`
 - 所属模态算子：[IMU](../../modality-operators/imu.md)
-- 实现：[operators/fm-imu-operator/src/fm_imu_operator/imu.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/imu.py#L640)
-- 注册：[operators/fm-imu-operator/src/fm_imu_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/rules.py#L65)
-- 测试：[operators/fm-imu-operator/tests/test_imu_operator.py::test_imu_rule_registry_has_unique_canonical_ids](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-imu-operator/tests/test_imu_operator.py#L209)
-- 计算规范：[docs/quality-rule-calculation-spec.md](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/docs/quality-rule-calculation-spec.md)
-- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator-docs/site/operator-pages/imu/imu-tsa-010.yaml#L1)
+- 实现：[operators/fm-imu-operator/src/fm_imu_operator/imu.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/imu.py#L646)
+- 注册：[operators/fm-imu-operator/src/fm_imu_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/rules.py#L65)
+- 测试：[operators/fm-imu-operator/tests/test_imu_operator.py::test_imu_rule_registry_has_unique_canonical_ids](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/operators/fm-imu-operator/tests/test_imu_operator.py#L209)
+- 计算规范：[docs/quality-rule-calculation-spec.md](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/docs/quality-rule-calculation-spec.md)
+- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator-docs/site/operator-pages/imu/imu-tsa-010.yaml#L1)

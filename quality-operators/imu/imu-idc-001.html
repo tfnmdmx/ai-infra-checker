@@ -508,15 +508,15 @@
   <code class="meta-cardinality">single</code>
   <code class="meta-domain">input_device_compatibility</code>
   <code class="meta-stage">raw</code>
-  <code class="meta-version">rule v1.0.0</code>
-  <code class="meta-version">fm-imu-operator v0.14.0</code>
+  <code class="meta-version">rule v2.0.0</code>
+  <code class="meta-version">fm-imu-operator v0.15.0</code>
 </div>
-<p class="quality-lead">检查输入是否具备完整的 IMU 三轴载荷、硬件时间戳和可用的样本时间戳来源。</p>
+<p class="quality-lead">检查输入是否具备必需的加速度与角速度三轴载荷，以及可用的样本和质检时间戳来源。</p>
 <section id="id1">
 <h2>先看懂这条规则<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p><strong>检查什么：</strong> 检查输入是否同时带有加速度、角速度、磁场和所需的时间信息。</p></li>
-<li><p><strong>什么情况下不通过：</strong> 缺少任何一组三轴数据或找不到必要时间轴，就无法组成完整 IMU 记录，也无法判断样本发生的时刻。</p></li>
+<li><p><strong>检查什么：</strong> 检查输入是否同时带有加速度、角速度和所需的时间信息；磁场数据为可选。</p></li>
+<li><p><strong>什么情况下不通过：</strong> 缺少加速度、角速度或找不到必要时间轴，就无法组成有效 IMU 记录，也无法判断样本发生的时刻。</p></li>
 </ul>
 <section id="id2">
 <h3>判定标准<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
@@ -528,13 +528,13 @@
 </thead>
 <tbody>
 <tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">pass</span></code></strong></p></td>
-<td><p>加速度、角速度、磁场三组数据齐全，并且处理与质检所需的时间戳候选都存在。</p></td>
+<td><p>加速度、角速度和处理与质检所需的时间戳候选均存在；磁场字段可以缺失。</p></td>
 </tr>
 <tr class="row-odd"><td><p><strong><code class="docutils literal notranslate"><span class="pre">warn</span></code></strong></p></td>
 <td><p>不会出现；本规则不使用 warn 状态。</p></td>
 </tr>
 <tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">error</span></code></strong></p></td>
-<td><p>任一 XYZ、硬件时间戳缺失，或 raw/sync 样本时间戳均不存在时为 error；具体缺项写入 details.missing_fields</p></td>
+<td><p>加速度、角速度或所需时间戳来源缺失时为 error；具体缺项写入 details.missing_fields。</p></td>
 </tr>
 </tbody>
 </table>
@@ -547,10 +547,11 @@
 <section id="id3">
 <h3>具体检查项<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
 <ol class="arabic simple">
-<li><p>确认输入同时包含 <code class="docutils literal notranslate"><span class="pre">emg_imu_accel</span></code>、<code class="docutils literal notranslate"><span class="pre">emg_imu_gyro</span></code> 和 <code class="docutils literal notranslate"><span class="pre">emg_imu_mag</span></code> 三个 XYZ 字段。</p></li>
-<li><p>确认存在用于周期与缺口计算的硬件时间戳 <code class="docutils literal notranslate"><span class="pre">emg_imu_hw_us</span></code>。</p></li>
-<li><p>确认至少存在 <code class="docutils literal notranslate"><span class="pre">emg_imu_sync_timestamps</span></code> 或 <code class="docutils literal notranslate"><span class="pre">emg_imu_ts_raw</span></code>；两者同时存在时优先使用 sync。</p></li>
-<li><p>任一必需字段缺失即按字段发布 error，不用零数组或其他时间戳代填。</p></li>
+<li><p>确认输入同时包含必需的 <code class="docutils literal notranslate"><span class="pre">emg_imu_accel</span></code> 和 <code class="docutils literal notranslate"><span class="pre">emg_imu_gyro</span></code> 两个 XYZ 字段。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">emg_imu_mag</span></code> 可选；存在时参与结构、数值检查和产物输出，缺失时发布六轴产物。</p></li>
+<li><p>确认存在可用于周期与缺口计算的 sync 或硬件时间戳。</p></li>
+<li><p>确认存在可用于输出对齐的 sync 时间戳，或同时存在所需的 legacy 回退时间戳。</p></li>
+<li><p>任一必需字段缺失即发布 error，不用零数组或其他时间戳代填。</p></li>
 </ol>
 </section>
 </section>
@@ -566,11 +567,11 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>—</p></td>
-<td><p>—</p></td>
-<td><p>—</p></td>
-<td><p>尚无基线后的版本变更</p></td>
-<td><p>—</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">2.0.0</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">0.15.0</span></code></p></td>
+<td><p>2026-09-24 21:51:33</p></td>
+<td><p>将磁力计字段改为可选；缺少磁力计不再触发本规则，缺少加速度计或陀螺仪仍为 error。<a class="reference external" href="https://originflowai.feishu.cn/wiki/UB5fwWtIWiMVgbkUtylcYgDpnyo">Force / IMU Operator 回归测试报告</a></p></td>
+<td><p><a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/5b5cc0e52aa99b9ee4498379248dbcbf6aa65cbb"><code class="docutils literal notranslate"><span class="pre">5b5cc0e</span></code></a></p></td>
 </tr>
 </tbody>
 </table>
@@ -588,15 +589,16 @@
 </div>
 </div>
 <div class="quality-source-links docutils">
-<p><a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/imu.py#L640">implementation</a> ·
-<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/rules.py#L54">registry</a> ·
-<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-imu-operator/tests/test_imu_operator.py#L784">test 1</a> ·
-<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/docs/quality-rule-calculation-spec.md">计算规范</a></p>
+<p><a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/imu.py#L646">implementation</a> ·
+<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/rules.py#L54">registry</a> ·
+<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/operators/fm-imu-operator/tests/test_imu_operator.py#L832">test 1</a> ·
+<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/docs/quality-rule-calculation-spec.md">计算规范</a></p>
 </div>
 <div class="note admonition">
 <p class="admonition-title">注意</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">emg_imu_sync_timestamps</span></code> 一旦存在即视为权威样本时间戳；其内容非法时不会回退到 raw。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">emg_imu_mag</span></code> 缺失不会触发本规则；存在但结构或数值非法时由对应结构或数值规则处理。</p></li>
 <li><p>字段存在但 shape、dtype 不正确属于 <code class="docutils literal notranslate"><span class="pre">imu-dsf-001</span></code>，不属于本规则。</p></li>
 <li><p>规则阶段为 raw；总状态只取已执行规则的最高严重度。</p></li>
 <li><p>质量或数据异常由 RuleResult 明确记录且进程返回 0；只有运行配置错误返回 1。</p></li>
@@ -623,7 +625,7 @@
 <td><p><code class="docutils literal notranslate"><span class="pre">timestamps=[T],</span> <span class="pre">axes=[T,3]</span></code></p></td>
 <td><p>N/A</p></td>
 <td><p>是</p></td>
-<td><p>输入 NPZ；必须包含三个 XYZ 字段、硬件时间戳，并提供 raw 或 sync 样本时间戳。</p></td>
+<td><p>输入 NPZ；必须包含加速度和角速度 XYZ 字段及可用时间戳，磁力计 XYZ 字段可选。</p></td>
 </tr>
 </tbody>
 </table>
@@ -671,7 +673,7 @@
 </div>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">  </span><span class="nt">"rule_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"imu-idc-001"</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"rule_version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0.0"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"rule_version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0.0"</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">"problem_domain"</span><span class="p">:</span><span class="w"> </span><span class="s2">"input_device_compatibility"</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">"stage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"raw"</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"error"</span><span class="p">,</span>
@@ -702,11 +704,11 @@
 <ul class="simple">
 <li><p>页面 owner：<code class="docutils literal notranslate"><span class="pre">data-quality/imu</span></code></p></li>
 <li><p>所属模态算子：<a class="reference internal" href="../../modality-operators/imu.html"><span class="std std-doc">IMU</span></a></p></li>
-<li><p>实现：<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/imu.py#L640">operators/fm-imu-operator/src/fm_imu_operator/imu.py</a></p></li>
-<li><p>注册：<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/rules.py#L54">operators/fm-imu-operator/src/fm_imu_operator/rules.py</a></p></li>
-<li><p>测试：<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-imu-operator/tests/test_imu_operator.py#L784">operators/fm-imu-operator/tests/test_imu_operator.py::test_imu_missing_mag_is_reported_without_ppa</a></p></li>
-<li><p>计算规范：<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/docs/quality-rule-calculation-spec.md">docs/quality-rule-calculation-spec.md</a></p></li>
-<li><p><a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator-docs/site/operator-pages/imu/imu-idc-001.yaml#L1">编辑本页 manifest</a></p></li>
+<li><p>实现：<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/imu.py#L646">operators/fm-imu-operator/src/fm_imu_operator/imu.py</a></p></li>
+<li><p>注册：<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/rules.py#L54">operators/fm-imu-operator/src/fm_imu_operator/rules.py</a></p></li>
+<li><p>测试：<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/operators/fm-imu-operator/tests/test_imu_operator.py#L832">operators/fm-imu-operator/tests/test_imu_operator.py::test_imu_missing_required_gyro_is_reported_without_ppa</a></p></li>
+<li><p>计算规范：<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/docs/quality-rule-calculation-spec.md">docs/quality-rule-calculation-spec.md</a></p></li>
+<li><p><a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator-docs/site/operator-pages/imu/imu-idc-001.yaml#L1">编辑本页 manifest</a></p></li>
 </ul>
 </section>
 </section>

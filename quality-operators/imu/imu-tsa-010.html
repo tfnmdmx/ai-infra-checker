@@ -509,7 +509,7 @@
   <code class="meta-domain">time_sample_alignment</code>
   <code class="meta-stage">raw</code>
   <code class="meta-version">rule v3.0.0</code>
-  <code class="meta-version">fm-imu-operator v0.14.0</code>
+  <code class="meta-version">fm-imu-operator v0.15.0</code>
 </div>
 <p class="quality-lead">找出相邻 IMU 质检时间戳之间的最大间隔，识别局部停采。</p>
 <section id="id2">
@@ -581,10 +581,10 @@
 </div>
 </div>
 <div class="quality-source-links docutils">
-<p><a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/imu.py#L640">implementation</a> ·
-<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/rules.py#L65">registry</a> ·
-<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-imu-operator/tests/test_imu_operator.py#L209">test 1</a> ·
-<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/docs/quality-rule-calculation-spec.md">计算规范</a></p>
+<p><a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/imu.py#L646">implementation</a> ·
+<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/rules.py#L65">registry</a> ·
+<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/operators/fm-imu-operator/tests/test_imu_operator.py#L209">test 1</a> ·
+<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/docs/quality-rule-calculation-spec.md">计算规范</a></p>
 </div>
 <div class="note admonition">
 <p class="admonition-title">注意</p>
@@ -724,11 +724,11 @@ value = max(diff(hw_seconds))
 <ul class="simple">
 <li><p>页面 owner：<code class="docutils literal notranslate"><span class="pre">data-quality/imu</span></code></p></li>
 <li><p>所属模态算子：<a class="reference internal" href="../../modality-operators/imu.html"><span class="std std-doc">IMU</span></a></p></li>
-<li><p>实现：<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/imu.py#L640">operators/fm-imu-operator/src/fm_imu_operator/imu.py</a></p></li>
-<li><p>注册：<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/rules.py#L65">operators/fm-imu-operator/src/fm_imu_operator/rules.py</a></p></li>
-<li><p>测试：<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-imu-operator/tests/test_imu_operator.py#L209">operators/fm-imu-operator/tests/test_imu_operator.py::test_imu_rule_registry_has_unique_canonical_ids</a></p></li>
-<li><p>计算规范：<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/docs/quality-rule-calculation-spec.md">docs/quality-rule-calculation-spec.md</a></p></li>
-<li><p><a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator-docs/site/operator-pages/imu/imu-tsa-010.yaml#L1">编辑本页 manifest</a></p></li>
+<li><p>实现：<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/imu.py#L646">operators/fm-imu-operator/src/fm_imu_operator/imu.py</a></p></li>
+<li><p>注册：<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/rules.py#L65">operators/fm-imu-operator/src/fm_imu_operator/rules.py</a></p></li>
+<li><p>测试：<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/operators/fm-imu-operator/tests/test_imu_operator.py#L209">operators/fm-imu-operator/tests/test_imu_operator.py::test_imu_rule_registry_has_unique_canonical_ids</a></p></li>
+<li><p>计算规范：<a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/docs/quality-rule-calculation-spec.md">docs/quality-rule-calculation-spec.md</a></p></li>
+<li><p><a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator-docs/site/operator-pages/imu/imu-tsa-010.yaml#L1">编辑本页 manifest</a></p></li>
 </ul>
 </section>
 </section>

@@ -433,7 +433,7 @@
 <p class="quality-lead">恢复腕带 IMU 时间轴并执行结构、数值和固有时间质量检查。</p>
 <div class="quality-meta">
   <code class="meta-kind">fm-imu-operator</code>
-  <code class="meta-version">v0.14.0</code>
+  <code class="meta-version">v0.15.0</code>
   <code class="meta-stage">unimodal</code>
   <code class="meta-domain">9 quality operators</code>
 </div>
@@ -448,7 +448,7 @@
 <td><p><code class="docutils literal notranslate"><span class="pre">fm-imu-operator</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p>包版本</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">0.14.0</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">0.15.0</span></code></p></td>
 </tr>
 <tr class="row-even"><td><p>输入边界</p></td>
 <td><p>一个原始 IMU NPZ</p></td>
@@ -473,7 +473,12 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0.14.0</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0.15.0</span></code></p></td>
+<td><p>2026-09-24 21:51:33</p></td>
+<td><p>将磁力计数据改为可选；仅包含加速度计和陀螺仪的六轴输入也可完成质检并生成产物。<a class="reference external" href="https://originflowai.feishu.cn/wiki/UB5fwWtIWiMVgbkUtylcYgDpnyo">Force / IMU Operator 回归测试报告</a></p></td>
+<td><p><a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/5b5cc0e52aa99b9ee4498379248dbcbf6aa65cbb"><code class="docutils literal notranslate"><span class="pre">5b5cc0e</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0.14.0</span></code></p></td>
 <td><p>2026-09-15 21:39:58</p></td>
 <td><p>将 IMU 采样率偏差告警阈值从 1% 调整为 2%，失败阈值保持 5%。 <a class="reference external" href="https://originflowai.feishu.cn/wiki/KBdCwyQjsiFlEyky4ysc4Z0mnqg">阈值统计依据</a>。</p></td>
 <td><p><a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/46829517fc715a059b316486f7d2f454e46c95e8"><code class="docutils literal notranslate"><span class="pre">4682951</span></code></a></p></td>
@@ -489,7 +494,7 @@
 </pre></div>
 </div>
 <div class="quality-source-links docutils">
-<p><a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/docs/operator-user-guide.md#2-imu-operator">查看完整使用手册</a> · <a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/tree/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-imu-operator">查看 GitHub 包源码</a></p>
+<p><a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/docs/operator-user-guide.md#2-imu-operator">查看完整使用手册</a> · <a class="reference external" href="https://github.com/OriginFlow-AI/AI-Infra-Toolbox/tree/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/operators/fm-imu-operator">查看 GitHub 包源码</a></p>
 </div>
 </section>
 <section id="id3">
@@ -513,7 +518,7 @@
 <td><p>无法生成</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">single</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">raw</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">1.0.0</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">2.0.0</span></code></p></td>
 </tr>
 </tbody>
 </table>

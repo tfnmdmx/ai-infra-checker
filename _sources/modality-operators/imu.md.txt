@@ -7,7 +7,7 @@
 
 <div class="quality-meta">
   <code class="meta-kind">fm-imu-operator</code>
-  <code class="meta-version">v0.14.0</code>
+  <code class="meta-version">v0.15.0</code>
   <code class="meta-stage">unimodal</code>
   <code class="meta-domain">9 quality operators</code>
 </div>
@@ -16,7 +16,7 @@
 | 属性 | 值 |
 | --- | --- |
 | 包名 | `fm-imu-operator` |
-| 包版本 | `0.14.0` |
+| 包版本 | `0.15.0` |
 | 输入边界 | 一个原始 IMU NPZ |
 | 默认产物 | `<work-dir>/imu/processed.npz` |
 | 质检算子数 | 9 |
@@ -25,6 +25,7 @@
 
 | 包版本 | 更新时间 | 变更 | 提交 |
 | --- | --- | --- | --- |
+| `0.15.0` | 2026-09-24 21:51:33 | 将磁力计数据改为可选；仅包含加速度计和陀螺仪的六轴输入也可完成质检并生成产物。[Force / IMU Operator 回归测试报告](https://originflowai.feishu.cn/wiki/UB5fwWtIWiMVgbkUtylcYgDpnyo) | [`5b5cc0e`](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/5b5cc0e52aa99b9ee4498379248dbcbf6aa65cbb) |
 | `0.14.0` | 2026-09-15 21:39:58 | 将 IMU 采样率偏差告警阈值从 1% 调整为 2%，失败阈值保持 5%。 [阈值统计依据](https://originflowai.feishu.cn/wiki/KBdCwyQjsiFlEyky4ysc4Z0mnqg)。 | [`4682951`](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/46829517fc715a059b316486f7d2f454e46c95e8) |
 
 仅展示文档 1.0.0 基线之后的变更。
@@ -36,7 +37,7 @@ fm-imu-operator --help
 ```
 
 ::::{div} quality-source-links
-[查看完整使用手册](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/docs/operator-user-guide.md#2-imu-operator) · [查看 GitHub 包源码](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/tree/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-imu-operator)
+[查看完整使用手册](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/docs/operator-user-guide.md#2-imu-operator) · [查看 GitHub 包源码](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/tree/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/operators/fm-imu-operator)
 ::::
 
 ## 质检算子
@@ -46,7 +47,7 @@ fm-imu-operator --help
 ::::{div} modality-rule-table
 | Rule ID | 名称 | error 时产物 | 实例 | 阶段 | 版本 |
 | --- | --- | --- | --- | --- | --- |
-| <span id="catalog-imu-idc-001"></span>`imu-idc-001` | [IMU 必需字段是否完整](../quality-operators/imu/imu-idc-001.md) | 无法生成 | `single` | `raw` | `1.0.0` |
+| <span id="catalog-imu-idc-001"></span>`imu-idc-001` | [IMU 必需字段是否完整](../quality-operators/imu/imu-idc-001.md) | 无法生成 | `single` | `raw` | `2.0.0` |
 ::::
 
 ### DSF · 数据结构/格式

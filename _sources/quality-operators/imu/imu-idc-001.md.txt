@@ -11,24 +11,24 @@
   <code class="meta-cardinality">single</code>
   <code class="meta-domain">input_device_compatibility</code>
   <code class="meta-stage">raw</code>
-  <code class="meta-version">rule v1.0.0</code>
-  <code class="meta-version">fm-imu-operator v0.14.0</code>
+  <code class="meta-version">rule v2.0.0</code>
+  <code class="meta-version">fm-imu-operator v0.15.0</code>
 </div>
 
-<p class="quality-lead">检查输入是否具备完整的 IMU 三轴载荷、硬件时间戳和可用的样本时间戳来源。</p>
+<p class="quality-lead">检查输入是否具备必需的加速度与角速度三轴载荷，以及可用的样本和质检时间戳来源。</p>
 
 ## 先看懂这条规则
 
-- **检查什么：** 检查输入是否同时带有加速度、角速度、磁场和所需的时间信息。
-- **什么情况下不通过：** 缺少任何一组三轴数据或找不到必要时间轴，就无法组成完整 IMU 记录，也无法判断样本发生的时刻。
+- **检查什么：** 检查输入是否同时带有加速度、角速度和所需的时间信息；磁场数据为可选。
+- **什么情况下不通过：** 缺少加速度、角速度或找不到必要时间轴，就无法组成有效 IMU 记录，也无法判断样本发生的时刻。
 
 ### 判定标准
 
 | 状态 | 怎么判 |
 | --- | --- |
-| **`pass`** | 加速度、角速度、磁场三组数据齐全，并且处理与质检所需的时间戳候选都存在。 |
+| **`pass`** | 加速度、角速度和处理与质检所需的时间戳候选均存在；磁场字段可以缺失。 |
 | **`warn`** | 不会出现；本规则不使用 warn 状态。 |
-| **`error`** | 任一 XYZ、硬件时间戳缺失，或 raw/sync 样本时间戳均不存在时为 error；具体缺项写入 details.missing_fields |
+| **`error`** | 加速度、角速度或所需时间戳来源缺失时为 error；具体缺项写入 details.missing_fields。 |
 
 **边界怎么算：**
 
@@ -36,16 +36,17 @@
 
 ### 具体检查项
 
-1. 确认输入同时包含 `emg_imu_accel`、`emg_imu_gyro` 和 `emg_imu_mag` 三个 XYZ 字段。
-2. 确认存在用于周期与缺口计算的硬件时间戳 `emg_imu_hw_us`。
-3. 确认至少存在 `emg_imu_sync_timestamps` 或 `emg_imu_ts_raw`；两者同时存在时优先使用 sync。
-4. 任一必需字段缺失即按字段发布 error，不用零数组或其他时间戳代填。
+1. 确认输入同时包含必需的 `emg_imu_accel` 和 `emg_imu_gyro` 两个 XYZ 字段。
+2. `emg_imu_mag` 可选；存在时参与结构、数值检查和产物输出，缺失时发布六轴产物。
+3. 确认存在可用于周期与缺口计算的 sync 或硬件时间戳。
+4. 确认存在可用于输出对齐的 sync 时间戳，或同时存在所需的 legacy 回退时间戳。
+5. 任一必需字段缺失即发布 error，不用零数组或其他时间戳代填。
 
 ## 版本历史
 
 | Rule 版本 | 首次对应包版本 | 更新时间 | 变更 | 提交 |
 | --- | --- | --- | --- | --- |
-| — | — | — | 尚无基线后的版本变更 | — |
+| `2.0.0` | `0.15.0` | 2026-09-24 21:51:33 | 将磁力计字段改为可选；缺少磁力计不再触发本规则，缺少加速度计或陀螺仪仍为 error。[Force / IMU Operator 回归测试报告](https://originflowai.feishu.cn/wiki/UB5fwWtIWiMVgbkUtylcYgDpnyo) | [`5b5cc0e`](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/5b5cc0e52aa99b9ee4498379248dbcbf6aa65cbb) |
 
 仅展示文档 1.0.0 基线之后的变更。
 
@@ -62,16 +63,17 @@ quality.imu.imu_idc_001(
 ::::
 
 ::::{div} quality-source-links
-[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/imu.py#L640) ·
-[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/rules.py#L54) ·
-[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-imu-operator/tests/test_imu_operator.py#L784) ·
-[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/docs/quality-rule-calculation-spec.md)
+[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/imu.py#L646) ·
+[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/rules.py#L54) ·
+[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/operators/fm-imu-operator/tests/test_imu_operator.py#L832) ·
+[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/docs/quality-rule-calculation-spec.md)
 ::::
 
 ```{admonition} 注意
 :class: note
 
 - `emg_imu_sync_timestamps` 一旦存在即视为权威样本时间戳；其内容非法时不会回退到 raw。
+- `emg_imu_mag` 缺失不会触发本规则；存在但结构或数值非法时由对应结构或数值规则处理。
 - 字段存在但 shape、dtype 不正确属于 `imu-dsf-001`，不属于本规则。
 - 规则阶段为 raw；总状态只取已执行规则的最高严重度。
 - 质量或数据异常由 RuleResult 明确记录且进程返回 0；只有运行配置错误返回 1。
@@ -81,7 +83,7 @@ quality.imu.imu_idc_001(
 
 | 名称 | 来源 | dtype | shape | 单位 | 必需 | 说明 |
 | --- | --- | --- | --- | --- | --- | --- |
-| `imu_record` | raw | `NPZ arrays` | `timestamps=[T], axes=[T,3]` | N/A | 是 | 输入 NPZ；必须包含三个 XYZ 字段、硬件时间戳，并提供 raw 或 sync 样本时间戳。 |
+| `imu_record` | raw | `NPZ arrays` | `timestamps=[T], axes=[T,3]` | N/A | 是 | 输入 NPZ；必须包含加速度和角速度 XYZ 字段及可用时间戳，磁力计 XYZ 字段可选。 |
 
 ## 配置参数
 
@@ -111,7 +113,7 @@ quality.imu.imu_idc_001(
 ```json
 {
   "rule_id": "imu-idc-001",
-  "rule_version": "1.0.0",
+  "rule_version": "2.0.0",
   "problem_domain": "input_device_compatibility",
   "stage": "raw",
   "status": "error",
@@ -138,8 +140,8 @@ quality.imu.imu_idc_001(
 
 - 页面 owner：`data-quality/imu`
 - 所属模态算子：[IMU](../../modality-operators/imu.md)
-- 实现：[operators/fm-imu-operator/src/fm_imu_operator/imu.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/imu.py#L640)
-- 注册：[operators/fm-imu-operator/src/fm_imu_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/rules.py#L54)
-- 测试：[operators/fm-imu-operator/tests/test_imu_operator.py::test_imu_missing_mag_is_reported_without_ppa](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-imu-operator/tests/test_imu_operator.py#L784)
-- 计算规范：[docs/quality-rule-calculation-spec.md](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/docs/quality-rule-calculation-spec.md)
-- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator-docs/site/operator-pages/imu/imu-idc-001.yaml#L1)
+- 实现：[operators/fm-imu-operator/src/fm_imu_operator/imu.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/imu.py#L646)
+- 注册：[operators/fm-imu-operator/src/fm_imu_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/operators/fm-imu-operator/src/fm_imu_operator/rules.py#L54)
+- 测试：[operators/fm-imu-operator/tests/test_imu_operator.py::test_imu_missing_required_gyro_is_reported_without_ppa](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/operators/fm-imu-operator/tests/test_imu_operator.py#L832)
+- 计算规范：[docs/quality-rule-calculation-spec.md](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/docs/quality-rule-calculation-spec.md)
+- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator-docs/site/operator-pages/imu/imu-idc-001.yaml#L1)

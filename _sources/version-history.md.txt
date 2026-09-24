@@ -11,7 +11,7 @@
 | 模态算子 | 包名 | 当前包版本 | 质检规则数 |
 | --- | --- | --- | ---: |
 | [EMG](modality-operators/emg.md) | `fm-emg-operator` | `0.17.0` | 16 |
-| [IMU](modality-operators/imu.md) | `fm-imu-operator` | `0.14.0` | 9 |
+| [IMU](modality-operators/imu.md) | `fm-imu-operator` | `0.15.0` | 9 |
 | [Force](modality-operators/force.md) | `fm-force-label-operator` | `3.6.0` | 12 |
 | [Pose](modality-operators/pose.md) | `fm-pose-label-operator` | `0.16.0` | 13 |
 | [Vision](modality-operators/vision.md) | `fm-vision-operator` | `0.9.0` | 14 |
@@ -22,6 +22,7 @@
 
 | 更新时间 | 模态算子 | 包版本 | 变更 | 提交 |
 | --- | --- | --- | --- | --- |
+| 2026-09-24 21:51:33 | [IMU](modality-operators/imu.md) | `0.15.0` | 将磁力计数据改为可选；仅包含加速度计和陀螺仪的六轴输入也可完成质检并生成产物。[Force / IMU Operator 回归测试报告](https://originflowai.feishu.cn/wiki/UB5fwWtIWiMVgbkUtylcYgDpnyo) | [`5b5cc0e`](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/5b5cc0e52aa99b9ee4498379248dbcbf6aa65cbb) |
 | 2026-09-22 21:26:08 | [Force](modality-operators/force.md) | `3.6.0` | 删除 Gen3 的 force-laq-002 warn 级别，p95/std 不再触发 warn。 | [`21fb32a`](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/21fb32aa792280ec63c0ccaae8e2417202acc81b) |
 | 2026-09-22 21:26:08 | [Force](modality-operators/force.md) | `3.5.0` | force-laq-002 的 Gen3 静息均值 error 门槛从 0.50 N 提高到 1.00 N，p95/std 不单独升级为 error。 | [`21fb32a`](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/21fb32aa792280ec63c0ccaae8e2417202acc81b) |
 | 2026-09-22 20:41:07 | [Force](modality-operators/force.md) | `3.4.0` | force-tsa-005 最大连续缺口达到 4 个期望周期时仅判为 warn，不再设置 error。 | [`90a7511`](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/90a751126816063fd33c53ccd3353c25772a4e28) |
@@ -39,6 +40,7 @@
 
 | 更新时间 | Rule ID | Rule 版本 | 首次对应包版本 | 变更 | 提交 |
 | --- | --- | --- | --- | --- | --- |
+| 2026-09-24 21:51:33 | [`imu-idc-001`](quality-operators/imu/imu-idc-001.md) | `2.0.0` | `0.15.0` | 将磁力计字段改为可选；缺少磁力计不再触发本规则，缺少加速度计或陀螺仪仍为 error。[Force / IMU Operator 回归测试报告](https://originflowai.feishu.cn/wiki/UB5fwWtIWiMVgbkUtylcYgDpnyo) | [`5b5cc0e`](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/5b5cc0e52aa99b9ee4498379248dbcbf6aa65cbb) |
 | 2026-09-22 21:26:08 | [`force-laq-002`](quality-operators/force/force-laq-002.md) | `8.0.0` | `3.6.0` | 删除 Gen3 的均值、p95、std warn 级别，仅保留均值超过 1.00 N 的 error。 | [`21fb32a`](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/21fb32aa792280ec63c0ccaae8e2417202acc81b) |
 | 2026-09-22 20:41:07 | [`force-tsa-005`](quality-operators/force/force-tsa-005.md) | `5.0.0` | `3.4.0` | 最大连续缺口达到 4 个期望周期时仍仅判为 warn，移除 error 门槛。 | [`90a7511`](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/90a751126816063fd33c53ccd3353c25772a4e28) |
 | 2026-09-22 13:31:58 | [`force-laq-005`](quality-operators/force/force-laq-005.md) | `1.0.0` | `3.3.0` | 新增全程五指受力模式指标。[Force Operator 指标修改汇报](https://originflowai.feishu.cn/wiki/MeJwwCTGHiLA0uksgRpciDLfnPe) | [`3c07e4b`](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/commit/3c07e4b9802b5635480d8a35d936a6ed0896fc69) |

@@ -42,7 +42,7 @@ fm-force-label-operator --help
 ```
 
 ::::{div} quality-source-links
-[查看完整使用手册](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/docs/operator-user-guide.md#3-force-label-operator) · [查看 GitHub 包源码](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/tree/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-force-label-operator)
+[查看完整使用手册](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/docs/operator-user-guide.md#3-force-label-operator) · [查看 GitHub 包源码](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/tree/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/operators/fm-force-label-operator)
 ::::
 
 ## 质检算子

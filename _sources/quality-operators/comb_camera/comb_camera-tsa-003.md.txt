@@ -63,10 +63,10 @@ quality.comb_camera.comb_camera_tsa_003(
 ::::
 
 ::::{div} quality-source-links
-[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-comb-camera-operator/src/fm_comb_camera_operator/calibration_freshness.py#L128) ·
-[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-comb-camera-operator/src/fm_comb_camera_operator/rules.py#L54) ·
-[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-comb-camera-operator/tests/test_calibration_freshness.py#L59) · [test 2](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-comb-camera-operator/tests/test_calibration_freshness.py#L77) ·
-[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/docs/quality-rule-calculation-spec.md#%E5%85%AB%E7%9B%AE%E6%A0%87%E5%AE%9A%E6%96%87%E4%BB%B6%E6%97%B6%E6%95%88)
+[implementation](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/operators/fm-comb-camera-operator/src/fm_comb_camera_operator/calibration_freshness.py#L128) ·
+[registry](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/operators/fm-comb-camera-operator/src/fm_comb_camera_operator/rules.py#L54) ·
+[test 1](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/operators/fm-comb-camera-operator/tests/test_calibration_freshness.py#L59) · [test 2](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/operators/fm-comb-camera-operator/tests/test_calibration_freshness.py#L77) ·
+[计算规范](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/docs/quality-rule-calculation-spec.md#%E5%85%AB%E7%9B%AE%E6%A0%87%E5%AE%9A%E6%96%87%E4%BB%B6%E6%97%B6%E6%95%88)
 ::::
 
 ```{admonition} 注意
@@ -156,9 +156,9 @@ quality.comb_camera.comb_camera_tsa_003(
 
 - 页面 owner：`data-quality/comb-camera`
 - 所属模态算子：[Comb Camera](../../modality-operators/comb_camera.md)
-- 实现：[operators/fm-comb-camera-operator/src/fm_comb_camera_operator/calibration_freshness.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-comb-camera-operator/src/fm_comb_camera_operator/calibration_freshness.py#L128)
-- 注册：[operators/fm-comb-camera-operator/src/fm_comb_camera_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-comb-camera-operator/src/fm_comb_camera_operator/rules.py#L54)
-- 测试：[operators/fm-comb-camera-operator/tests/test_calibration_freshness.py::test_freshness_passes_for_reference_document_example](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-comb-camera-operator/tests/test_calibration_freshness.py#L59)
-- 测试：[operators/fm-comb-camera-operator/tests/test_calibration_freshness.py::test_freshness_rejects_expired_or_future_calibration](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/operators/fm-comb-camera-operator/tests/test_calibration_freshness.py#L77)
-- 计算规范：[docs/quality-rule-calculation-spec.md#八目标定文件时效](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator/docs/quality-rule-calculation-spec.md#%E5%85%AB%E7%9B%AE%E6%A0%87%E5%AE%9A%E6%96%87%E4%BB%B6%E6%97%B6%E6%95%88)
-- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/38bfa81fc97b472b1a30066c2a7106c0514fadb3/QC-operator-docs/site/operator-pages/comb_camera/comb_camera-tsa-003.yaml#L1)
+- 实现：[operators/fm-comb-camera-operator/src/fm_comb_camera_operator/calibration_freshness.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/operators/fm-comb-camera-operator/src/fm_comb_camera_operator/calibration_freshness.py#L128)
+- 注册：[operators/fm-comb-camera-operator/src/fm_comb_camera_operator/rules.py](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/operators/fm-comb-camera-operator/src/fm_comb_camera_operator/rules.py#L54)
+- 测试：[operators/fm-comb-camera-operator/tests/test_calibration_freshness.py::test_freshness_passes_for_reference_document_example](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/operators/fm-comb-camera-operator/tests/test_calibration_freshness.py#L59)
+- 测试：[operators/fm-comb-camera-operator/tests/test_calibration_freshness.py::test_freshness_rejects_expired_or_future_calibration](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/operators/fm-comb-camera-operator/tests/test_calibration_freshness.py#L77)
+- 计算规范：[docs/quality-rule-calculation-spec.md#八目标定文件时效](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator/docs/quality-rule-calculation-spec.md#%E5%85%AB%E7%9B%AE%E6%A0%87%E5%AE%9A%E6%96%87%E4%BB%B6%E6%97%B6%E6%95%88)
+- [编辑本页 manifest](https://github.com/OriginFlow-AI/AI-Infra-Toolbox/blob/94657ce4b6709828ff3c11f7069ce20d19e6a155/QC-operator-docs/site/operator-pages/comb_camera/comb_camera-tsa-003.yaml#L1)
